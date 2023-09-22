@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { SERVER } from '../contances/configs';
 import RestService from './RestService';
+import StorageService from './StorageService';
 
 const UserService = {
   signin: async (username: string, password: string) => {
@@ -20,9 +21,14 @@ const UserService = {
           ...{ headers: await RestService.retrieveHeader(true) }
         }
       ).then(async (response: AxiosResponse<any, any>) => {
-        if (response.data.data.length) {
-          const data = response.data.data[0];
+        if (response.data) {
+          const data = response.data;
           console.log(data);
+
+          await StorageService.set('token', data.token);
+          await StorageService.set('refresh_token', data.refresh_token);
+
+
           resolve(data);
         } else {
           reject(404);
