@@ -18,7 +18,7 @@ const UserService = {
         payload,
         {
           params,
-          ...{ headers: await RestService.retrieveHeader(true) }
+          ...{ headers: await RestService.retrieveHeader() }
         }
       ).then(async (response: AxiosResponse<any, any>) => {
         if (response.data) {

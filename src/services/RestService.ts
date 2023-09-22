@@ -8,7 +8,7 @@ const RestService = {
     encodedFormData: boolean = false
   ) => {
     const getLoginToken = async () => {
-      return await StorageService.get('token', true);
+      return await StorageService.get('token');
     }
     let headers: any = {};
     headers['Authenticate'] = API_KEY;
