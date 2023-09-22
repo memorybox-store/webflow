@@ -1,8 +1,7 @@
-import UserService from './services/UserService';
+import { LoginEvent } from './events/LoginEvent';
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Hello World!");
-  UserService.set();
-  console.log('test');
+  LoginEvent();
+
 });
