@@ -1,0 +1,21 @@
+import axios from 'axios';
+
+const UserService = {
+  set: async () => {
+    console.log('set');
+    axios.get('/user?ID=12345')
+      .then(function (response) {
+        // handle success
+        console.log(response);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  }
+};
+
+export default UserService;
