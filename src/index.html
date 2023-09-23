@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>MemoryBox</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  
+
 </head>
 
 <body>
@@ -14,6 +14,44 @@
     <input name="password">
     <button>Submit</button>
   </form>
+
+  <button id="wf-logout-button">Logout</button>
+
+  <div class="wrapper">
+    <img id="myImg" crossOrigin='anonymous' src="./test/REF1.jpg" />
+    <canvas id="myCanvas">
+  </div>
+
+  <div class="wrapper">
+    <img id="myImg2" crossOrigin='anonymous' src="./test/REF2.jpeg" />
+    <canvas id="myCanvas2">
+  </div>
+
 </body>
+
+<style>
+  .wrapper {
+    width: 600px;
+    height: 500px;
+    position: relative;
+  }
+
+  .wrapper img {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .wrapper canvas {
+    position: absolute;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+    z-index: 1;
+  }
+</style>
 
 </html>

@@ -1,27 +1,54 @@
 import { API_KEY } from '../contances/configs';
 
+import { Session } from '../models/UserModel';
+
 import StorageService from './StorageService';
 
 const RestService = {
   retrieveHeader: async (
     requireSession: boolean = false,
+    requireKey: boolean = false,
     encodedFormData: boolean = false
   ) => {
-    const getLoginToken = async () => {
-      return await StorageService.get('token');
+    const getAccessToken = async () => {
+      const session: Session = await StorageService.get('session', true) as Session || null;
+      return session?.accessToken || null;
     }
     let headers: any = {};
-    headers['Authenticate'] = API_KEY;
+    if (requireKey) {
+      headers['Authenticate'] = API_KEY;
+    }
     if (encodedFormData) {
       headers['Content-Type'] = 'application/x-www-form-urlencoded';
     }
     if (requireSession) {
-      const loginToken = await getLoginToken();
+      const loginToken = await getAccessToken();
       if (loginToken) {
         headers['Authorization'] = `Bearer ${loginToken}`;
       }
     }
     return headers;
+  },
+  handleResponseError: (error: any) => {
+    let message = error.message;
+    if (error.response.data) {
+      if (error.response.data.Message) {
+        message = error.response.data.Message;
+      } else if (error.response.data.error) {
+        if (error.response.data.error_description) {
+          message = error.response.data.error_description;
+        } else {
+          if (error.response.data.error === 'invalid_client') {
+            message = 'Access Denied - Unauthorized API Usage';
+          } else {
+            message = error.response.data.error;
+          }
+        }
+      } else {
+        message = error.response.statusText || 'Unknown Error';
+      }
+    }
+    return message;
   },
   async createFormData(values: any = null) {
     let formData = new FormData();
