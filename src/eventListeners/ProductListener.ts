@@ -169,7 +169,6 @@ export const ProductListener = (): void => {
 		boatElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
 			setBoat(value);
-			loadProducts(value, date);
 		});
 	}
 
