@@ -1,4 +1,5 @@
 import { 
+	EL_ID_FIND_FORM,
 	EL_ID_SELECT_BOAT, 
 	EL_ID_SELECT_COMPANY, 
 	EL_ID_SELECT_TRIP_DATE
@@ -142,11 +143,35 @@ export const ProductListener = (): void => {
 
 	const dateElement: any = document.getElementById(EL_ID_SELECT_TRIP_DATE);
 	if (dateElement) {
+		console.log('Found from gh');
 		dateElement.addEventListener("change", () => {
 			const value = dateElement.value;
 			console.log(value);
 			setDate(value);
 			loadProducts(company, value);
+		});
+	} else {
+		console.log('Not found from gh');
+	}
+
+
+	const form = document.getElementById(EL_ID_FIND_FORM);
+	if (form) {
+		form.addEventListener('submit', (event) => {
+
+			event.preventDefault();
+			event.stopPropagation();
+
+			const boatElement: any = document.getElementById(EL_ID_SELECT_BOAT);
+			if (boatElement) {
+				const value = boatElement.value;
+				if (value) {
+					alert('Please select boat');			
+				} else {
+					location.href = './result'  + "?fid=" + value + "&mid=";
+				}		
+			}
+
 		});
 	}
 };
