@@ -134,8 +134,8 @@ export const ProductListener = (): void => {
 	const companyElement: any = document.getElementById(EL_ID_SELECT_COMPANY);
 	if (companyElement) {
 		loadCompanies();
-		companyElement.addEventListener("change", () => {
-			const value = companyElement.value;
+		companyElement.addEventListener("change", (event: any) => {
+			const value = event.target.value;
 			setCompany(value);
 			loadProducts(value, date);
 		});
@@ -144,12 +144,13 @@ export const ProductListener = (): void => {
 	const dateElement: any = document.getElementById(EL_ID_SELECT_TRIP_DATE);
 	if (dateElement) {
 		console.log('Found from gh');
-		dateElement.addEventListener("change", () => {
-			const value = dateElement.value;
-			console.log(value);
+		dateElement.addEventListener("change", (event: any) => {
+			const value = event.target.value;
+			console.log('Change From gh', value);
 			setDate(value);
 			loadProducts(company, value);
 		});
+		dateElement.value = moment().format('YYYY-MM-DD');
 	} else {
 		console.log('Not found from gh');
 	}
