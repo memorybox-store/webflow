@@ -1,7 +1,7 @@
-import { 
+import {
 	EL_ID_FIND_FORM,
-	EL_ID_SELECT_BOAT, 
-	EL_ID_SELECT_COMPANY, 
+	EL_ID_SELECT_BOAT,
+	EL_ID_SELECT_COMPANY,
 	EL_ID_SELECT_TRIP_DATE
 } from "../constants/elements";
 
@@ -143,14 +143,25 @@ export const ProductListener = (): void => {
 
 	const dateElement: any = document.getElementById(EL_ID_SELECT_TRIP_DATE);
 	if (dateElement) {
-		console.log('Found from gh');
-		dateElement.addEventListener("change", (event: any) => {
-			const value = event.target.value;
-			console.log('Change From gh', value);
-			setDate(value);
-			loadProducts(company, value);
+		// Create a MutationObserver
+		const observer = new MutationObserver(function (mutationsList) {
+			for (const mutation of mutationsList) {
+				if (mutation.type === 'attributes' && mutation.attributeName === 'value') {
+					// The value attribute of the input element has changed
+					const value = dateElement.value;
+					if (moment(value, 'YYYY-MM-DD', true).isValid()) {
+						console.log('Change From gh', value);
+						setDate(value);
+						loadProducts(company, value);
+					}
+				}
+			}
 		});
-		dateElement.value = moment().format('YYYY-MM-DD');
+
+		observer.observe(dateElement, { attributes: true, attributeFilter: ['value'] });
+
+		dateElement.setAttribute('value', moment().format('YYYY-MM-DD'));
+
 	} else {
 		console.log('Not found from gh');
 	}
@@ -167,10 +178,10 @@ export const ProductListener = (): void => {
 			if (boatElement) {
 				const value = boatElement.value;
 				if (value) {
-					alert('Please select boat');			
+					alert('Please select boat');
 				} else {
-					location.href = './result'  + "?fid=" + value + "&mid=";
-				}		
+					location.href = './result' + "?fid=" + value + "&mid=";
+				}
 			}
 
 		});
