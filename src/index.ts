@@ -1,47 +1,96 @@
-import { LoginEvent } from './events/LoginEvent';
-import { LogoutEvent } from './events/LogoutEvent';
-import { ScanEvent } from './events/ScanEvent';
-import { Profile } from './models/UserModel';
-import UserService from './services/UserService';
+import {
+  EL_ID_CART_BADGE
+} from './constants/elements';
 
-var profile: Profile = null;
+import { getCartItems } from './api/cart';
+import { authen, retrieveProfile, signout } from './api/user';
+
+import { LoginListener } from './eventListeners/LoginListener';
+import { LogoutListener } from './eventListeners/LogoutListener';
+import { ScanListener } from './eventListeners/ScanListener';
+
+import { Profile } from './models/user';
+import { ProductListener } from './eventListeners/ProductListener';
 
 const publicUrls = [
   '/',
   '/log-in',
 ];
 
+var profile: Profile = null;
+var cartItems: Array<any> = [];
+
 const setProfile = (data: Profile) => {
   profile = data;
   console.log(profile);
 }
 
-const initialize = () => {
-  const path: string = window.location.pathname;
-  UserService.authen().then(() => {
-    if (path === '/log-in') {
-      location.href = './finder';
+const setCartItems = (data: Array<any>) => {
+  cartItems = data;
+  const element = document.getElementById(EL_ID_CART_BADGE);
+  if (element) {
+    element.textContent = data.length.toString();
+    if (data.length <= 0) {
+      element.style.display = 'none';
     } else {
-      UserService.profile().then((data: Profile) => {
-        setProfile(data);
-      }).catch((message) => {
-        alert(message);
+      element.style.display = '';
+    }
+  }
+}
+
+const checkAuthen = () => {
+  return new Promise(async (resolve) => {
+    let result: boolean = false;
+    const path: string = window.location.pathname;
+    await authen().then(async () => {
+      if (path === '/log-in') {
+        location.href = './finder';
+      } else {
+        await retrieveProfile().then((data: Profile) => {
+          setProfile(data);
+          result = true;
+        }).catch((message) => {
+          alert(message);
+        });
+      }
+    }).catch(async () => {
+      await signout().catch((message?) => {
+        alert(message || '');
       });
-    }
-  }).catch(async () => {
-    await UserService.signout().catch((message?) => {
-      alert(message || '');
+      setProfile(null);
+      if (!publicUrls.includes(path)) {
+        location.href = './log-in';
+      }
     });
-    setProfile(null);
-    if (!publicUrls.includes(path)) {
-      location.href = './log-in';
-    }
+    resolve(result);
   });
 }
 
+const loadCart = () => {
+  return new Promise(async (resolve) => {
+    const path: string = window.location.pathname;
+    await getCartItems().then(async (data: Array<any>) => {
+      console.log(data);
+      setCartItems(data);
+      resolve(data);
+    }).catch((error) => {
+      alert(error);
+    });
+  });
+}
+
+const initialize = () => {
+  LoginListener(setProfile);
+  LogoutListener(setProfile);
+  ScanListener();
+  checkAuthen().then((result: boolean) => {
+    if (result) {
+      loadCart();
+      ProductListener();
+    }
+  })
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  LoginEvent(setProfile);
-  LogoutEvent(setProfile);
-  // ScanEvent();
   initialize();
 });
