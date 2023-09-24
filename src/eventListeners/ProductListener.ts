@@ -162,10 +162,16 @@ export const ProductListener = (): void => {
 
 		dateElement.setAttribute('value', moment().format('YYYY-MM-DD'));
 
-	} else {
-		console.log('Not found from gh');
 	}
 
+	const boatElement: any = document.getElementById(EL_ID_SELECT_COMPANY);
+	if (boatElement) {
+		boatElement.addEventListener("change", (event: any) => {
+			const value = event.target.value;
+			setBoat(value);
+			loadProducts(value, date);
+		});
+	}
 
 	const form = document.getElementById(EL_ID_FIND_FORM);
 	if (form) {
@@ -174,14 +180,10 @@ export const ProductListener = (): void => {
 			event.preventDefault();
 			event.stopPropagation();
 
-			const boatElement: any = document.getElementById(EL_ID_SELECT_BOAT);
-			if (boatElement) {
-				const value = boatElement.value;
-				if (value) {
-					alert('Please select boat');
-				} else {
-					location.href = './result' + "?fid=" + value + "&mid=";
-				}
+			if (boat) {
+				alert('Please select boat');
+			} else {
+				location.href = './result' + "?fid=" + boat + "&mid=";
 			}
 
 		});
