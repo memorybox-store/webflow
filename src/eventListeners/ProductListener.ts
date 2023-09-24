@@ -164,7 +164,7 @@ export const ProductListener = (): void => {
 
 	}
 
-	const boatElement: any = document.getElementById(EL_ID_SELECT_COMPANY);
+	const boatElement: any = document.getElementById(EL_ID_SELECT_BOAT);
 	if (boatElement) {
 		boatElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
