@@ -20,19 +20,36 @@ export const ProductListener = (): void => {
 		}
 	];
 
+	let boatOptions: Array<any> = [
+		{
+			value: '',
+			text: 'Boat...'
+		}
+	];
+
 	let company: string = '';
 	const setCompany = (data: string = '') => {
 		company = data;
+	}
+	const getCompany = () => {
+		return company;
 	}
 
 	let date: string = moment().format();
 	const setDate = (data: string = moment().format()) => {
 		date = data;
 	}
+	const getDate = () => {
+		return date;
+	}
 
 	let boat: string = '';
 	const setBoat = (data: string = '') => {
 		boat = data;
+		console.log('setBoat', boat);
+	}
+	const getBoat = () => {
+		return boat;
 	}
 
 	const setCompanies = (data: Company[]) => {
@@ -72,7 +89,7 @@ export const ProductListener = (): void => {
 	}
 
 	const setProducts = (data: Company[]) => {
-		companyOptions = [
+		boatOptions = [
 			{
 				value: '',
 				text: 'Boat...'
@@ -96,7 +113,7 @@ export const ProductListener = (): void => {
 				}
 				if (commonNodes.length) {
 					const optionElementTemplate = commonNodes[0];
-					for (const option of companyOptions) {
+					for (const option of boatOptions) {
 						const clonedElement: any = optionElementTemplate.cloneNode(true);
 						clonedElement.setAttribute('value', option.value);
 						clonedElement.textContent = option.text;
@@ -173,11 +190,13 @@ export const ProductListener = (): void => {
 
 	const form = document.getElementById(EL_ID_FIND_FORM);
 	if (form) {
+		console.log('Found Form', form);
 		form.addEventListener('submit', (event) => {
 
 			event.preventDefault();
 			event.stopPropagation();
 
+			console.log('Boat', boat);
 			if (boat) {
 				location.href = './result' + "?fid=" + boat + "&mid=";
 			} else {
