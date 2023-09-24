@@ -150,7 +150,6 @@ export const ProductListener = (): void => {
 					// The value attribute of the input element has changed
 					const value = dateElement.value;
 					if (moment(value, 'YYYY-MM-DD', true).isValid()) {
-						console.log('Change From gh', value);
 						setDate(value);
 						loadProducts(company, value);
 					}
@@ -180,9 +179,9 @@ export const ProductListener = (): void => {
 			event.stopPropagation();
 
 			if (boat) {
-				alert('Please select boat');
-			} else {
 				location.href = './result' + "?fid=" + boat + "&mid=";
+			} else {
+				alert('Please select boat');
 			}
 
 		});
