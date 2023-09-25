@@ -7,11 +7,11 @@ import {
 
 import moment from '../config/moment';
 
-import { getCompanies, getProducts } from "../api/product";
+import { getCompanies, getBoats } from "../api/sale";
 
-import { Company } from "../models/product";
+import { Company } from "../models/sale";
 
-export const ProductListener = (): void => {
+export const SearchListener = (): void => {
 
 	let companyOptions: Array<any> = [
 		{
@@ -28,29 +28,10 @@ export const ProductListener = (): void => {
 	];
 
 	let company: string = '';
-	const setCompany = (data: string = '') => {
-		company = data;
-	}
-	const getCompany = () => {
-		return company;
-	}
 
 	let date: string = moment().format();
-	const setDate = (data: string = moment().format()) => {
-		date = data;
-	}
-	const getDate = () => {
-		return date;
-	}
 
 	let boat: string = '';
-	const setBoat = (data: string = '') => {
-		boat = data;
-		console.log('setBoat', boat);
-	}
-	const getBoat = () => {
-		return boat;
-	}
 
 	const setCompanies = (data: Company[]) => {
 		companyOptions = [
@@ -88,7 +69,7 @@ export const ProductListener = (): void => {
 		}
 	}
 
-	const setProducts = (data: Company[]) => {
+	const setBoats = (data: Company[]) => {
 		boatOptions = [
 			{
 				value: '',
@@ -136,11 +117,11 @@ export const ProductListener = (): void => {
 		});
 	}
 
-	const loadProducts = (companyId: string, tripDate: string) => {
+	const loadBoats = (companyId: string, tripDate: string) => {
 		return new Promise(async (resolve) => {
-			await getProducts(companyId, tripDate).then(async (data: Array<any>) => {
+			await getBoats(companyId, tripDate).then(async (data: Array<any>) => {
 				console.log(data);
-				setProducts(data);
+				setBoats(data);
 				resolve(data);
 			}).catch((error) => {
 				alert(error);
@@ -153,8 +134,8 @@ export const ProductListener = (): void => {
 		loadCompanies();
 		companyElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
-			setCompany(value);
-			loadProducts(value, date);
+			company = value;
+			loadBoats(value, date);
 		});
 	}
 
@@ -167,14 +148,30 @@ export const ProductListener = (): void => {
 					// The value attribute of the input element has changed
 					const value = dateElement.value;
 					if (moment(value, 'YYYY-MM-DD', true).isValid()) {
-						setDate(value);
-						loadProducts(company, value);
+						date = value;
+						loadBoats(company, value);
 					}
 				}
 			}
 		});
 
 		observer.observe(dateElement, { attributes: true, attributeFilter: ['value'] });
+
+		dateElement.addEventListener("change", (event: any) => {
+			const value = event.target.value;
+			if (moment(value, 'YYYY-MM-DD', true).isValid() && value !== date) {
+				date = value;
+				dateElement.setAttribute('value', value);
+			}
+		});
+
+		dateElement.addEventListener("input", (event: any) => {
+			const value = event.target.value;
+			if (moment(value, 'YYYY-MM-DD', true).isValid() && value !== date) {
+				date = value;
+				dateElement.setAttribute('value', value);
+			}
+		});
 
 		dateElement.setAttribute('value', moment().format('YYYY-MM-DD'));
 
@@ -184,7 +181,7 @@ export const ProductListener = (): void => {
 	if (boatElement) {
 		boatElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
-			setBoat(value);
+			boat = value;
 		});
 	}
 

@@ -7,7 +7,7 @@ import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 
-import { Company, Product } from '../models/product';
+import { Company, Boat } from '../models/sale';
 
 export const getCompanies = async () => {
   return new Promise(async (resolve, reject) => {
@@ -53,7 +53,7 @@ export const getCompanies = async () => {
   });
 }
 
-export const getProducts = async (compId: string, date: string) => {
+export const getBoats = async (compId: string, date: string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
       comp_id: compId,
@@ -72,7 +72,7 @@ export const getProducts = async (compId: string, date: string) => {
       if (response.data) {
         if (response.data.Status === 'Success') {
           const data: Array<any> = response.data.Data;
-          const products: Product[] = data.map((item: any) => (
+          const boats: Boat[] = data.map((item: any) => (
             {
               id: item.a1,
               name: item.a3,
@@ -80,8 +80,8 @@ export const getProducts = async (compId: string, date: string) => {
               createdAt: item.a4
             }
           ));
-          console.log(products);
-          resolve(products);
+          console.log(boats);
+          resolve(boats);
         } else {
           reject(response.data.Message);
         }

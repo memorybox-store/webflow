@@ -10,7 +10,7 @@ import { LogoutListener } from './eventListeners/LogoutListener';
 import { ScanListener } from './eventListeners/ScanListener';
 
 import { Profile } from './models/user';
-import { ProductListener } from './eventListeners/ProductListener';
+import { SearchListener } from './eventListeners/SearchListener';
 
 const publicUrls = [
   '/',
@@ -86,7 +86,7 @@ const initialize = () => {
   checkAuthen().then((result: boolean) => {
     if (result) {
       loadCart();
-      ProductListener();
+      SearchListener();
     }
   })
 }
