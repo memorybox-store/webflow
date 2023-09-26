@@ -8,4 +8,4 @@ export const EL_ID_CART_BADGE = 'cart-items-badge';
 export const EL_CLASS_CART_FORM = 'w-commerce-commercecartform';
 export const EL_CLASS_CART_LIST = 'w-commerce-commercecartlist';
 export const EL_CLASS_CART_AMOUNT = 'w-commerce-commercecartordervalue';
-export const EL_CLASS_CART_STATUS = 'w-commerce-commercecartemptystate';
+export const EL_CLASS_CART_EMPTY = 'w-commerce-commercecartemptystate';
