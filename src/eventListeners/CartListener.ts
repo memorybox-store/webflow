@@ -34,65 +34,55 @@ const updateCartBadge = (data: Array<any>) => {
 };
 
 const updateCartList = (data: Array<any>) => {
-  const forms: HTMLCollectionOf<HTMLElement>
+
+  const formElements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_FORM) as HTMLCollectionOf<HTMLElement>;
-  if (forms && forms.length) {
-    console.log(forms);
-    for (const [_, node] of Object.entries(forms)) {
-      const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
-      replacedElement.removeAttribute('data-node-type');
-      replacedElement.style.display = data.length ? 'flex' : 'none';
-      node.parentNode.replaceChild(replacedElement, node);
-      console.log(node);
-    }
-  }
-  const emptyElements: HTMLCollectionOf<HTMLElement>
-    = document.getElementsByClassName(EL_CLASS_CART_EMPTY) as HTMLCollectionOf<HTMLElement>;
-  if (emptyElements && emptyElements.length) {
-    console.log(emptyElements);
-    for (const [_, node] of Object.entries(emptyElements)) {
-      const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
-      replacedElement.removeAttribute('data-wf-collection');
-      replacedElement.removeAttribute('data-wf-template-id');
-      replacedElement.style.display = data.length ? 'none' : 'flex';
-      node.parentNode.replaceChild(replacedElement, node);
-      console.log(node);
-    }
-  }
-  const elements: HTMLCollectionOf<HTMLElement>
-    = document.getElementsByClassName(EL_CLASS_CART_LIST) as HTMLCollectionOf<HTMLElement>;
-  if (elements && elements.length) {
-    console.log(elements);
-    for (const [_, node] of Object.entries(elements)) {
-      console.log(node);
-      const container: HTMLElement = document.createElement('div');
-      const innerHTML = data.reduce((result: any, item: any) => {
-        return `
-          ${result} 
-          ${cartItemTemplate
-            .replace('{{cartImage}}', item.product?.image || '')
-            .replace('{{cartId}}', item.id.toString())
-            .replace('{{cartName}}', item.product?.name || '')
-            .replace('{{cartCompany}}', item.product?.company?.name || '')
-            .replace('{{cartPrice}}', item.product?.price || '')
-          }`;
-      }, '');
-      container.innerHTML = innerHTML;
-      if (node) {
-        
-        const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+  if (formElements && formElements.length) {
+    console.log(formElements);
+    for (const [_, formNode] of Object.entries(formElements)) {
 
-        if (replacedElement.hasChildNodes()) {
-          const childNodes: Array<any> = Object.entries(replacedElement.childNodes).map(
-            ([_, childNode]) => childNode
-          );
-          for (const childNode of childNodes) {
-            replacedElement.removeChild(childNode);
+      const formElement: HTMLElement = formNode.cloneNode(true) as HTMLElement;
+      formElement.removeAttribute('data-node-type');
+      formElement.style.display = data.length ? 'flex' : 'none';
+
+      const listElements: HTMLCollectionOf<HTMLElement>
+        = formElement.getElementsByClassName(EL_CLASS_CART_LIST) as HTMLCollectionOf<HTMLElement>;
+      if (listElements && listElements.length) {
+        console.log(listElements);
+        for (const [_, listNode] of Object.entries(listElements)) {
+          console.log(listNode);
+
+          const itemsContainer: HTMLElement = document.createElement('div');
+          const itemsHTML = data.reduce((result: any, item: any) => {
+            return `
+              ${result} 
+              ${cartItemTemplate
+                .replace('{{cartImage}}', item.product?.image || '')
+                .replace('{{cartId}}', item.id.toString())
+                .replace('{{cartName}}', item.product?.name || '')
+                .replace('{{cartCompany}}', item.product?.company?.name || '')
+                .replace('{{cartPrice}}', item.product?.price || '')
+              }`;
+          }, '');
+          itemsContainer.innerHTML = itemsHTML;
+
+          const listElement: HTMLElement = listNode.cloneNode(true) as HTMLElement;
+          listElement.removeAttribute('data-wf-collection');
+          listElement.removeAttribute('data-wf-template-id');
+
+          if (listElement.hasChildNodes()) {
+            const childNodes: Array<any> = Object.entries(listElement.childNodes).map(
+              ([_, childNode]) => childNode
+            );
+            for (const childNode of childNodes) {
+              listElement.removeChild(childNode);
+            }
           }
-        }
 
-        replacedElement.appendChild(container);
-        node.parentNode.replaceChild(replacedElement, node);
+          listElement.appendChild(itemsContainer);
+          listNode.parentNode.replaceChild(listElement, listNode);
+
+        }
 
         const removeElements: HTMLCollectionOf<HTMLElement>
           = document.getElementsByClassName('cart-remove-button') as HTMLCollectionOf<HTMLElement>;
@@ -114,9 +104,28 @@ const updateCartList = (data: Array<any>) => {
             });
           }
         }
+        
       }
+
+      formNode.parentNode.replaceChild(formElement, formNode);
+      console.log(formNode);
     }
   }
+
+  const emptyElements: HTMLCollectionOf<HTMLElement>
+    = document.getElementsByClassName(EL_CLASS_CART_EMPTY) as HTMLCollectionOf<HTMLElement>;
+  if (emptyElements && emptyElements.length) {
+    console.log(emptyElements);
+    for (const [_, emptyNode] of Object.entries(emptyElements)) {
+      const emptyElement: HTMLElement = emptyNode.cloneNode(true) as HTMLElement;
+      emptyElement.removeAttribute('data-wf-collection');
+      emptyElement.removeAttribute('data-wf-template-id');
+      emptyElement.style.display = data.length ? 'none' : 'flex';
+      emptyNode.parentNode.replaceChild(emptyElement, emptyNode);
+      console.log(emptyNode);
+    }
+  }
+  
 }
 
 const updateCartAmount = async (data: Array<any>) => {
