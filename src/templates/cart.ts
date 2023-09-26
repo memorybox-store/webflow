@@ -6,7 +6,7 @@ export const cartItemTemplate = `
     <p style="margin: 0;">{{cartCompany}}</p>
     <p style="margin: 0;">฿ {{cartPrice}} THB</p>
     <p style="margin: 10px 0 0;">
-      <a href="#" class="cart-remove-button" data-target="{{cartId}}" data-name="{{cartName}}">
+      <a href="#" class="cart-remove-button" data-target="{{cartId}}" data-name="{{cartNamePrompt}}">
         Remove
       </a>
     </p>

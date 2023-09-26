@@ -69,6 +69,7 @@ const updateCartList = (data: Array<any>) => {
                 .replace('{{cartImage}}', item.product?.image || '')
                 .replace('{{cartId}}', item.id.toString())
                 .replace('{{cartName}}', item.product?.name || '')
+                .replace('{{cartNamePrompt}}', item.product?.name || '')
                 .replace('{{cartCompany}}', item.product?.company?.name || '')
                 .replace('{{cartPrice}}', item.product?.price || '')
               }`;
