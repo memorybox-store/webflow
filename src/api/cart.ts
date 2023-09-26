@@ -180,7 +180,7 @@ export const addItemToCart = async (
   });
 }
 
-export const removeItemToCart = async (cartId: number | string) => {
+export const removeItemFromCart = async (cartId: number | string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
       cart_id: parseInt(cartId.toString())

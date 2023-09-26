@@ -8,9 +8,19 @@ import {
 } from "../constants/elements";
 import { cartItemTemplate, cartModalTemplate } from "../templates/cart";
 
-import { getCartItems } from "../api/cart";
+import { getCartItems, removeItemFromCart } from "../api/cart";
 
 var cartItems: Array<any> = [];
+
+const removeCartItem = (cartId: string) => {
+  return new Promise(async (resolve) => {
+    await removeItemFromCart(cartId).then(async (data: Array<any>) => {
+      resolve(data);
+    }).catch((error) => {
+      alert(error);
+    });
+  });
+}
 
 const updateCartBadge = (data: Array<any>) => {
   const element: HTMLElement
@@ -20,7 +30,7 @@ const updateCartBadge = (data: Array<any>) => {
   }
 };
 
-const updateCartList = (data: Array<any>) => {
+const updateCartList = async (data: Array<any>) => {
   const forms: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_FORM) as HTMLCollectionOf<HTMLElement>;
   if (forms && forms.length) {
@@ -54,7 +64,7 @@ const updateCartList = (data: Array<any>) => {
           ${result} 
           ${cartItemTemplate
             .replace('{{cartImage}}', item.product?.image || '')
-            .replace('{{cartId}}', item.id)
+            .replace('{{cartId}}', item.id.toString())
             .replace('{{cartName}}', item.product?.name || '')
             .replace('{{cartCompany}}', item.product?.company?.name || '')
             .replace('{{cartPrice}}', item.product?.price || '')
@@ -62,7 +72,31 @@ const updateCartList = (data: Array<any>) => {
       }, '');
       container.innerHTML = innerHTML;
       if (node) {
+        if (node.hasChildNodes()) {
+          const childNodes: Array<any> = Object.entries(node.childNodes).map(
+            ([_, childNode]) => childNode
+          );
+          for (const childNode of childNodes) {
+            await node.removeChild(childNode);
+          }
+        }
         node.appendChild(container);
+        const removeElements: HTMLCollectionOf<HTMLElement>
+          = document.getElementsByClassName('cart-remove-button') as HTMLCollectionOf<HTMLElement>;
+        if (removeElements && removeElements.length) {
+          for (const [_, removeNode] of Object.entries(removeElements)) {
+            removeNode.addEventListener('click', async () => {
+              const cartId = removeNode.getAttribute('data-target');
+              removeCartItem(cartId).then(() => {
+                updateCartBadge(data);
+                updateCartList(data);
+                updateCartAmount(data);
+              }).catch((error) => {
+                alert(error);
+              });
+            });
+          }
+        }
       }
     }
   }
@@ -76,9 +110,10 @@ const updateCartAmount = (data: Array<any>) => {
     for (const [_, node] of Object.entries(elements)) {
       console.log(node);
       if (data.length) {
-        node.textContent = data.reduce((result: number, item: any) => {
-          return result + (item.price || 0);
-        }, 0).toString();
+        node.textContent = `฿ ${data.reduce((result: number, item: any) => {
+          return result + (item.product?.price || 0);
+        }, 0).toString()
+          } THB`;
       } else {
         node.textContent = '฿ 0 THB';
       }
@@ -95,7 +130,7 @@ export const updateCartItems = (data: Array<any>) => {
 
 export const CartListener = (): void => {
 
-  const setCartItems = (data: Array<any>) => {
+  const setItemsCount = (data: Array<any>) => {
     cartItems = data;
     const element: HTMLElement
       = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
@@ -110,11 +145,11 @@ export const CartListener = (): void => {
     updateCartAmount(data);
   }
 
-  const loadCart = () => {
+  const load = () => {
     return new Promise(async (resolve) => {
       await getCartItems().then(async (data: Array<any>) => {
         console.log('CART', data);
-        setCartItems(data);
+        setItemsCount(data);
         resolve(data);
       }).catch((error) => {
         alert(error);
@@ -142,7 +177,7 @@ export const CartListener = (): void => {
   const element: HTMLElement
     = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
-    loadCart();
+    load();
     // createCartModal();
   }
 
