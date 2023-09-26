@@ -10,6 +10,7 @@ export const CartListener = (): void => {
     cartItems = data;
     const element = document.getElementById(EL_ID_CART_BADGE);
     if (element) {
+      element.removeAttribute('data-wf-bindings');
       const replacedElement: any = element.cloneNode(true);
       replacedElement.textContent = data.length.toString();
       element.parentNode.replaceChild(replacedElement, element);
