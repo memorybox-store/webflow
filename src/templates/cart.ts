@@ -1,4 +1,4 @@
-export const testTemplate = `
+export const cartItem = `
 <span>999999999999</span>
 `;
 

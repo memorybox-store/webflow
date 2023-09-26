@@ -1,6 +1,6 @@
 import { getCartItems } from "../api/cart";
 import { EL_ID_CART_BADGE } from "../constants/elements";
-import { cartModalTemplate, testTemplate } from "../templates/cart";
+import { cartModalTemplate } from "../templates/cart";
 
 export const CartListener = (): void => {
 
@@ -10,16 +10,9 @@ export const CartListener = (): void => {
     cartItems = data;
     const element = document.getElementById(EL_ID_CART_BADGE);
     if (element) {
-      element.removeAttribute('data-wf-bindings');
       const replacedElement: any = element.cloneNode(true);
-      element.style.opacity = '0';
-      replacedElement.style.pointerEvents = 'none';
-      replacedElement.style.position = 'absolute';
-      replacedElement.style.top = '0';
-      replacedElement.style.left = '0';
       replacedElement.textContent = data.length.toString();
-      console.log('CARTS', data.length.toString());
-      element.parentNode.append(replacedElement);
+      element.parentNode.replaceChild(replacedElement, element);
     }
   }
 
