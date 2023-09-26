@@ -59,6 +59,7 @@ export const getCartItems = async () => {
             }
             const product: Product = {
               id: item.slist_id,
+              itemId: item.fitem_id,
               name: item.slist_name,
               description: null,
               tag: null,
@@ -149,6 +150,7 @@ export const addItemToCart = async (
             }
             const product: Product = {
               id: item.slist_id,
+              itemId: item.fitem_id,
               name: item.slist_name,
               description: null,
               tag: null,

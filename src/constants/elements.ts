@@ -10,3 +10,4 @@ export const EL_CLASS_CART_LIST = 'w-commerce-commercecartlist';
 export const EL_CLASS_CART_AMOUNT = 'w-commerce-commercecartordervalue';
 export const EL_CLASS_CART_EMPTY = 'w-commerce-commercecartemptystate';
 export const EL_CLASS_CART_ERROR = 'w-commerce-commercecarterrorstate'
+export const EL_ID_FACESCAN_UPLOADER = 'facescan-uploader';

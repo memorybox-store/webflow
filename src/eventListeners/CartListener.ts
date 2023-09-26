@@ -13,12 +13,12 @@ import { getCartItems, removeItemFromCart } from "../api/cart";
 var cartItems: Array<any> = [];
 
 const removeCartItem = (cartId: string, cartName: string) => {
-  return new Promise(async (resolve) => {
+  return new Promise(async (resolve, reject) => {
     if (confirm(`Do you want to remove "${cartName}" from cart?`)) {
       await removeItemFromCart(cartId).then(async (data: Array<any>) => {
         resolve(data);
       }).catch((error) => {
-        alert(error);
+        reject(error);
       });
     }
   });

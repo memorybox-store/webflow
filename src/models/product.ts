@@ -2,6 +2,7 @@ import { Boat, Company } from "./sale";
 
 export interface Product {
   id: string | null;
+  itemId: string | null;
   name: string | null;
   description: string | null;
   tag: string | null;

@@ -51,6 +51,7 @@ export const getProducts = async (boatId: string) => {
             };
             const product: Product = {
               id: item.slist_id,
+              itemId: item.fitem_id,
               name: item.slist_name,
               description: item.slist_details,
               tag: item.Tag,

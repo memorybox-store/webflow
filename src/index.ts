@@ -24,6 +24,7 @@ const checkAuthen = () => {
   return new Promise(async (resolve) => {
     let result: boolean = false;
     const path: string = window.location.pathname;
+    console.log(path);
     await authen().then(async () => {
       if (path === '/log-in') {
         location.href = './finder';
