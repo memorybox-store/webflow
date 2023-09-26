@@ -1,3 +1,12 @@
+import { 
+  EL_ID_RESULT_CONTAINER, 
+  EL_ID_RESULT_SAMPLE, 
+  EL_ID_RESULT_SUM_MY_PIC, 
+  EL_ID_RESULT_SUM_TOTAL, 
+  EL_ID_RESULT_SUM_BOAT, 
+  EL_ID_RESULT_SUM_COMPANY 
+} from "../constants/elements";
+
 import { addItemToCart, getCartItems } from "../api/cart";
 import { getProducts } from "../api/product";
 import { Product } from "../models/product";
@@ -18,19 +27,42 @@ export const ProductListener = (): void => {
   const load = (boatId: string) => {
     return new Promise(async (resolve) => {
 
-      const cardContainer = document.getElementById("cardContainer");
+      const cardContainer: HTMLElement
+        = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
       const sampleElement: HTMLElement
-        = document.getElementById('ModuleSample') as HTMLElement;
-      sampleElement.style.opacity = '0';
-      sampleElement.style.display = 'none';
+        = document.getElementById(EL_ID_RESULT_SAMPLE) as HTMLElement;
+      const cardElement: HTMLElement
+        = sampleElement.cloneNode(true) as HTMLElement;
+
+      sampleElement.classList.add("hidden-force");
+
+      const sumMyPicElement: HTMLElement
+        = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+      if (sumMyPicElement) {
+        sumMyPicElement.innerText = 'N/A';
+      }
+
+      const sumTotalElement: HTMLElement
+        = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
+      if (sumTotalElement) {
+        sumTotalElement.innerText = '0';
+      }
+
+      const sumBoatElement: HTMLElement
+        = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
+      if (sumBoatElement) {
+        sumBoatElement.innerText = '-';
+      }
+
+      const sumCompanyElement: HTMLElement
+        = document.getElementById(EL_ID_RESULT_SUM_COMPANY) as HTMLElement;
+      if (sumCompanyElement) {
+        sumCompanyElement.innerText = '-';
+      }
 
       await getProducts(boatId).then(async (data: Product[]) => {
         console.log('Product', data);
         for (let item of data) {
-
-          // Copy the card and it's style
-          const cardElement: HTMLElement
-            = sampleElement.cloneNode(true) as HTMLElement;
 
           cardElement.setAttribute('id', `product-${item.id}`);
           cardElement.style.opacity = '1';
@@ -41,8 +73,7 @@ export const ProductListener = (): void => {
             = cardElement.querySelector('img') as HTMLImageElement;
           imgElement.srcset = item.image;
           imgElement.src = item.image;
-
-          //card.querySelector('a[class="btn-primary small cart w-button"]').onclick = function(){alert(1)} //
+          
           const addButtonElements: HTMLCollectionOf<HTMLElement>
             = cardElement.getElementsByTagName('a') as HTMLCollectionOf<HTMLElement>;
           for (const [_, addNode] of Object.entries(addButtonElements)) {
@@ -56,26 +87,12 @@ export const ProductListener = (): void => {
 
         }
 
-        const sumMyPicElement: HTMLElement
-          = document.getElementById('myPic') as HTMLElement;
-        if (sumMyPicElement) {
-          sumMyPicElement.innerText = 'N/A';
-        }
-
-        const sumTotalElement: HTMLElement
-          = document.getElementById('totalPic') as HTMLElement;
         if (sumTotalElement) {
           sumTotalElement.innerText = data.length.toString();
         }
-
-        const sumBoatElement: HTMLElement
-          = document.getElementById('boatName') as HTMLElement;
         if (sumBoatElement) {
           sumBoatElement.innerText = data.length ? data[0].name : '-';
         }
-
-        const sumCompanyElement: HTMLElement
-          = document.getElementById('comp_id') as HTMLElement;
         if (sumCompanyElement) {
           sumCompanyElement.innerText = data.length ? data[0].company?.name : '-';
         }

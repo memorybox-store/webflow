@@ -7,6 +7,7 @@ import { ScanListener } from './eventListeners/ScanListener';
 import { Profile } from './models/user';
 import { SearchListener } from './eventListeners/SearchListener';
 import { CartListener } from './eventListeners/CartListener';
+import { ProductListener } from './eventListeners/ProductListener';
 
 const publicUrls = [
   '/',
@@ -57,6 +58,7 @@ const initialize = () => {
     if (result) {
       CartListener();
       SearchListener();
+      ProductListener();
     }
   })
 }
