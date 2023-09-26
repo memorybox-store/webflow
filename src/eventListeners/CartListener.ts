@@ -40,7 +40,7 @@ const updateCartList = async (data: Array<any>) => {
     console.log(forms);
     for (const [_, node] of Object.entries(forms)) {
       node.removeAttribute('data-node-type');
-      node.style.display = data.length ? 'flex !important' : 'none !important';
+      node.style.display = data.length ? 'flex' : 'none';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
@@ -53,7 +53,7 @@ const updateCartList = async (data: Array<any>) => {
     for (const [_, node] of Object.entries(emptyElements)) {
       node.removeAttribute('data-wf-collection');
       node.removeAttribute('data-wf-template-id');
-      node.style.display = data.length ? 'none !important' : 'flex !important';
+      node.style.display = data.length ? 'none' : 'flex';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
@@ -96,10 +96,14 @@ const updateCartList = async (data: Array<any>) => {
           for (const [_, removeNode] of Object.entries(removeElements)) {
             removeNode.addEventListener('click', async () => {
               const cartId = removeNode.getAttribute('data-target');
-              removeCartItem(cartId).then(() => {
-                updateCartBadge(data);
-                updateCartList(data);
-                updateCartAmount(data);
+              removeCartItem(cartId).then(async () => {
+                await getCartItems().then(async (updatedData: Array<any>) => {
+                  updateCartBadge(updatedData);
+                  updateCartList(updatedData);
+                  updateCartAmount(updatedData);
+                }).catch((error) => {
+                  alert(error);
+                });
               }).catch((error) => {
                 alert(error);
               });
