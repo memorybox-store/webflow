@@ -26,7 +26,10 @@ const updateCartBadge = (data: Array<any>) => {
   const element: HTMLElement
     = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
-    element.textContent = data.length.toString();
+    element.removeAttribute('data-wf-bindings');
+    const replacedElement: HTMLElement = element.cloneNode(true) as HTMLElement;
+    replacedElement.textContent = data.length.toString();
+    element.parentNode.replaceChild(replacedElement, element);
   }
 };
 
@@ -37,7 +40,10 @@ const updateCartList = async (data: Array<any>) => {
     console.log(forms);
     for (const [_, node] of Object.entries(forms)) {
       node.removeAttribute('data-node-type');
-      node.style.display = data.length ? 'flex' : 'none';
+      node.style.display = data.length ? 'flex !important' : 'none !important';
+      const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+      replacedElement.textContent = data.length.toString();
+      node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
     }
   }
@@ -48,7 +54,10 @@ const updateCartList = async (data: Array<any>) => {
     for (const [_, node] of Object.entries(emptyElements)) {
       node.removeAttribute('data-wf-collection');
       node.removeAttribute('data-wf-template-id');
-      node.style.display = data.length ? 'none' : 'flex';
+      node.style.display = data.length ? 'none !important' : 'flex !important';
+      const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+      replacedElement.textContent = data.length.toString();
+      node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
     }
   }
@@ -81,6 +90,9 @@ const updateCartList = async (data: Array<any>) => {
           }
         }
         node.appendChild(container);
+        const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+        replacedElement.textContent = data.length.toString();
+        node.parentNode.replaceChild(replacedElement, node);
         const removeElements: HTMLCollectionOf<HTMLElement>
           = document.getElementsByClassName('cart-remove-button') as HTMLCollectionOf<HTMLElement>;
         if (removeElements && removeElements.length) {
@@ -110,6 +122,7 @@ const updateCartAmount = (data: Array<any>) => {
     for (const [_, node] of Object.entries(elements)) {
       console.log(node);
       if (data.length) {
+        node.removeAttribute('data-wf-bindings');
         node.textContent = `฿ ${data.reduce((result: number, item: any) => {
           return result + (item.product?.price || 0);
         }, 0).toString()
@@ -130,16 +143,8 @@ export const updateCartItems = (data: Array<any>) => {
 
 export const CartListener = (): void => {
 
-  const setItemsCount = (data: Array<any>) => {
+  const initializeElements = (data: Array<any>) => {
     cartItems = data;
-    const element: HTMLElement
-      = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
-    if (element) {
-      element.removeAttribute('data-wf-bindings');
-      const replacedElement: HTMLElement = element.cloneNode(true) as HTMLElement;
-      replacedElement.textContent = data.length.toString();
-      element.parentNode.replaceChild(replacedElement, element);
-    }
     updateCartBadge(data);
     updateCartList(data);
     updateCartAmount(data);
@@ -149,7 +154,7 @@ export const CartListener = (): void => {
     return new Promise(async (resolve) => {
       await getCartItems().then(async (data: Array<any>) => {
         console.log('CART', data);
-        setItemsCount(data);
+        initializeElements(data);
         resolve(data);
       }).catch((error) => {
         alert(error);
