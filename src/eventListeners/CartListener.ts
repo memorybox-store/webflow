@@ -22,26 +22,26 @@ const removeCartItem = (cartId: string) => {
   });
 }
 
-const updateCartBadge = async (data: Array<any>) => {
+const updateCartBadge = (data: Array<any>) => {
   const element: HTMLElement
     = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
-    await element.removeAttribute('data-wf-bindings');
     const replacedElement: HTMLElement = element.cloneNode(true) as HTMLElement;
+    replacedElement.removeAttribute('data-wf-bindings');
     replacedElement.textContent = data.length.toString();
     element.parentNode.replaceChild(replacedElement, element);
   }
 };
 
-const updateCartList = async (data: Array<any>) => {
+const updateCartList = (data: Array<any>) => {
   const forms: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_FORM) as HTMLCollectionOf<HTMLElement>;
   if (forms && forms.length) {
     console.log(forms);
     for (const [_, node] of Object.entries(forms)) {
-      await node.removeAttribute('data-node-type');
-      node.style.display = data.length ? 'flex' : 'none';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+      replacedElement.removeAttribute('data-node-type');
+      replacedElement.style.display = data.length ? 'flex' : 'none';
       node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
     }
@@ -51,10 +51,10 @@ const updateCartList = async (data: Array<any>) => {
   if (emptyElements && emptyElements.length) {
     console.log(emptyElements);
     for (const [_, node] of Object.entries(emptyElements)) {
-      await node.removeAttribute('data-wf-collection');
-      await node.removeAttribute('data-wf-template-id');
-      node.style.display = data.length ? 'none' : 'flex';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+      replacedElement.removeAttribute('data-wf-collection');
+      replacedElement.removeAttribute('data-wf-template-id');
+      replacedElement.style.display = data.length ? 'none' : 'flex';
       node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
     }
@@ -79,17 +79,21 @@ const updateCartList = async (data: Array<any>) => {
       }, '');
       container.innerHTML = innerHTML;
       if (node) {
-        if (node.hasChildNodes()) {
-          const childNodes: Array<any> = Object.entries(node.childNodes).map(
+        
+        const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+
+        if (replacedElement.hasChildNodes()) {
+          const childNodes: Array<any> = Object.entries(replacedElement.childNodes).map(
             ([_, childNode]) => childNode
           );
           for (const childNode of childNodes) {
-            await node.removeChild(childNode);
+            replacedElement.removeChild(childNode);
           }
         }
-        node.appendChild(container);
-        const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+
+        replacedElement.appendChild(container);
         node.parentNode.replaceChild(replacedElement, node);
+
         const removeElements: HTMLCollectionOf<HTMLElement>
           = document.getElementsByClassName('cart-remove-button') as HTMLCollectionOf<HTMLElement>;
         if (removeElements && removeElements.length) {
@@ -122,15 +126,18 @@ const updateCartAmount = async (data: Array<any>) => {
     console.log(elements);
     for (const [_, node] of Object.entries(elements)) {
       console.log(node);
+      const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
+      replacedElement.removeAttribute('data-wf-bindings');
+      replacedElement.textContent = data.length.toString();
       if (data.length) {
-        await node.removeAttribute('data-wf-bindings');
-        node.textContent = `฿ ${data.reduce((result: number, item: any) => {
+        replacedElement.textContent = `฿ ${data.reduce((result: number, item: any) => {
           return result + (item.product?.price || 0);
         }, 0).toString()
           } THB`;
       } else {
-        node.textContent = '฿ 0 THB';
+        replacedElement.textContent = '฿ 0 THB';
       }
+      node.parentNode.replaceChild(replacedElement, node);
     }
   }
 }
