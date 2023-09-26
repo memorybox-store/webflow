@@ -12,13 +12,15 @@ import { getCartItems, removeItemFromCart } from "../api/cart";
 
 var cartItems: Array<any> = [];
 
-const removeCartItem = (cartId: string) => {
+const removeCartItem = (cartId: string, cartName: string) => {
   return new Promise(async (resolve) => {
-    await removeItemFromCart(cartId).then(async (data: Array<any>) => {
-      resolve(data);
-    }).catch((error) => {
-      alert(error);
-    });
+    if (confirm(`Do you want to remove "${cartName}" from cart?`)) {
+      await removeItemFromCart(cartId).then(async (data: Array<any>) => {
+        resolve(data);
+      }).catch((error) => {
+        alert(error);
+      });
+    }
   });
 }
 
@@ -91,13 +93,20 @@ const updateCartList = (data: Array<any>) => {
 
         }
 
-        const removeElements: HTMLCollectionOf<HTMLElement>
-          = document.getElementsByClassName('cart-remove-button') as HTMLCollectionOf<HTMLElement>;
-        if (removeElements && removeElements.length) {
-          for (const [_, removeNode] of Object.entries(removeElements)) {
-            removeNode.addEventListener('click', async () => {
-              const cartId = removeNode.getAttribute('data-target');
-              removeCartItem(cartId).then(async () => {
+      }
+
+      formNode.parentNode.replaceChild(formElement, formNode);
+
+
+      const removeElements: HTMLCollectionOf<HTMLElement>
+        = document.getElementsByClassName('cart-remove-button') as HTMLCollectionOf<HTMLElement>;
+      if (removeElements && removeElements.length) {
+        for (const [_, removeNode] of Object.entries(removeElements)) {
+          removeNode.addEventListener('click', async () => {
+            const cartId = removeNode.getAttribute('data-target');
+            if (cartId) {
+              const cartName = removeNode.getAttribute('data-name') || '';
+              removeCartItem(cartId, cartName).then(async () => {
                 await getCartItems().then(async (updatedData: Array<any>) => {
                   updateCartBadge(updatedData);
                   updateCartList(updatedData);
@@ -108,13 +117,11 @@ const updateCartList = (data: Array<any>) => {
               }).catch((error) => {
                 alert(error);
               });
-            });
-          }
+            }
+          });
         }
-        
       }
 
-      formNode.parentNode.replaceChild(formElement, formNode);
       console.log(formElement);
     }
   }
@@ -130,16 +137,16 @@ const updateCartList = (data: Array<any>) => {
       emptyElement.classList.remove("hidden-force");
       emptyElement.classList.remove("flex-force");
       if (data.length) {
-        emptyElement.classList.add("flex-force");
-      } else {
         emptyElement.classList.add("hidden-force");
+      } else {
+        emptyElement.classList.add("flex-force");
       }
       emptyNode.parentNode.replaceChild(emptyElement, emptyNode);
       console.log(data.length ? 'none' : 'flex');
       console.log(emptyElement);
     }
   }
-  
+
 }
 
 const updateCartAmount = async (data: Array<any>) => {
