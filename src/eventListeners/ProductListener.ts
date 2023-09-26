@@ -31,8 +31,6 @@ export const ProductListener = (): void => {
         = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
       const sampleElement: HTMLElement
         = document.getElementById(EL_ID_RESULT_SAMPLE) as HTMLElement;
-      const cardElement: HTMLElement
-        = sampleElement.cloneNode(true) as HTMLElement;
 
       sampleElement.classList.add("hidden-force");
 
@@ -63,6 +61,11 @@ export const ProductListener = (): void => {
       await getProducts(boatId).then(async (data: Product[]) => {
         console.log('Product', data);
         for (let item of data) {
+
+          const cardElement: HTMLElement
+            = sampleElement.cloneNode(true) as HTMLElement;
+
+          cardElement.classList.remove("hidden-force");
 
           cardElement.setAttribute('id', `product-${item.id}`);
           cardElement.style.opacity = '1';
@@ -106,6 +109,7 @@ export const ProductListener = (): void => {
               if (productId) {
                 const companyId = addNode.getAttribute('data-company');
                 const itemId = addNode.getAttribute('data-item');
+                console.log(productId, companyId, itemId);
                 add(productId, companyId, itemId).then(async () => {
                   await getCartItems().then(async (updatedData: Array<any>) => {
                     updateCartItems(updatedData);

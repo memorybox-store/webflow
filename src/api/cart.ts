@@ -92,8 +92,8 @@ export const getCartItems = async () => {
 }
 
 export const addItemToCart = async (
-  companyId: number | string,
   productId: number | string,
+  companyId: number | string,
   itemId: number | string,
   quantity: number
 ) => {
