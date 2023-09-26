@@ -43,7 +43,7 @@ const updateCartList = (data: Array<any>) => {
 
       const formElement: HTMLElement = formNode.cloneNode(true) as HTMLElement;
       formElement.removeAttribute('data-node-type');
-      formElement.style.display = data.length ? 'flex' : 'none';
+      formElement.setAttribute('style', `display: ${data.length ? 'flex' : 'none'}`);
 
       const listElements: HTMLCollectionOf<HTMLElement>
         = formElement.getElementsByClassName(EL_CLASS_CART_LIST) as HTMLCollectionOf<HTMLElement>;
@@ -120,7 +120,7 @@ const updateCartList = (data: Array<any>) => {
       const emptyElement: HTMLElement = emptyNode.cloneNode(true) as HTMLElement;
       emptyElement.removeAttribute('data-wf-collection');
       emptyElement.removeAttribute('data-wf-template-id');
-      emptyElement.style.display = data.length ? 'none' : 'flex';
+      emptyElement.setAttribute('style', `display: ${data.length ? 'none' : 'flex'}`);
       emptyNode.parentNode.replaceChild(emptyElement, emptyNode);
       console.log(emptyNode);
     }
