@@ -1,0 +1,7 @@
+.hidden-force {
+  display: none !important;
+}
+
+.flex-force {
+  display: flex !important;
+}

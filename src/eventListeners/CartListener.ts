@@ -43,8 +43,13 @@ const updateCartList = (data: Array<any>) => {
 
       const formElement: HTMLElement = formNode.cloneNode(true) as HTMLElement;
       formElement.removeAttribute('data-node-type');
-      formElement.style.display = data.length ? 'flex' : 'none';
-      formElement.setAttribute('style', `display: ${data.length ? 'flex' : 'none'}`);
+      formElement.classList.remove("hidden-force");
+      formElement.classList.remove("flex-force");
+      if (data.length) {
+        formElement.classList.add("flex-force");
+      } else {
+        formElement.classList.add("hidden-force");
+      }
       console.log(data.length ? 'flex' : 'none');
 
       const listElements: HTMLCollectionOf<HTMLElement>
@@ -122,8 +127,13 @@ const updateCartList = (data: Array<any>) => {
       const emptyElement: HTMLElement = emptyNode.cloneNode(true) as HTMLElement;
       emptyElement.removeAttribute('data-wf-collection');
       emptyElement.removeAttribute('data-wf-template-id');
-      emptyElement.style.display = data.length ? 'none' : 'flex';
-      emptyElement.setAttribute('style', `display: ${data.length ? 'none' : 'flex'}`);
+      emptyElement.classList.remove("hidden-force");
+      emptyElement.classList.remove("flex-force");
+      if (data.length) {
+        emptyElement.classList.add("flex-force");
+      } else {
+        emptyElement.classList.add("hidden-force");
+      }
       emptyNode.parentNode.replaceChild(emptyElement, emptyNode);
       console.log(data.length ? 'none' : 'flex');
       console.log(emptyElement);
