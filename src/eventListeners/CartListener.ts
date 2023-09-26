@@ -42,7 +42,6 @@ const updateCartList = async (data: Array<any>) => {
       node.removeAttribute('data-node-type');
       node.style.display = data.length ? 'flex !important' : 'none !important';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
-      replacedElement.textContent = data.length.toString();
       node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
     }
@@ -56,7 +55,6 @@ const updateCartList = async (data: Array<any>) => {
       node.removeAttribute('data-wf-template-id');
       node.style.display = data.length ? 'none !important' : 'flex !important';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
-      replacedElement.textContent = data.length.toString();
       node.parentNode.replaceChild(replacedElement, node);
       console.log(node);
     }
@@ -91,7 +89,6 @@ const updateCartList = async (data: Array<any>) => {
         }
         node.appendChild(container);
         const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
-        replacedElement.textContent = data.length.toString();
         node.parentNode.replaceChild(replacedElement, node);
         const removeElements: HTMLCollectionOf<HTMLElement>
           = document.getElementsByClassName('cart-remove-button') as HTMLCollectionOf<HTMLElement>;
