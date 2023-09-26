@@ -22,11 +22,11 @@ const removeCartItem = (cartId: string) => {
   });
 }
 
-const updateCartBadge = (data: Array<any>) => {
+const updateCartBadge = async (data: Array<any>) => {
   const element: HTMLElement
     = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
-    element.removeAttribute('data-wf-bindings');
+    await element.removeAttribute('data-wf-bindings');
     const replacedElement: HTMLElement = element.cloneNode(true) as HTMLElement;
     replacedElement.textContent = data.length.toString();
     element.parentNode.replaceChild(replacedElement, element);
@@ -39,7 +39,7 @@ const updateCartList = async (data: Array<any>) => {
   if (forms && forms.length) {
     console.log(forms);
     for (const [_, node] of Object.entries(forms)) {
-      node.removeAttribute('data-node-type');
+      await node.removeAttribute('data-node-type');
       node.style.display = data.length ? 'flex' : 'none';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       node.parentNode.replaceChild(replacedElement, node);
@@ -51,8 +51,8 @@ const updateCartList = async (data: Array<any>) => {
   if (emptyElements && emptyElements.length) {
     console.log(emptyElements);
     for (const [_, node] of Object.entries(emptyElements)) {
-      node.removeAttribute('data-wf-collection');
-      node.removeAttribute('data-wf-template-id');
+      await node.removeAttribute('data-wf-collection');
+      await node.removeAttribute('data-wf-template-id');
       node.style.display = data.length ? 'none' : 'flex';
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       node.parentNode.replaceChild(replacedElement, node);
@@ -115,7 +115,7 @@ const updateCartList = async (data: Array<any>) => {
   }
 }
 
-const updateCartAmount = (data: Array<any>) => {
+const updateCartAmount = async (data: Array<any>) => {
   const elements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_AMOUNT) as HTMLCollectionOf<HTMLElement>;
   if (elements && elements.length) {
@@ -123,7 +123,7 @@ const updateCartAmount = (data: Array<any>) => {
     for (const [_, node] of Object.entries(elements)) {
       console.log(node);
       if (data.length) {
-        node.removeAttribute('data-wf-bindings');
+        await node.removeAttribute('data-wf-bindings');
         node.textContent = `฿ ${data.reduce((result: number, item: any) => {
           return result + (item.product?.price || 0);
         }, 0).toString()
