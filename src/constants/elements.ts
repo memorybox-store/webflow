@@ -9,3 +9,4 @@ export const EL_CLASS_CART_FORM = 'w-commerce-commercecartform';
 export const EL_CLASS_CART_LIST = 'w-commerce-commercecartlist';
 export const EL_CLASS_CART_AMOUNT = 'w-commerce-commercecartordervalue';
 export const EL_CLASS_CART_EMPTY = 'w-commerce-commercecartemptystate';
+export const EL_CLASS_CART_ERROR = 'w-commerce-commercecarterrorstate'

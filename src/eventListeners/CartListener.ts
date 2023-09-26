@@ -26,8 +26,9 @@ const updateCartList = (data: Array<any>) => {
   if (forms && forms.length) {
     console.log(forms);
     for (const [_, node] of Object.entries(forms)) {
+      node.removeAttribute('data-node-type');
+      node.style.display = data.length ? 'flex' : 'none';
       console.log(node);
-      node.style.display = data.length ? 'flex !important' : 'none !important';
     }
   }
   const emptyElements: HTMLCollectionOf<HTMLElement>
@@ -35,8 +36,10 @@ const updateCartList = (data: Array<any>) => {
   if (emptyElements && emptyElements.length) {
     console.log(emptyElements);
     for (const [_, node] of Object.entries(emptyElements)) {
+      node.removeAttribute('data-wf-collection');
+      node.removeAttribute('data-wf-template-id');
+      node.style.display = data.length ? 'none' : 'flex';
       console.log(node);
-      node.style.display = data.length ? 'none !important' : 'flex !important';
     }
   }
   const elements: HTMLCollectionOf<HTMLElement>
