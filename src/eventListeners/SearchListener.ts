@@ -46,10 +46,13 @@ export const SearchListener = (): void => {
 				}
 			))
 		];
-		const element = document.getElementById(EL_ID_SELECT_COMPANY);
+		const element: HTMLSelectElement
+			= document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 		if (element) {
 			if (element.hasChildNodes()) {
-				const nodes: Array<any> = Object.entries(element.childNodes).map(([_, node]) => node);
+				const nodes: Array<any> = Object.entries(element.childNodes).map(
+					([_, node]) => node
+				);
 				const commonNodes = nodes.filter(
 					(node) => node.nodeType !== 3
 				);
@@ -82,10 +85,13 @@ export const SearchListener = (): void => {
 				}
 			))
 		];
-		const element = document.getElementById(EL_ID_SELECT_BOAT);
+		const element: HTMLSelectElement
+			= document.getElementById(EL_ID_SELECT_BOAT) as HTMLSelectElement;
 		if (element) {
 			if (element.hasChildNodes()) {
-				const nodes: Array<any> = Object.entries(element.childNodes).map(([_, node]) => node);
+				const nodes: Array<any> = Object.entries(element.childNodes).map(
+					([_, node]) => node
+				);
 				const commonNodes = nodes.filter(
 					(node) => node.nodeType !== 3
 				);
@@ -129,7 +135,8 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const companyElement: any = document.getElementById(EL_ID_SELECT_COMPANY);
+	const companyElement: HTMLSelectElement
+		= document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 	if (companyElement) {
 		loadCompanies();
 		companyElement.addEventListener("change", (event: any) => {
@@ -139,7 +146,8 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const dateElement: any = document.getElementById(EL_ID_SELECT_TRIP_DATE);
+	const dateElement: HTMLInputElement
+		= document.getElementById(EL_ID_SELECT_TRIP_DATE) as HTMLInputElement;
 	if (dateElement) {
 		// Create a MutationObserver
 		const observer = new MutationObserver(function (mutationsList) {
@@ -177,7 +185,8 @@ export const SearchListener = (): void => {
 
 	}
 
-	const boatElement: any = document.getElementById(EL_ID_SELECT_BOAT);
+	const boatElement: HTMLSelectElement
+		= document.getElementById(EL_ID_SELECT_BOAT) as HTMLSelectElement;
 	if (boatElement) {
 		boatElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
@@ -185,7 +194,8 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const form = document.getElementById(EL_ID_FIND_FORM);
+	const form: HTMLFormElement
+		= document.getElementById(EL_ID_FIND_FORM) as HTMLFormElement;
 	if (form) {
 		console.log('Found Form', form);
 		form.addEventListener('submit', (event) => {

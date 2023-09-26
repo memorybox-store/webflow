@@ -7,6 +7,7 @@ export interface Product {
   tag: string | null;
   minPrice: number | null;
   maxPrice: number | null;
+  price: number | null;
   image: string | null;
   details: ProductDetail;
   boat: Boat;

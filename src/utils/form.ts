@@ -1,5 +1,6 @@
 export const getElementValueByID = (id: string) => {
-  const element = document.getElementById(id);
+  const element: HTMLInputElement | HTMLSelectElement
+    = document.getElementById(id) as HTMLInputElement | HTMLSelectElement;
   if (element instanceof HTMLInputElement) {
     return element.value;
   }
@@ -9,7 +10,9 @@ export const getElementValueByID = (id: string) => {
 export const getElementValueByName = (name: string): string => {
   const elements = document.getElementsByName(name);
   if (elements.length) {
-    const inputElements = Array.from(elements).filter((element) => (element instanceof HTMLInputElement));
+    const inputElements = Array.from(elements).filter(
+      (element) => (element instanceof HTMLInputElement)
+    );
     if (inputElements.length > 1) {
       return inputElements.map((element) => {
         if (element instanceof HTMLInputElement) {

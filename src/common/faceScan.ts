@@ -51,8 +51,9 @@ export const detectFace = async (imageId: string, options?: Array<any>) => {
   return new Promise(async (resolve, reject) => {
     try {
       const faceDetectionOptions = new SsdMobilenetv1Options({ minConfidence });
-      const inputElement: any = document.getElementById(imageId);
-      let imgElement = document.createElement("img");
+      const inputElement: HTMLImageElement
+        = document.getElementById(imageId) as HTMLImageElement;
+      let imgElement: HTMLImageElement = document.createElement("img");
       imgElement.src = inputElement.src;
       console.log(imgElement.width, imgElement.height);
       imgElement.onload = () => {

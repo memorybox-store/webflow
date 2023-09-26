@@ -1,5 +1,10 @@
-export const cartItem = `
-<span>999999999999</span>
+export const cartItemTemplate = `
+<div>
+  <img src="{{imageSource}}" />
+  <div>
+    <a href="#" class="cart-remove-button" data-target="{{cartId}}">Remove</a>
+  </div>
+</div>
 `;
 
 export const cartModalTemplate = `

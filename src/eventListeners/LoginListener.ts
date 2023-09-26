@@ -8,7 +8,8 @@ import { Profile, Session } from "../models/user";
 export const LoginListener = (
 	setProfile = (profile?: Profile | null) => { }
 ): void => {
-	const form = document.getElementById(EL_ID_LOGIN_FORM);
+	const form: HTMLFormElement
+		= document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
 	if (form) {
 		form.addEventListener('submit', (event) => {
 

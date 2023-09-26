@@ -8,7 +8,8 @@ export const LogoutListener = (
 	setProfile = (profile?: Profile | null) => { }
 ): void => {
 	try {
-		let button = document.getElementById(EL_ID_LOGOUT_BTN);
+		let button: HTMLButtonElement
+			= document.getElementById(EL_ID_LOGOUT_BTN) as HTMLButtonElement;
 		if (button) {
 			button.addEventListener('click', async () => {
 				await signout().catch((message?) => {

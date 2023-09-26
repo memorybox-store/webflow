@@ -6,6 +6,9 @@ axios.defaults.withCredentials = true;
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
+import { CartItem } from '../models/cart';
+import { Company } from '../models/sale';
+import { Product, ProductDetail } from '../models/product';
 
 export const getCartItems = async () => {
   return new Promise(async (resolve, reject) => {
@@ -22,9 +25,59 @@ export const getCartItems = async () => {
     ).then(async (response: AxiosResponse<any, any>) => {
       if (response.data) {
         if (response.data.Status === 'Success') {
-          const data = response.data.Data;
-          console.log(data);
-          resolve(data);
+          const data: Array<any> = response.data.Data;
+          const cartItems: CartItem[] = data.map((item: any) => {
+            const company: Company = {
+              id: item.comp_id,
+              title: item.comp_name_th,
+              name: item.comp_name_th,
+              branch: null,
+              contactPerson: null,
+              tel: null,
+              email: null,
+              address: null,
+              website: null,
+              image: null,
+            };
+            const productDetail: ProductDetail = {
+              id: item.item_id,
+              sku: item.sku,
+              optionId: item.slist_option_id,
+              option: item.itemoption,
+              status: null,
+              unit: {
+                id: null,
+                name: item.unitname,
+                price: item.unitprice,
+              },
+              package: {
+                depth: item.package_depth,
+                height: item.package_height,
+                width: item.package_width,
+                weight: item.package_weight,
+              }
+            }
+            const product: Product = {
+              id: item.slist_id,
+              name: item.slist_name,
+              description: null,
+              tag: null,
+              minPrice: item.minprice,
+              maxPrice: item.maxprice,
+              price: item.maxprice,
+              image: item.img_path,
+              details: productDetail,
+              boat: null,
+              company: company,
+            }
+            const cartItem: CartItem = {
+              id: item.cart_id,
+              quantity: item.qty,
+              product: product
+            }
+            return cartItem;
+          });
+          resolve(cartItems);
         } else {
           reject(response.data.Message);
         }
@@ -62,9 +115,90 @@ export const addItemToCart = async (
     ).then(async (response: AxiosResponse<any, any>) => {
       if (response.data) {
         if (response.data.Status === 'Success') {
-          const data = response.data.Data;
-          console.log(data);
-          resolve(data);
+          const data: Array<any> = response.data.Data;
+          const cartItems: CartItem[] = data.map((item: any) => {
+            const company: Company = {
+              id: item.comp_id,
+              title: item.comp_name_th,
+              name: item.comp_name_th,
+              branch: null,
+              contactPerson: null,
+              tel: null,
+              email: null,
+              address: null,
+              website: null,
+              image: null,
+            };
+            const productDetail: ProductDetail = {
+              id: item.item_id,
+              sku: item.sku,
+              optionId: item.slist_option_id,
+              option: item.itemoption,
+              status: null,
+              unit: {
+                id: null,
+                name: item.unitname,
+                price: item.unitprice,
+              },
+              package: {
+                depth: item.package_depth,
+                height: item.package_height,
+                width: item.package_width,
+                weight: item.package_weight,
+              }
+            }
+            const product: Product = {
+              id: item.slist_id,
+              name: item.slist_name,
+              description: null,
+              tag: null,
+              minPrice: item.minprice,
+              maxPrice: item.maxprice,
+              price: item.maxprice,
+              image: item.img_path,
+              details: productDetail,
+              boat: null,
+              company: company,
+            }
+            const cartItem: CartItem = {
+              id: item.cart_id,
+              quantity: item.qty,
+              product: product
+            }
+            return cartItem;
+          });
+          resolve(cartItems);
+        } else {
+          reject(response.data.Message);
+        }
+      } else {
+        reject(MSG_ERR_EMP_RES);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
+  });
+}
+
+export const removeItemToCart = async (cartId: number | string) => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      cart_id: parseInt(cartId.toString())
+    }
+    await axios.post(
+      `${SERVER}/api/MemoryBox/DeleteItemCart`,
+      payload,
+      {
+        withCredentials: true,
+        ...{
+          headers: await createRequestHeader(true)
+        }
+      }
+    ).then(async (response: AxiosResponse<any, any>) => {
+      if (response.data) {
+        if (response.data.Status === 'Success') {
+          console.log(true);
+          resolve(true);
         } else {
           reject(response.data.Message);
         }
