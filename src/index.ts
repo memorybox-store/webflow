@@ -1,8 +1,3 @@
-import {
-  EL_ID_CART_BADGE
-} from './constants/elements';
-
-import { getCartItems } from './api/cart';
 import { authen, retrieveProfile, signout } from './api/user';
 
 import { LoginListener } from './eventListeners/LoginListener';
@@ -11,6 +6,7 @@ import { ScanListener } from './eventListeners/ScanListener';
 
 import { Profile } from './models/user';
 import { SearchListener } from './eventListeners/SearchListener';
+import { CartListener } from './eventListeners/CartListener';
 
 const publicUrls = [
   '/',
@@ -18,24 +14,10 @@ const publicUrls = [
 ];
 
 var profile: Profile = null;
-var cartItems: Array<any> = [];
 
 const setProfile = (data: Profile) => {
   profile = data;
   console.log(profile);
-}
-
-const setCartItems = (data: Array<any>) => {
-  cartItems = data;
-  const element = document.getElementById(EL_ID_CART_BADGE);
-  if (element) {
-    element.textContent = data.length.toString();
-    if (data.length <= 0) {
-      element.style.display = 'none';
-    } else {
-      element.style.display = '';
-    }
-  }
 }
 
 const checkAuthen = () => {
@@ -66,26 +48,13 @@ const checkAuthen = () => {
   });
 }
 
-const loadCart = () => {
-  return new Promise(async (resolve) => {
-    const path: string = window.location.pathname;
-    await getCartItems().then(async (data: Array<any>) => {
-      console.log(data);
-      setCartItems(data);
-      resolve(data);
-    }).catch((error) => {
-      alert(error);
-    });
-  });
-}
-
 const initialize = () => {
   LoginListener(setProfile);
   LogoutListener(setProfile);
   ScanListener();
   checkAuthen().then((result: boolean) => {
     if (result) {
-      loadCart();
+      CartListener();
       SearchListener();
     }
   })
