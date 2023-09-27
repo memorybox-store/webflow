@@ -8,6 +8,7 @@ import { Profile } from './models/user';
 import { SearchListener } from './eventListeners/SearchListener';
 import { CartListener } from './eventListeners/CartListener';
 import { ProductListener } from './eventListeners/ProductListener';
+import { CartItem } from './models/cart';
 
 const publicUrls = [
   '/',
@@ -17,7 +18,7 @@ const publicUrls = [
 var profile: Profile = null;
 
 const setProfile = (data: Profile) => {
-  profile = data;
+  profile = {...data};
   console.log(profile);
 }
 

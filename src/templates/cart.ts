@@ -1,5 +1,5 @@
 export const cartItemTemplate = `
-<div style="display: flex;">
+<div style="display: flex; margin-top: 10px; margin-bottom: 10px;">
   <img src="{{cartImage}}" style="flex: auto; width: 60px; border-radius: 12px;">
   <div style="flex: auto; padding: 12px;">
     <h5 style="margin: 0; color: #6f7182;">{{cartName}}</h5>

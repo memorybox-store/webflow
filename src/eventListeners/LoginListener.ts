@@ -6,7 +6,7 @@ import { retrieveProfile, signin } from "../api/user";
 import { Profile, Session } from "../models/user";
 
 export const LoginListener = (
-	setProfile = (profile?: Profile | null) => { }
+	setProfile = (profile: Profile | null) => {}
 ): void => {
 	const form: HTMLFormElement
 		= document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;

@@ -9,13 +9,12 @@ import {
 import { cartItemTemplate, cartModalTemplate } from "../templates/cart";
 
 import { getCartItems, removeItemFromCart } from "../api/cart";
-
-var cartItems: Array<any> = [];
+import { CartItem } from "../models/cart";
 
 const removeCartItem = (cartId: string, cartName: string) => {
   return new Promise(async (resolve, reject) => {
     if (confirm(`Do you want to remove "${cartName}" from cart?`)) {
-      await removeItemFromCart(cartId).then(async (data: Array<any>) => {
+      await removeItemFromCart(cartId).then(async (data: CartItem[]) => {
         resolve(data);
       }).catch((error) => {
         reject(error);
@@ -24,7 +23,7 @@ const removeCartItem = (cartId: string, cartName: string) => {
   });
 }
 
-const updateCartBadge = (data: Array<any>) => {
+const updateCartBadge = (data: CartItem[]) => {
   const element: HTMLElement
     = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
@@ -35,7 +34,7 @@ const updateCartBadge = (data: Array<any>) => {
   }
 };
 
-const updateCartList = (data: Array<any>) => {
+const updateCartList = (data: CartItem[]) => {
 
   const formElements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_FORM) as HTMLCollectionOf<HTMLElement>;
@@ -108,10 +107,8 @@ const updateCartList = (data: Array<any>) => {
             if (cartId) {
               const cartName = removeNode.getAttribute('data-name') || '';
               removeCartItem(cartId, cartName).then(async () => {
-                await getCartItems().then(async (updatedData: Array<any>) => {
-                  updateCartBadge(updatedData);
-                  updateCartList(updatedData);
-                  updateCartAmount(updatedData);
+                await getCartItems().then(async (updatedData: CartItem[]) => {
+                  updateCartItems(updatedData);
                 }).catch((error) => {
                   alert(error);
                 });
@@ -150,7 +147,7 @@ const updateCartList = (data: Array<any>) => {
 
 }
 
-const updateCartAmount = async (data: Array<any>) => {
+const updateCartAmount = async (data: CartItem[]) => {
   const elements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_AMOUNT) as HTMLCollectionOf<HTMLElement>;
   if (elements && elements.length) {
@@ -173,25 +170,38 @@ const updateCartAmount = async (data: Array<any>) => {
   }
 }
 
-export const updateCartItems = (data: Array<any>) => {
-  cartItems = data;
+export const updateCartItems = (data: CartItem[]) => {
+  
   updateCartBadge(data);
   updateCartList(data);
   updateCartAmount(data);
+
+  const addedItems = data.map((item: CartItem) => item.product.id);
+  const addButtonElements: HTMLCollectionOf<HTMLElement>
+    = document.getElementsByClassName('product-add-button') as HTMLCollectionOf<HTMLElement>;
+  for (const [_, addNode] of Object.entries(addButtonElements)) {
+    addNode.classList.add('product-add-button');
+    const productId = addNode.getAttribute('data-target');
+    if (productId) {
+      addNode.textContent = 'Add to Cart';
+      if (addedItems.includes(productId)) {
+        addNode.setAttribute('disabled', 'true');
+        addNode.textContent = 'Added';
+      }
+    }
+  }
+
 }
 
 export const CartListener = (): void => {
 
-  const initializeElements = (data: Array<any>) => {
-    cartItems = data;
-    updateCartBadge(data);
-    updateCartList(data);
-    updateCartAmount(data);
+  const initializeElements = (data: CartItem[]) => {
+    updateCartItems(data);
   }
 
   const load = () => {
     return new Promise(async (resolve) => {
-      await getCartItems().then(async (data: Array<any>) => {
+      await getCartItems().then(async (data: CartItem[]) => {
         console.log('CART', data);
         initializeElements(data);
         resolve(data);
