@@ -156,10 +156,6 @@ export const ProductListener = (): void => {
             const addButtonElement: HTMLElement = cardElement.querySelector('a.cart');
             initAddToCartElement(addButtonElement, item, addedItems);
 
-            // Init add to cart button in popup
-            const addPopupButtonElement: HTMLElement = cardElement.querySelector('a.add-to-cart');
-            initAddToCartElement(addPopupButtonElement, item, addedItems);
-
             // Init popup
             const innerPopupElement: HTMLElement = cardElement.querySelector('.popup-wrapper-photo');
             if (innerPopupElement) {
@@ -178,8 +174,12 @@ export const ProductListener = (): void => {
               // Init subtitle
               const subtitlePopupElements: HTMLElement = popupElement.querySelector('.mg-bottom-24px');
               if (subtitlePopupElements) {
-                subtitlePopupElements.innerText = companyName;
+                subtitlePopupElements.innerText = `${data.length ? data[0].boat?.name : '-'} x ${companyName}`;
               }
+
+              // Init add to cart button in popup
+              const addPopupButtonElement: HTMLElement = popupElement.querySelector('a.add-to-cart');
+              initAddToCartElement(addPopupButtonElement, item, addedItems);
 
               // Init image in popup
               const imgPopupElement: HTMLImageElement = popupElement.querySelector('img');

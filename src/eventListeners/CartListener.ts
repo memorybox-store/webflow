@@ -238,7 +238,9 @@ export const CartListener = (): void => {
     = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
     load();
-    // createCartModal();
+    const modalElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-container-wrapper"]');
+    modalElement?.parentNode.removeChild(modalElement);
+    document.querySelector('body')?.appendChild(modalElement);
   }
 
 }
