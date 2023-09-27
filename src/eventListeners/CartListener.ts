@@ -243,10 +243,12 @@ export const CartListener = (): void => {
       document.querySelector('body')?.appendChild(modalElement);
       const modalLinkElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-open-link"]');
       modalLinkElement?.addEventListener('click', async () => {
-        modalElement.classList.add('display-force');
+        modalElement.classList.remove('hidden-force');
+        modalElement.classList.add('flex-force');
       });
       const modalCloseElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-close-link"]');
       modalCloseElement?.addEventListener('click', async () => {
+        modalElement.classList.remove('flex-force');
         modalElement.classList.add('hidden-force');
       });
       load();
