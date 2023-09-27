@@ -34,21 +34,23 @@ export const createRequestHeader = async (
 
 export const handleResponseError = (error: any) => {
   let message = error.message;
-  if (error.response.data) {
-    if (error.response.data.Message) {
-      message = error.response.data.Message;
-    } else if (error.response.data.error) {
-      if (error.response.data.error_description) {
-        message = error.response.data.error_description;
-      } else {
-        if (error.response.data.error === 'invalid_client') {
-          message = MSG_ERR_API_NOT_PERMIT;
+  if (error.response) {
+    if (error.response.data) {
+      if (error.response.data.Message) {
+        message = error.response.data.Message;
+      } else if (error.response.data.error) {
+        if (error.response.data.error_description) {
+          message = error.response.data.error_description;
         } else {
-          message = error.response.data.error;
+          if (error.response.data.error === 'invalid_client') {
+            message = MSG_ERR_API_NOT_PERMIT;
+          } else {
+            message = error.response.data.error;
+          }
         }
+      } else {
+        message = error.response.statusText || MSG_ERR_UNKNOWN;
       }
-    } else {
-      message = error.response.statusText || MSG_ERR_UNKNOWN;
     }
   }
   return message;

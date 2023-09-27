@@ -7,10 +7,14 @@ import {
   EL_ID_RESULT_SUM_COMPANY
 } from "../constants/elements";
 
+import moment from '../config/moment';
+
 import { addItemToCart, getCartItems } from "../api/cart";
 import { getProducts } from "../api/product";
-import { Product } from "../models/product";
+
 import { updateCartItems } from "./CartListener";
+
+import { Product } from "../models/product";
 import { CartItem } from "../models/cart";
 
 export const ProductListener = (): void => {
@@ -27,7 +31,7 @@ export const ProductListener = (): void => {
     });
   }
 
-  const load = (boatId: string) => {
+  const load = (boatId: string, date: string, companyName: string) => {
     return new Promise(async (resolve) => {
 
       // Init card container
@@ -160,29 +164,43 @@ export const ProductListener = (): void => {
             const innerPopupElement: HTMLElement = cardElement.querySelector('.popup-wrapper-photo');
             if (innerPopupElement) {
 
-              innerPopupElement.setAttribute('data-popup', item.image);
+              // Init popup
+              const popupElement = innerPopupElement.cloneNode(true) as HTMLElement;
+
+              popupElement.setAttribute('data-popup', item.image);
+
+              // Init title
+              const titlePopupElements: HTMLElement = popupElement.querySelector('.display-4');
+              if (titlePopupElements) {
+                titlePopupElements.innerText = moment(date).format('DD.MM.YYYY');
+              }
+
+              // Init subtitle
+              const subtitlePopupElements: HTMLElement = popupElement.querySelector('.mg-bottom-24px');
+              if (subtitlePopupElements) {
+                subtitlePopupElements.innerText = companyName;
+              }
 
               // Init image in popup
-              const imgPopupElement: HTMLImageElement = innerPopupElement.querySelector('img');
+              const imgPopupElement: HTMLImageElement = popupElement.querySelector('img');
               if (imgPopupElement) {
                 imgPopupElement.src = item.image;
                 imgPopupElement.srcset = item.image;
               }
 
               // Register click event to dismiss popup
-              const closePopupMobileButtonElement: HTMLElement = cardElement.querySelector('a.hide-mobile');
+              const closePopupMobileButtonElement: HTMLElement = popupElement.querySelector('a.hide-mobile');
               closePopupMobileButtonElement?.addEventListener('click', async () => {
-                innerPopupElement.classList.remove('lightbox-display-force');
+                popupElement.classList.remove('lightbox-display-force');
               });
 
               // Register click event to dismiss popup
-              const closePopupButtonElements: HTMLElement = cardElement.querySelector('close-button-popup-module');
+              const closePopupButtonElements: HTMLElement = popupElement.querySelector('.close-button-popup-module');
               closePopupButtonElements?.addEventListener('click', async () => {
-                innerPopupElement.classList.remove('lightbox-display-force');
+                popupElement.classList.remove('lightbox-display-force');
               });
 
-              // Init popup (Change popup location)
-              const popupElement = innerPopupElement.cloneNode(true) as HTMLElement;
+              // Change popup location
               document.querySelector('body')?.appendChild(popupElement);
               innerPopupElement.parentElement.removeChild(innerPopupElement);
 
@@ -202,6 +220,7 @@ export const ProductListener = (): void => {
       }).catch((error) => {
         alert(error);
       });
+
     });
   }
 
@@ -210,9 +229,11 @@ export const ProductListener = (): void => {
   if (path === '/result') {
     const url = new URL(window.location.href);
     const boatId = url.searchParams.get("fid");
-    const imgeId = url.searchParams.get("mid");
+    const date = url.searchParams.get("date");
+    const companyName = decodeURI(url.searchParams.get("company") || '');
+    const imageId = url.searchParams.get("mid");
     if (boatId) {
-      load(boatId);
+      load(boatId, date, companyName);
     }
   }
 

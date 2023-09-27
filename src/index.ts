@@ -64,20 +64,6 @@ const initialize = () => {
   })
 }
 
-const playgroundElement: HTMLElement = document.getElementById('memorybox-dev');
-if (playgroundElement) {
-  const path: string = window.location.pathname;
-  // const url = `https://memorybox.webflow.io${path}`;
-  const url = `https://memorybox.webflow.io/log-in`;
-  // Fetch HTML source code from the URL
-  fetch(url).then(response => response.text())
-    .then(html => {
-      // Render the HTML by injecting it into the 'result' div
-      document.documentElement.innerHTML = html;
-      console.log(html);
-    }).catch(error => console.error('Error fetching HTML:', error));
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   initialize();
 });

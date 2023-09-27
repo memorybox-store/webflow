@@ -28,12 +28,14 @@ export const SearchListener = (): void => {
 	];
 
 	let company: string = '';
+	let companies: Company[] = [];
 
 	let date: string = moment().format();
 
 	let boat: string = '';
 
 	const setCompanies = (data: Company[]) => {
+		companies = [...data];
 		companyOptions = [
 			{
 				value: '',
@@ -205,7 +207,8 @@ export const SearchListener = (): void => {
 
 			console.log('Boat', boat);
 			if (boat) {
-				location.href = './result' + "?fid=" + boat + "&mid=";
+				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
+				location.href = `./result?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
 			} else {
 				alert('Please select boat');
 			}
