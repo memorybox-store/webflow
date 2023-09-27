@@ -64,9 +64,7 @@ export const ProductListener = (): void => {
       const initAddToCartElement = (element: HTMLElement, item: Product, addedItems: Array<any>) => {
         if (element) {
           element.classList.add('product-add-button');
-          element.setAttribute('data-target', item.id || '');
-          element.setAttribute('data-company', item.company?.id.toString() || '');
-          element.setAttribute('data-item', item.itemId.toString() || '');
+          element.setAttribute('data-target', item.id);
           // If item was added then disable button
           if (addedItems.includes(item.id.toString())) {
             element.classList.add('disabled');
@@ -81,29 +79,26 @@ export const ProductListener = (): void => {
               element.classList.remove('disabled');
               element.innerText = 'Add to Cart';
             }
-            const productId = element.getAttribute('data-target');
-            if (productId) {
-              element.classList.add('disabled');
-              element.innerText = 'Adding...';
-              const companyId = element.getAttribute('data-company');
-              const itemId = element.getAttribute('data-item');
-              add(productId, companyId, itemId).then(async () => {
-                element.innerText = 'Added';
-                // Get updated items from cart for checking via API
-                await getCartItems().then(async (updatedData: CartItem[]) => {
-                  // Update cart count badges in header
-                  updateCartItems(updatedData);
-                }).catch((error) => {
-                  alert(error);
-                  reset();
-                });
+            element.classList.add('disabled');
+            element.innerText = 'Adding...';
+            add(
+              item.id,
+              item.company?.id.toString() || '',
+              item.itemId.toString() || ''
+            ).then(async () => {
+              element.innerText = 'Added';
+              // Get updated items from cart for checking via API
+              await getCartItems().then(async (updatedData: CartItem[]) => {
+                // Update cart count badges in header
+                updateCartItems(updatedData);
               }).catch((error) => {
                 alert(error);
                 reset();
               });
-            } else {
+            }).catch((error) => {
+              alert(error);
               reset();
-            }
+            });
           });
         }
       }
@@ -115,6 +110,22 @@ export const ProductListener = (): void => {
         // Get products from boat via API
         await getProducts(boatId).then(async (data: Product[]) => {
           console.log('Product', data);
+
+          // Update summary of image includes my picture
+          if (sumTotalElement) {
+            sumTotalElement.innerText = data.length.toString();
+          }
+
+          // Update summary of total image
+          if (sumBoatElement) {
+            sumBoatElement.innerText = data.length ? data[0].boat?.name : '-';
+          }
+
+          // Update summary of comapny
+          if (sumCompanyElement) {
+            sumCompanyElement.innerText = data.length ? data[0].company?.name : '-';
+          }
+
           for (let item of data) {
 
             // Init card (Cloned from sample element)
@@ -131,7 +142,7 @@ export const ProductListener = (): void => {
               imgElement.classList.add('open-popup-button');
               // Register click event to open popup
               imgElement.addEventListener('click', async () => {
-                const popupElement: HTMLElement = cardElement.querySelector('.popup-wrapper-photo');
+                const popupElement: HTMLElement = cardElement.querySelector(`[data-popup="${item.image}"]`);
                 popupElement?.classList.add('lightbox-display-force');
               });
             }
@@ -145,42 +156,41 @@ export const ProductListener = (): void => {
             initAddToCartElement(addPopupButtonElement, item, addedItems);
 
             // Init popup
-            const popupElement: HTMLElement = cardElement.querySelector('.popup-wrapper-photo');
-            // Init image in popup
-            const imgPopupElement: HTMLImageElement = popupElement?.querySelector('img');
-            if (imgPopupElement) {
-              imgPopupElement.src = item.image;
-              imgPopupElement.srcset = item.image;
+            const innerPopupElement: HTMLElement = cardElement.querySelector('.popup-wrapper-photo');
+            if (innerPopupElement) {
+
+              innerPopupElement.setAttribute('data-popup', item.image);
+
+              // Init image in popup
+              const imgPopupElement: HTMLImageElement = innerPopupElement.querySelector('img');
+              if (imgPopupElement) {
+                imgPopupElement.src = item.image;
+                imgPopupElement.srcset = item.image;
+                imgPopupElement.classList.add('clickable');
+              }
+
+              // Register click event to dismiss popup
+              const closePopupMobileButtonElement: HTMLElement = cardElement.querySelector('a.hide-mobile');
+              closePopupMobileButtonElement?.addEventListener('click', async () => {
+                innerPopupElement.classList.remove('lightbox-display-force');
+              });
+
+              // Register click event to dismiss popup
+              const closePopupButtonElements: HTMLElement = cardElement.querySelector('close-button-popup-module');
+              closePopupButtonElements?.addEventListener('click', async () => {
+                innerPopupElement.classList.remove('lightbox-display-force');
+              });
+
+              // Init popup (Change popup location)
+              const popupElement = innerPopupElement.cloneNode(true) as HTMLElement;
+              document.querySelector('body')?.appendChild(popupElement);
+              innerPopupElement.parentElement.removeChild(innerPopupElement);
+
             }
-            // Register click event to dismiss popup
-            const closePopupMobileButtonElement: HTMLElement = cardElement.querySelector('a.hide-mobile');
-            closePopupMobileButtonElement?.addEventListener('click', async () => {
-              popupElement?.classList.remove('lightbox-display-force');
-            });
-            // Register click event to dismiss popup
-            const closePopupButtonElements: HTMLElement = cardElement.querySelector('a.close-button-popup-module');
-            closePopupButtonElements?.addEventListener('click', async () => {
-              popupElement?.classList.remove('lightbox-display-force');
-            });
 
             // Append card to container
             cardContainer?.appendChild(cardElement);
 
-          }
-
-          // Update summary of image includes my picture
-          if (sumTotalElement) {
-            sumTotalElement.innerText = data.length.toString();
-          }
-
-          // Update summary of total image
-          if (sumBoatElement) {
-            sumBoatElement.innerText = data.length ? data[0].boat?.name : '-';
-          }
-
-          // Update summary of comapny
-          if (sumCompanyElement) {
-            sumCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }
 
           resolve(data);
