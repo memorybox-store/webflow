@@ -237,10 +237,20 @@ export const CartListener = (): void => {
   const element: HTMLElement
     = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
-    load();
     const modalElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-container-wrapper"]');
-    modalElement?.parentNode.removeChild(modalElement);
-    document.querySelector('body')?.appendChild(modalElement);
+    if (modalElement) {
+      modalElement.parentNode.removeChild(modalElement);
+      document.querySelector('body')?.appendChild(modalElement);
+      const modalLinkElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-open-link"]');
+      modalLinkElement?.addEventListener('click', async () => {
+        modalElement.classList.add('display-force');
+      });
+      const modalCloseElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-close-link"]');
+      modalCloseElement?.addEventListener('click', async () => {
+        modalElement.classList.add('hidden-force');
+      });
+      load();
+    }
   }
 
 }
