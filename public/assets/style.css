@@ -2,6 +2,10 @@
   display: none !important;
 }
 
+.display-force {
+  display: block !important;
+}
+
 .flex-force {
   display: flex !important;
 }
