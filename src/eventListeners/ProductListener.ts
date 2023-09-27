@@ -90,8 +90,9 @@ export const ProductListener = (): void => {
               addNode.setAttribute('data-company', item.company?.id.toString() || '');
               addNode.setAttribute('data-item', item.itemId.toString() || '');
               addNode.textContent = 'Add to Cart';
+              addNode.classList.remove('disabled');
               if (addedItems.includes(item.id)) {
-                addNode.setAttribute('disabled', 'true');
+                addNode.classList.add('disabled');
                 addNode.textContent = 'Added';
               }
             }

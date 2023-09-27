@@ -184,8 +184,9 @@ export const updateCartItems = (data: CartItem[]) => {
     const productId = addNode.getAttribute('data-target');
     if (productId) {
       addNode.textContent = 'Add to Cart';
+      addNode.classList.remove('disabled');
       if (addedItems.includes(productId)) {
-        addNode.setAttribute('disabled', 'true');
+        addNode.classList.add('disabled');
         addNode.textContent = 'Added';
       }
     }

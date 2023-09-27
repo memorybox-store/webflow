@@ -5,3 +5,8 @@
 .flex-force {
   display: flex !important;
 }
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
