@@ -171,7 +171,7 @@ const updateCartAmount = async (data: CartItem[]) => {
 }
 
 export const updateCartItems = (data: CartItem[]) => {
-  
+
   updateCartBadge(data);
   updateCartList(data);
   updateCartAmount(data);
@@ -179,15 +179,17 @@ export const updateCartItems = (data: CartItem[]) => {
   const addedItems = data.map((item: CartItem) => item.product.id.toString());
   const addButtonElements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName('product-add-button') as HTMLCollectionOf<HTMLElement>;
-  for (const [_, addNode] of Object.entries(addButtonElements)) {
-    const productId = addNode.getAttribute('data-target');
-    if (productId) {
-      if (addedItems.includes(productId.toString())) {
-        addNode.classList.add('disabled');
-        addNode.textContent = 'Added';
-      } else {
-        addNode.classList.remove('disabled');
-        addNode.textContent = 'Add to Cart';
+  if (addButtonElements) {
+    for (const [_, addNode] of Object.entries(addButtonElements)) {
+      const productId = addNode.getAttribute('data-target');
+      if (productId) {
+        if (addedItems.includes(productId.toString())) {
+          addNode.classList.add('disabled');
+          addNode.textContent = 'Added';
+        } else {
+          addNode.classList.remove('disabled');
+          addNode.textContent = 'Add to Cart';
+        }
       }
     }
   }
