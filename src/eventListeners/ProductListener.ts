@@ -140,9 +140,10 @@ export const ProductListener = (): void => {
               imgElement.src = item.image;
               imgElement.srcset = item.image;
               imgElement.classList.add('open-popup-button');
+              imgElement.classList.add('clickable');
               // Register click event to open popup
               imgElement.addEventListener('click', async () => {
-                const popupElement: HTMLElement = cardElement.querySelector(`[data-popup="${item.image}"]`);
+                const popupElement: HTMLElement = document.querySelector(`[data-popup="${item.image}"]`);
                 popupElement?.classList.add('lightbox-display-force');
               });
             }
@@ -166,7 +167,6 @@ export const ProductListener = (): void => {
               if (imgPopupElement) {
                 imgPopupElement.src = item.image;
                 imgPopupElement.srcset = item.image;
-                imgPopupElement.classList.add('clickable');
               }
 
               // Register click event to dismiss popup
