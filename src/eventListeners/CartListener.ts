@@ -176,18 +176,18 @@ export const updateCartItems = (data: CartItem[]) => {
   updateCartList(data);
   updateCartAmount(data);
 
-  const addedItems = data.map((item: CartItem) => item.product.id);
+  const addedItems = data.map((item: CartItem) => item.product.id.toString());
   const addButtonElements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName('product-add-button') as HTMLCollectionOf<HTMLElement>;
   for (const [_, addNode] of Object.entries(addButtonElements)) {
-    addNode.classList.add('product-add-button');
     const productId = addNode.getAttribute('data-target');
     if (productId) {
-      addNode.textContent = 'Add to Cart';
-      addNode.classList.remove('disabled');
-      if (addedItems.includes(productId)) {
+      if (addedItems.includes(productId.toString())) {
         addNode.classList.add('disabled');
         addNode.textContent = 'Added';
+      } else {
+        addNode.classList.remove('disabled');
+        addNode.textContent = 'Add to Cart';
       }
     }
   }

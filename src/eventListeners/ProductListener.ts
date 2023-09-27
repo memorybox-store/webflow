@@ -30,7 +30,7 @@ export const ProductListener = (): void => {
 
       getCartItems().then(async (cartItemsData: CartItem[]) => {
 
-        const addedItems = cartItemsData.map((item: CartItem) => item.product.id);
+        const addedItems = cartItemsData.map((item: CartItem) => item.product.id.toString());
 
         const cardContainer: HTMLElement
           = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
@@ -89,11 +89,12 @@ export const ProductListener = (): void => {
               addNode.setAttribute('data-target', item.id || '');
               addNode.setAttribute('data-company', item.company?.id.toString() || '');
               addNode.setAttribute('data-item', item.itemId.toString() || '');
-              addNode.textContent = 'Add to Cart';
-              addNode.classList.remove('disabled');
-              if (addedItems.includes(item.id)) {
+              if (addedItems.includes(item.id.toString())) {
                 addNode.classList.add('disabled');
                 addNode.textContent = 'Added';
+              } else {
+                addNode.classList.remove('disabled');
+                addNode.textContent = 'Add to Cart';
               }
             }
   
