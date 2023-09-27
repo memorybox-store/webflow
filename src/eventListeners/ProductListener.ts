@@ -84,15 +84,13 @@ export const ProductListener = (): void => {
             cardElement.setAttribute('id', `product-${item.id}`);
 
             // Init image
-            const imgSampleElement: HTMLImageElement
+            const imgElement: HTMLImageElement
               = cardElement.querySelector('img') as HTMLImageElement;
-            if (imgSampleElement) {
-
-              const imgElement: HTMLImageElement
-                = imgSampleElement.cloneNode(true) as HTMLImageElement;
+            if (imgElement) {
 
               imgElement.src = item.image;
               imgElement.srcset = item.image;
+              imgElement.classList.add('open-popup-button');
 
               // Init image in popup
               const popupElement: HTMLCollectionOf<HTMLElement>
@@ -107,19 +105,6 @@ export const ProductListener = (): void => {
                   }
                 }
               }
-
-              imgSampleElement.parentNode.replaceChild(imgElement, imgSampleElement);
-
-              // Register click event to open popup
-              imgElement.addEventListener('click', async () => {
-                const popupElement: HTMLCollectionOf<HTMLElement>
-                  = cardElement.getElementsByTagName('popup-wrapper-photo') as HTMLCollectionOf<HTMLElement>;
-                if (popupElement) {
-                  for (const [_, popupNode] of Object.entries(popupElement)) {
-                    popupNode.classList.add('lightbox-display-force');
-                  }
-                }
-              });
 
             }
 
@@ -186,6 +171,23 @@ export const ProductListener = (): void => {
             }
           }
 
+          const imgElements: HTMLCollectionOf<HTMLElement>
+            = cardContainer.getElementsByClassName('open-popup-button') as HTMLCollectionOf<HTMLElement>;
+          if (imgElements) {
+            for (const [_, imageNode] of Object.entries(imgElements)) {
+              // Register click event to open popup
+              imageNode.addEventListener('click', async () => {
+                const popupElement: HTMLCollectionOf<HTMLElement>
+                  = imageNode.parentElement.getElementsByTagName('popup-wrapper-photo') as HTMLCollectionOf<HTMLElement>;
+                if (popupElement) {
+                  for (const [_, popupNode] of Object.entries(popupElement)) {
+                    popupNode.classList.add('lightbox-display-force');
+                  }
+                }
+              });
+            }
+          }
+
           // Init close button in popup
           const closePopupButtonElements: HTMLCollectionOf<HTMLElement>
             = cardContainer.getElementsByTagName('a.close-button-popup-module') as HTMLCollectionOf<HTMLElement>;
@@ -204,25 +206,10 @@ export const ProductListener = (): void => {
             }
           }
 
-          // Update summary of image includes my picture
-          if (sumTotalElement) {
-            sumTotalElement.innerText = data.length.toString();
-          }
-
-          // Update summary of total image
-          if (sumBoatElement) {
-            sumBoatElement.innerText = data.length ? data[0].boat?.name : '-';
-          }
-
-          // Update summary of comapny
-          if (sumCompanyElement) {
-            sumCompanyElement.innerText = data.length ? data[0].company?.name : '-';
-          }
-
           // Register click event to add to cart
           const addElements: HTMLCollectionOf<HTMLElement>
             = cardContainer.getElementsByClassName('product-add-button') as HTMLCollectionOf<HTMLElement>;
-          if (addElements && addElements.length) {
+          if (addElements) {
             for (const [_, addNode] of Object.entries(addElements)) {
               addNode.addEventListener('click', async () => {
                 const productId = addNode.getAttribute('data-target');
@@ -253,6 +240,21 @@ export const ProductListener = (): void => {
                 }
               });
             }
+          }
+
+          // Update summary of image includes my picture
+          if (sumTotalElement) {
+            sumTotalElement.innerText = data.length.toString();
+          }
+
+          // Update summary of total image
+          if (sumBoatElement) {
+            sumBoatElement.innerText = data.length ? data[0].boat?.name : '-';
+          }
+
+          // Update summary of comapny
+          if (sumCompanyElement) {
+            sumCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }
 
           resolve(data);
