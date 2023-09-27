@@ -39,6 +39,7 @@ export const ProductListener = (): void => {
 
       // Get sample element and hide
       const sampleElement: HTMLElement = document.getElementById(EL_ID_RESULT_SAMPLE);
+      sampleElement.style.opacity = '0';
       sampleElement?.classList.add("hidden-force");
 
       // Init summary of image includes my picture
@@ -137,6 +138,7 @@ export const ProductListener = (): void => {
             cardElement.classList.remove("hidden-force");
             cardElement.removeAttribute('data-w-id');
             cardElement.setAttribute('id', `product-${item.id}`);
+            cardElement.style.opacity = '1';
 
             // Init image
             const imgElement: HTMLImageElement = cardElement.querySelector('img');

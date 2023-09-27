@@ -20,6 +20,14 @@
   transform-style: preserve-3d;
 }
 
+.popup.photo {
+  max-height: 100% !important;
+}
+
+.popup.photo img {
+  max-height: calc(100vh - 226px) !important;
+}
+
 .popup a:not(.add, .add-to-cart, .hide-mobile, .close-button-popup-module) {
   display: none !important;
 }
