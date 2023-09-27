@@ -64,7 +64,7 @@ export const SearchListener = (): void => {
 					for (const option of companyOptions) {
 						const clonedElement: any = optionElementTemplate.cloneNode(true);
 						clonedElement.setAttribute('value', option.value);
-						clonedElement.textContent = option.text;
+						clonedElement.innerText = option.text;
 						element.appendChild(clonedElement);
 					};
 				}
@@ -103,7 +103,7 @@ export const SearchListener = (): void => {
 					for (const option of boatOptions) {
 						const clonedElement: any = optionElementTemplate.cloneNode(true);
 						clonedElement.setAttribute('value', option.value);
-						clonedElement.textContent = option.text;
+						clonedElement.innerText = option.text;
 						element.appendChild(clonedElement);
 					};
 				}

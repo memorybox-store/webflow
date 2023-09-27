@@ -29,7 +29,7 @@ const updateCartBadge = (data: CartItem[]) => {
   if (element) {
     const replacedElement: HTMLElement = element.cloneNode(true) as HTMLElement;
     replacedElement.removeAttribute('data-wf-bindings');
-    replacedElement.textContent = data.length.toString();
+    replacedElement.innerText = data.length.toString();
     element.parentNode.replaceChild(replacedElement, element);
   }
 };
@@ -156,14 +156,14 @@ const updateCartAmount = async (data: CartItem[]) => {
       console.log(node);
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       replacedElement.removeAttribute('data-wf-bindings');
-      replacedElement.textContent = data.length.toString();
+      replacedElement.innerText = data.length.toString();
       if (data.length) {
-        replacedElement.textContent = `฿ ${data.reduce((result: number, item: any) => {
+        replacedElement.innerText = `฿ ${data.reduce((result: number, item: any) => {
           return result + (item.product?.price || 0);
         }, 0).toString()
           } THB`;
       } else {
-        replacedElement.textContent = '฿ 0 THB';
+        replacedElement.innerText = '฿ 0 THB';
       }
       node.parentNode.replaceChild(replacedElement, node);
     }
@@ -185,14 +185,14 @@ export const updateCartItems = (data: CartItem[]) => {
       if (productId) {
         if (addedItems.includes(productId.toString())) {
           addNode.classList.add('disabled');
-          addNode.textContent = 'Added';
+          addNode.innerText = 'Added';
         } else {
           addNode.classList.remove('disabled');
-          addNode.textContent = 'Add to Cart';
+          addNode.innerText = 'Add to Cart';
         }
       } else {
         addNode.classList.remove('disabled');
-        addNode.textContent = 'Add to Cart';
+        addNode.innerText = 'Add to Cart';
       }
     }
   }
