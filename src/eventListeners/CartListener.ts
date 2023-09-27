@@ -190,6 +190,9 @@ export const updateCartItems = (data: CartItem[]) => {
           addNode.classList.remove('disabled');
           addNode.textContent = 'Add to Cart';
         }
+      } else {
+        addNode.classList.remove('disabled');
+        addNode.textContent = 'Add to Cart';
       }
     }
   }

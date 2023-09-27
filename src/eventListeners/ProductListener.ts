@@ -108,17 +108,15 @@ export const ProductListener = (): void => {
                 }
               }
 
+              imgSampleElement.parentNode.replaceChild(imgElement, imgSampleElement);
+
               // Register click event to open popup
               imgElement.addEventListener('click', async () => {
                 const popupElement: HTMLCollectionOf<HTMLElement>
                   = cardElement.getElementsByTagName('popup-wrapper-photo') as HTMLCollectionOf<HTMLElement>;
                 if (popupElement) {
                   for (const [_, popupNode] of Object.entries(popupElement)) {
-                    if (popupNode.classList.contains('lightbox-display-force')) {
-                      popupNode.classList.remove('lightbox-display-force');
-                    } else {
-                      popupNode.classList.add('lightbox-display-force');
-                    }
+                    popupNode.classList.add('lightbox-display-force');
                   }
                 }
               });
@@ -142,35 +140,6 @@ export const ProductListener = (): void => {
                   addNode.classList.remove('disabled');
                   addNode.textContent = 'Add to Cart';
                 }
-                // Register click event to add to cart
-                addNode.addEventListener('click', async () => {
-                  const productId = addNode.getAttribute('data-target');
-                  if (productId) {
-                    addNode.classList.add('disabled');
-                    addNode.textContent = 'Adding...';
-                    const companyId = addNode.getAttribute('data-company');
-                    const itemId = addNode.getAttribute('data-item');
-                    await add(productId, companyId, itemId).then(async () => {
-                      addNode.textContent = 'Added';
-                      // Get updated items from cart for checking via API
-                      await getCartItems().then(async (updatedData: CartItem[]) => {
-                        // Update cart count badges in header
-                        updateCartItems(updatedData);
-                      }).catch((error) => {
-                        alert(error);
-                        addNode.classList.remove('disabled');
-                        addNode.textContent = 'Add to Cart';
-                      });
-                    }).catch((error) => {
-                      alert(error);
-                      addNode.classList.remove('disabled');
-                      addNode.textContent = 'Add to Cart';
-                    });
-                  } else {
-                    addNode.classList.remove('disabled');
-                    addNode.textContent = 'Add to Cart';
-                  }
-                });
               }
             }
 
@@ -191,59 +160,48 @@ export const ProductListener = (): void => {
                   addNode.classList.remove('disabled');
                   addNode.textContent = 'Add to Cart';
                 }
-                // Register click event to add item to cart
-                addNode.addEventListener('click', async () => {
-                  const productId = addNode.getAttribute('data-target');
-                  if (productId) {
-                    addNode.classList.add('disabled');
-                    addNode.textContent = 'Adding...';
-                    const companyId = addNode.getAttribute('data-company');
-                    const itemId = addNode.getAttribute('data-item');
-                    add(productId, companyId, itemId).then(async () => {
-                      addNode.textContent = 'Added';
-                      // Get updated items from cart for checking via API
-                      await getCartItems().then(async (updatedData: CartItem[]) => {
-                        // Update cart count badges in header
-                        updateCartItems(updatedData);
-                      }).catch((error) => {
-                        alert(error);
-                        addNode.classList.remove('disabled');
-                        addNode.textContent = 'Add to Cart';
-                      });
-                    }).catch((error) => {
-                      alert(error);
-                      addNode.classList.remove('disabled');
-                      addNode.textContent = 'Add to Cart';
-                    });
-                  } else {
-                    addNode.classList.remove('disabled');
-                    addNode.textContent = 'Add to Cart';
-                  }
-                });
-              }
-            }
-
-            // Init close button in popup
-            const closePopupButtonElements: HTMLCollectionOf<HTMLElement>
-              = cardElement.getElementsByTagName('a.add-to-cart') as HTMLCollectionOf<HTMLElement>;
-            if (closePopupButtonElements) {
-              for (const [_, closeNode] of Object.entries(closePopupButtonElements)) {
-                // Register click event to dismiss popup
-                closeNode.addEventListener('click', async () => {
-                  const popupElement: HTMLCollectionOf<HTMLElement>
-                    = cardElement.getElementsByTagName('popup-wrapper-photo') as HTMLCollectionOf<HTMLElement>;
-                  if (popupElement) {
-                    for (const [_, popupNode] of Object.entries(popupElement)) {
-                      popupNode.classList.remove('lightbox-display-force');
-                    }
-                  }
-                });
               }
             }
 
             // Append card to container
             cardContainer.appendChild(cardElement);
 
+          }
+
+          // Init close button in popup
+          const closePopupMobileButtonElements: HTMLCollectionOf<HTMLElement>
+            = cardContainer.getElementsByTagName('a.hide-mobile') as HTMLCollectionOf<HTMLElement>;
+          if (closePopupMobileButtonElements) {
+            for (const [_, closeNode] of Object.entries(closePopupMobileButtonElements)) {
+              // Register click event to dismiss popup
+              closeNode.addEventListener('click', async () => {
+                const popupElement: HTMLCollectionOf<HTMLElement>
+                  = cardContainer.getElementsByTagName('popup-wrapper-photo') as HTMLCollectionOf<HTMLElement>;
+                if (popupElement) {
+                  for (const [_, popupNode] of Object.entries(popupElement)) {
+                    popupNode.classList.remove('lightbox-display-force');
+                  }
+                }
+              });
+            }
+          }
+
+          // Init close button in popup
+          const closePopupButtonElements: HTMLCollectionOf<HTMLElement>
+            = cardContainer.getElementsByTagName('a.close-button-popup-module') as HTMLCollectionOf<HTMLElement>;
+          if (closePopupButtonElements) {
+            for (const [_, closeNode] of Object.entries(closePopupButtonElements)) {
+              // Register click event to dismiss popup
+              closeNode.addEventListener('click', async () => {
+                const popupElement: HTMLCollectionOf<HTMLElement>
+                  = cardContainer.getElementsByTagName('popup-wrapper-photo') as HTMLCollectionOf<HTMLElement>;
+                if (popupElement) {
+                  for (const [_, popupNode] of Object.entries(popupElement)) {
+                    popupNode.classList.remove('lightbox-display-force');
+                  }
+                }
+              });
+            }
           }
 
           // Update summary of image includes my picture
@@ -261,29 +219,41 @@ export const ProductListener = (): void => {
             sumCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }
 
-          // const addElements: HTMLCollectionOf<HTMLElement>
-          //   = document.getElementsByClassName('product-add-button') as HTMLCollectionOf<HTMLElement>;
-          // if (addElements && addElements.length) {
-          //   for (const [_, addNode] of Object.entries(addElements)) {
-          //     addNode.addEventListener('click', async () => {
-          //       const productId = addNode.getAttribute('data-target');
-          //       if (productId) {
-          //         const companyId = addNode.getAttribute('data-company');
-          //         const itemId = addNode.getAttribute('data-item');
-          //         console.log(productId, companyId, itemId);
-          //         add(productId, companyId, itemId).then(async () => {
-          //           await getCartItems().then(async (updatedData: CartItem[]) => {
-          //             updateCartItems(updatedData);
-          //           }).catch((error) => {
-          //             alert(error);
-          //           });
-          //         }).catch((error) => {
-          //           alert(error);
-          //         });
-          //       }
-          //     });
-          //   }
-          // }
+          // Register click event to add to cart
+          const addElements: HTMLCollectionOf<HTMLElement>
+            = cardContainer.getElementsByClassName('product-add-button') as HTMLCollectionOf<HTMLElement>;
+          if (addElements && addElements.length) {
+            for (const [_, addNode] of Object.entries(addElements)) {
+              addNode.addEventListener('click', async () => {
+                const productId = addNode.getAttribute('data-target');
+                if (productId) {
+                  addNode.classList.add('disabled');
+                  addNode.textContent = 'Adding...';
+                  const companyId = addNode.getAttribute('data-company');
+                  const itemId = addNode.getAttribute('data-item');
+                  add(productId, companyId, itemId).then(async () => {
+                    addNode.textContent = 'Added';
+                    // Get updated items from cart for checking via API
+                    await getCartItems().then(async (updatedData: CartItem[]) => {
+                      // Update cart count badges in header
+                      updateCartItems(updatedData);
+                    }).catch((error) => {
+                      alert(error);
+                      addNode.classList.remove('disabled');
+                      addNode.textContent = 'Add to Cart';
+                    });
+                  }).catch((error) => {
+                    alert(error);
+                    addNode.classList.remove('disabled');
+                    addNode.textContent = 'Add to Cart';
+                  });
+                } else {
+                  addNode.classList.remove('disabled');
+                  addNode.textContent = 'Add to Cart';
+                }
+              });
+            }
+          }
 
           resolve(data);
 
