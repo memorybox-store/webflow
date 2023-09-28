@@ -14,16 +14,49 @@ export const authen = async () => {
   return new Promise(async (resolve, reject) => {
     const session: Session = await getStorage('session', true) as Session || null;
     if (session) {
-      if (session.expires && moment(session.expires) < moment()) {
-        reject();
-      } else {
+      if (session.expires && moment() <= moment(session.expires)) {
         resolve(true);
+      } else {
+        reject();
       }
     } else {
       reject();
     }
   });
 };
+
+export const register = async (username: string, password: string, name: string = '', tel: string = '') => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      PhoneNumber: tel,
+      UserName: username,
+      Password: password,
+      User_Name: name
+    }
+    await axios.post(
+      `${SERVER}/api/Main/Register`,
+      payload,
+      {
+        withCredentials: true,
+        ...{
+          headers: await createRequestHeader(false, true)
+        }
+      }
+    ).then(async (response: AxiosResponse<any, any>) => {
+      if (response.data) {
+        if (response.data.Status === 'Success') {
+          resolve(true);
+        } else {
+          reject(response.data.Message);
+        }
+      } else {
+        reject(MSG_ERR_EMP_RES);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
+  });
+}
 
 export const signin = async (username: string, password: string) => {
   return new Promise(async (resolve, reject) => {
@@ -52,7 +85,6 @@ export const signin = async (username: string, password: string) => {
           expires: data['.expires'] ? moment(data['.expires']).format() : null,
           issued: data['.issued'] ? moment(data['.issued']).format() : null,
         };
-        console.log(session);
         await setStorage('session', session, true);
         resolve(session);
       } else {
@@ -112,7 +144,6 @@ export const retrieveProfile = async () => {
             }
           };
           await setStorage('profile', profile, true);
-          console.log(profile);
           stored = profile;
         } else {
           reject(MSG_ERR_EMP_DATA);
@@ -124,6 +155,84 @@ export const retrieveProfile = async () => {
       reject(handleResponseError(error));
     });
     resolve(stored);
+  });
+}
+
+export const checkSocialAuthen = async (platform: string, socialId: string) => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      authen_code: socialId,
+      platform_name: platform === 'fb'
+        ? 'fbauthen'
+        : platform === 'google'
+          ? 'googleauthen'
+          : platform === 'line'
+            ? 'lineauthen'
+            : ''
+    }
+    await axios.post(
+      `${SERVER}/api/Main/CheckPlatform_Authencode`,
+      payload,
+      {
+        withCredentials: true,
+        ...{
+          headers: await createRequestHeader(false, true)
+        }
+      }
+    ).then(async (response: AxiosResponse<any, any>) => {
+      if (response.data) {
+        if (response.data.Status === 'Success') {
+          if (response.data.Data === 'True') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        } else {
+          reject(response.data.Message);
+        }
+      } else {
+        reject(MSG_ERR_EMP_RES);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
+  });
+}
+
+export const saveSocialAuthen = async (platform: string, socialId: string) => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      authen_code: socialId,
+      platform_name: platform === 'fb'
+        ? 'fbauthen'
+        : platform === 'google'
+          ? 'googleauthen'
+          : platform === 'line'
+            ? 'lineauthen'
+            : ''
+    }
+    await axios.post(
+      `${SERVER}/api/Main/SaveAuthenCode`,
+      payload,
+      {
+        withCredentials: true,
+        ...{
+          headers: await createRequestHeader(true)
+        }
+      }
+    ).then(async (response: AxiosResponse<any, any>) => {
+      if (response.data) {
+        if (response.data.Status === 'Success') {
+          resolve(true);
+        } else {
+          reject(response.data.Message);
+        }
+      } else {
+        reject(MSG_ERR_EMP_RES);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
   });
 }
 

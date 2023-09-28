@@ -65,7 +65,6 @@ export const getProducts = async (boatId: string) => {
             }
             return product;
           });
-          console.log(products);
           resolve(products);
         } else {
           reject(response.data.Message);
@@ -116,7 +115,6 @@ export const getProductDetails = async (productId: number | string) => {
                 weight: data.package_weight,
               }
             }
-            console.log(productDetail);
             resolve(productDetail);
           } else {
             resolve(null);

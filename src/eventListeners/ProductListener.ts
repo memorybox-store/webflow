@@ -35,33 +35,33 @@ export const ProductListener = (): void => {
     return new Promise(async (resolve) => {
 
       // Init card container
-      const cardContainer: HTMLElement = document.getElementById(EL_ID_RESULT_CONTAINER);
+      const cardContainer = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
 
       // Get sample element and hide
-      const sampleElement: HTMLElement = document.getElementById(EL_ID_RESULT_SAMPLE);
+      const sampleElement = document.getElementById(EL_ID_RESULT_SAMPLE) as HTMLElement;
       sampleElement.style.opacity = '0';
       sampleElement?.classList.add("hidden-force");
 
       // Init summary of image includes my picture
-      const sumMyPicElement: HTMLElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC);
+      const sumMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
       if (sumMyPicElement) {
         sumMyPicElement.innerText = 'N/A';
       }
 
       // Init summary of total image
-      const sumTotalElement: HTMLElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL);
+      const sumTotalElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
       if (sumTotalElement) {
         sumTotalElement.innerText = '0';
       }
 
       // Init summary of boat name
-      const sumBoatElement: HTMLElement = document.getElementById(EL_ID_RESULT_SUM_BOAT);
+      const sumBoatElement = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
       if (sumBoatElement) {
         sumBoatElement.innerText = '-';
       }
 
       // Init summary of comapny
-      const sumCompanyElement: HTMLElement = document.getElementById(EL_ID_RESULT_SUM_COMPANY);
+      const sumCompanyElement = document.getElementById(EL_ID_RESULT_SUM_COMPANY) as HTMLElement;
       if (sumCompanyElement) {
         sumCompanyElement.innerText = '-';
       }
@@ -114,7 +114,6 @@ export const ProductListener = (): void => {
 
         // Get products from boat via API
         await getProducts(boatId).then(async (data: Product[]) => {
-          console.log('Product', data);
 
           // Update summary of image includes my picture
           if (sumTotalElement) {

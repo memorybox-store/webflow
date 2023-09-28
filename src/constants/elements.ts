@@ -17,3 +17,5 @@ export const EL_ID_RESULT_SUM_BOAT = 'boatName';
 export const EL_ID_RESULT_SUM_COMPANY = 'comp_id';
 export const EL_ID_RESULT_CONTAINER = 'cardContainer';
 export const EL_ID_RESULT_SAMPLE = 'ModuleSample';
+export const EL_ID_FB_BTN = 'fb-login-btn';
+export const EL_ID_GOOGLE_BTN = 'google-login-btn';

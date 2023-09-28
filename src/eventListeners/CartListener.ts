@@ -39,7 +39,6 @@ const updateCartList = (data: CartItem[]) => {
   const formElements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_FORM) as HTMLCollectionOf<HTMLElement>;
   if (formElements && formElements.length) {
-    console.log(formElements);
     for (const [_, formNode] of Object.entries(formElements)) {
 
       const formElement: HTMLElement = formNode.cloneNode(true) as HTMLElement;
@@ -51,15 +50,11 @@ const updateCartList = (data: CartItem[]) => {
       } else {
         formElement.classList.add("hidden-force");
       }
-      console.log(data.length ? 'flex' : 'none');
 
       const listElements: HTMLCollectionOf<HTMLElement>
         = formElement.getElementsByClassName(EL_CLASS_CART_LIST) as HTMLCollectionOf<HTMLElement>;
       if (listElements && listElements.length) {
-        console.log(listElements);
         for (const [_, listNode] of Object.entries(listElements)) {
-          console.log(listNode);
-
           const itemsContainer: HTMLElement = document.createElement('div');
           const itemsHTML = data.reduce((result: any, item: any) => {
             return `
@@ -119,15 +114,12 @@ const updateCartList = (data: CartItem[]) => {
           });
         }
       }
-
-      console.log(formElement);
     }
   }
 
   const emptyElements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_EMPTY) as HTMLCollectionOf<HTMLElement>;
   if (emptyElements && emptyElements.length) {
-    console.log(emptyElements);
     for (const [_, emptyNode] of Object.entries(emptyElements)) {
       const emptyElement: HTMLElement = emptyNode.cloneNode(true) as HTMLElement;
       emptyElement.removeAttribute('data-wf-collection');
@@ -140,8 +132,6 @@ const updateCartList = (data: CartItem[]) => {
         emptyElement.classList.add("flex-force");
       }
       emptyNode.parentNode.replaceChild(emptyElement, emptyNode);
-      console.log(data.length ? 'none' : 'flex');
-      console.log(emptyElement);
     }
   }
 
@@ -151,9 +141,7 @@ const updateCartAmount = async (data: CartItem[]) => {
   const elements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_AMOUNT) as HTMLCollectionOf<HTMLElement>;
   if (elements && elements.length) {
-    console.log(elements);
     for (const [_, node] of Object.entries(elements)) {
-      console.log(node);
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       replacedElement.removeAttribute('data-wf-bindings');
       replacedElement.innerText = data.length.toString();
@@ -208,7 +196,6 @@ export const CartListener = (): void => {
   const load = () => {
     return new Promise(async (resolve) => {
       await getCartItems().then(async (data: CartItem[]) => {
-        console.log('CART', data);
         initializeElements(data);
         resolve(data);
       }).catch((error) => {
@@ -234,8 +221,7 @@ export const CartListener = (): void => {
     }
   }
 
-  const element: HTMLElement
-    = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
+  const element = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
     const modalElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-container-wrapper"]');
     if (modalElement) {
@@ -251,8 +237,8 @@ export const CartListener = (): void => {
         modalElement.classList.remove('flex-force');
         modalElement.classList.add('hidden-force');
       });
-      load();
     }
+    load();
   }
 
 }

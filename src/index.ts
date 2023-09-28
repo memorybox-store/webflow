@@ -9,32 +9,24 @@ import { SearchListener } from './eventListeners/SearchListener';
 import { CartListener } from './eventListeners/CartListener';
 import { ProductListener } from './eventListeners/ProductListener';
 import { CartItem } from './models/cart';
+import { SocialLoginListener } from './eventListeners/SocialLoginListener';
 
 const publicUrls = [
   '/',
   '/log-in',
+  '/sign-in',
 ];
-
-var profile: Profile = null;
-
-const setProfile = (data: Profile) => {
-  profile = { ...data };
-  console.log(profile);
-}
 
 const checkAuthen = () => {
   return new Promise(async (resolve) => {
     let result: boolean = false;
     const path: string = window.location.pathname;
-    console.log(path);
     await authen().then(async () => {
+      result = true;
       if (path === '/log-in') {
         location.href = './finder';
       } else {
-        await retrieveProfile().then((data: Profile) => {
-          setProfile(data);
-          result = true;
-        }).catch((message) => {
+        await retrieveProfile().catch((message) => {
           alert(message);
         });
       }
@@ -42,7 +34,6 @@ const checkAuthen = () => {
       await signout().catch((message?) => {
         alert(message || '');
       });
-      setProfile(null);
       if (!publicUrls.includes(path)) {
         location.href = './log-in';
       }
@@ -52,10 +43,12 @@ const checkAuthen = () => {
 }
 
 const initialize = () => {
-  LoginListener(setProfile);
-  LogoutListener(setProfile);
+  LoginListener();
+  LogoutListener();
+  SocialLoginListener();
   ScanListener();
   checkAuthen().then((result: boolean) => {
+    console.log(result);
     if (result) {
       CartListener();
       SearchListener();

@@ -39,7 +39,6 @@ export const getCompanies = async () => {
               image: item.a19
             }
           ));
-          console.log(companies);
           resolve(companies);
         } else {
           reject(response.data.Message);
@@ -80,7 +79,6 @@ export const getBoats = async (compId: string, date: string) => {
               createdAt: item.a4
             }
           ));
-          console.log(boats);
           resolve(boats);
         } else {
           reject(response.data.Message);

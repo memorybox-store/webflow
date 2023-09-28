@@ -48,8 +48,7 @@ export const SearchListener = (): void => {
 				}
 			))
 		];
-		const element: HTMLSelectElement
-			= document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
+		const element = document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 		if (element) {
 			if (element.hasChildNodes()) {
 				const nodes: Array<any> = Object.entries(element.childNodes).map(
@@ -87,8 +86,7 @@ export const SearchListener = (): void => {
 				}
 			))
 		];
-		const element: HTMLSelectElement
-			= document.getElementById(EL_ID_SELECT_BOAT) as HTMLSelectElement;
+		const element = document.getElementById(EL_ID_SELECT_BOAT) as HTMLSelectElement;
 		if (element) {
 			if (element.hasChildNodes()) {
 				const nodes: Array<any> = Object.entries(element.childNodes).map(
@@ -116,7 +114,6 @@ export const SearchListener = (): void => {
 	const loadCompanies = () => {
 		return new Promise(async (resolve) => {
 			await getCompanies().then(async (data: Array<any>) => {
-				console.log(data);
 				setCompanies(data);
 				resolve(data);
 			}).catch((error) => {
@@ -128,7 +125,6 @@ export const SearchListener = (): void => {
 	const loadBoats = (companyId: string, tripDate: string) => {
 		return new Promise(async (resolve) => {
 			await getBoats(companyId, tripDate).then(async (data: Array<any>) => {
-				console.log(data);
 				setBoats(data);
 				resolve(data);
 			}).catch((error) => {
@@ -137,8 +133,7 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const companyElement: HTMLSelectElement
-		= document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
+	const companyElement = document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 	if (companyElement) {
 		loadCompanies();
 		companyElement.addEventListener("change", (event: any) => {
@@ -148,8 +143,7 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const dateElement: HTMLInputElement
-		= document.getElementById(EL_ID_SELECT_TRIP_DATE) as HTMLInputElement;
+	const dateElement = document.getElementById(EL_ID_SELECT_TRIP_DATE) as HTMLInputElement;
 	if (dateElement) {
 		// Create a MutationObserver
 		const observer = new MutationObserver(function (mutationsList) {
@@ -187,8 +181,7 @@ export const SearchListener = (): void => {
 
 	}
 
-	const boatElement: HTMLSelectElement
-		= document.getElementById(EL_ID_SELECT_BOAT) as HTMLSelectElement;
+	const boatElement = document.getElementById(EL_ID_SELECT_BOAT) as HTMLSelectElement;
 	if (boatElement) {
 		boatElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
@@ -196,16 +189,13 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const form: HTMLFormElement
-		= document.getElementById(EL_ID_FIND_FORM) as HTMLFormElement;
+	const form = document.getElementById(EL_ID_FIND_FORM) as HTMLFormElement;
 	if (form) {
-		console.log('Found Form', form);
 		form.addEventListener('submit', (event) => {
 
 			event.preventDefault();
 			event.stopPropagation();
 
-			console.log('Boat', boat);
 			if (boat) {
 				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
 				location.href = `./result?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;

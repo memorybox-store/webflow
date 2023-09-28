@@ -16,8 +16,7 @@ export const ScanListener = (): void => {
     // 'expression'
   ];
 
-  const element: HTMLInputElement
-    = document.getElementById(EL_ID_FACESCAN_UPLOADER) as HTMLInputElement;
+  const element = document.getElementById(EL_ID_FACESCAN_UPLOADER) as HTMLInputElement;
   if (element) {
 
     loadFaceModels(options).then(() => {

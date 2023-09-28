@@ -199,7 +199,6 @@ export const removeItemFromCart = async (cartId: number | string) => {
     ).then(async (response: AxiosResponse<any, any>) => {
       if (response.data) {
         if (response.data.Status === 'Success') {
-          console.log(true);
           resolve(true);
         } else {
           reject(response.data.Message);
