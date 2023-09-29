@@ -6,3 +6,4 @@ export const FB_CLIENT_ID = '6561287033956755';
 export const GOOGLE_CLIENT_ID = '737492098323-bekfqpnhgvbh25a7ubvphbokaf5smem8.apps.googleusercontent.com';
 // export const SOCIAL_LOGIN_REDIRECT = 'http://localhost:8080/';
 export const SOCIAL_LOGIN_REDIRECT = 'https://memorybox.webflow.io/log-in';
+export const OMISE_PUBLIC_KEY = 'pkey_test_5x66z2s0d6z4aobvn7f';

@@ -40,3 +40,22 @@
 .clickable {
   cursor: pointer;
 }
+
+.omise-checkout-button {
+  color: #fff;
+  text-align: center;
+  letter-spacing: .3px;
+  transform-style: preserve-3d;
+  background-color: #1476ff;
+  border-radius: 44px;
+  justify-content: center;
+  padding: 18px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.143em;
+  text-decoration: none;
+  transition: background-color .3s, transform .3s, color .3s;
+  box-shadow: 0 4px 10px rgba(2, 87, 251, .2);
+  border: 0;
+  cursor: pointer;
+}

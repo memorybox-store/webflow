@@ -6,6 +6,8 @@
   <title>MemoryBox</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
 
+  <link rel="stylesheet" href="./assets/style.css">
+
 </head>
 
 <body>
@@ -58,6 +60,15 @@
   <div id="cart-modal">
 
   </div>
+
+  <form id="checkoutForm" method="POST" action="/charge">
+    <script type="text/javascript" src="https://cdn.omise.co/omise.js"
+            data-key="pkey_test_5x66z2s0d6z4aobvn7f"
+            data-amount="12345"
+            data-currency="THB"
+            data-default-payment-method="credit_card">
+    </script>
+  </form>
 
 </body>
 

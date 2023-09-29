@@ -6,7 +6,7 @@ import {
   EL_CLASS_CART_LIST,
   EL_ID_CART_BADGE
 } from "../constants/elements";
-import { cartItemTemplate, cartModalTemplate } from "../templates/cart";
+import { cartItemTemplate, cartModalTemplate, omiseFormTemplate } from "../templates/cart";
 
 import { getCartItems, removeItemFromCart } from "../api/cart";
 import { CartItem } from "../models/cart";
@@ -138,6 +138,12 @@ const updateCartList = (data: CartItem[]) => {
 }
 
 const updateCartAmount = async (data: CartItem[]) => {
+  let amount: number = 0;
+  if (data.length) {
+    amount = data.reduce((result: number, item: any) => {
+      return result + (item.product?.price || 0);
+    }, 0) * 100;
+  }
   const elements: HTMLCollectionOf<HTMLElement>
     = document.getElementsByClassName(EL_CLASS_CART_AMOUNT) as HTMLCollectionOf<HTMLElement>;
   if (elements && elements.length) {
@@ -145,16 +151,16 @@ const updateCartAmount = async (data: CartItem[]) => {
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       replacedElement.removeAttribute('data-wf-bindings');
       replacedElement.innerText = data.length.toString();
-      if (data.length) {
-        replacedElement.innerText = `฿ ${data.reduce((result: number, item: any) => {
-          return result + (item.product?.price || 0);
-        }, 0).toString()
-          } THB`;
-      } else {
-        replacedElement.innerText = '฿ 0 THB';
-      }
+      replacedElement.innerText = `฿ ${amount.toFixed()} THB`;
       node.parentNode.replaceChild(replacedElement, node);
     }
+  }
+  const modalCheckOutFormElement: HTMLElement = document.querySelector('.omise-checkout-form-wraper');
+  if (modalCheckOutFormElement) {
+    const container = document.createElement('div');
+    container.classList.add('omise-checkout-form-wraper');
+    container.innerHTML = omiseFormTemplate.replace('{{amount}}', amount.toString());
+    modalCheckOutFormElement.parentNode.replaceChild(container, modalCheckOutFormElement);
   }
 }
 
@@ -204,40 +210,31 @@ export const CartListener = (): void => {
     });
   }
 
-  const createCartModal = () => {
-
-    // Create a temporary container element
-    const container = document.createElement('div');
-
-    // Parse the HTML string into a DOM element
-    container.innerHTML = cartModalTemplate;
-
-    // Append the element to the document body or another target element
-    const targetElement = document.querySelector('#cart-modal'); // Replace with the selector of your target element
-    if (targetElement) {
-      targetElement.appendChild(container);
-    } else {
-      document.body.appendChild(container);
+  const modalElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-container-wrapper"]');
+  if (modalElement) {
+    modalElement.parentNode.removeChild(modalElement);
+    document.querySelector('body')?.appendChild(modalElement);
+    const modalLinkElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-open-link"]');
+    modalLinkElement?.addEventListener('click', async () => {
+      modalElement.classList.remove('hidden-force');
+      modalElement.classList.add('flex-force');
+    });
+    const modalCloseElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-close-link"]');
+    modalCloseElement?.addEventListener('click', async () => {
+      modalElement.classList.remove('flex-force');
+      modalElement.classList.add('hidden-force');
+    });
+    const modalCheckOutButtonElement: HTMLElement = document.querySelector('[data-node-type="cart-checkout-button"]');
+    if (modalCheckOutButtonElement) {
+      const container = document.createElement('div');
+      container.classList.add('omise-checkout-form-wraper');
+      container.innerHTML = omiseFormTemplate.replace('{{amount}}', '0');
+      modalCheckOutButtonElement.parentNode.replaceChild(container, modalCheckOutButtonElement);
     }
   }
 
   const element = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
-    const modalElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-container-wrapper"]');
-    if (modalElement) {
-      modalElement.parentNode.removeChild(modalElement);
-      document.querySelector('body')?.appendChild(modalElement);
-      const modalLinkElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-open-link"]');
-      modalLinkElement?.addEventListener('click', async () => {
-        modalElement.classList.remove('hidden-force');
-        modalElement.classList.add('flex-force');
-      });
-      const modalCloseElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-close-link"]');
-      modalCloseElement?.addEventListener('click', async () => {
-        modalElement.classList.remove('flex-force');
-        modalElement.classList.add('hidden-force');
-      });
-    }
     load();
   }
 
