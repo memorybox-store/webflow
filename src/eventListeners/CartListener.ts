@@ -4,7 +4,9 @@ import {
   EL_CLASS_CART_EMPTY,
   EL_CLASS_CART_FORM,
   EL_CLASS_CART_LIST,
-  EL_ID_CART_BADGE
+  EL_ID_CART_BADGE,
+  EL_ID_CHECKOUT_BTN,
+  EL_ID_CHECKOUT_OMISE_FORM
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
@@ -155,9 +157,9 @@ const updateCartAmount = async (data: CartItem[]) => {
       node.parentNode.replaceChild(replacedElement, node);
     }
   }
-  const modalCheckOutFormElement: HTMLElement = document.querySelector('.omise-checkout-form-wraper');
+  const modalCheckOutFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLElement;
   if (modalCheckOutFormElement) {
-    const omiseElement = createOmiseElement(0);
+    const omiseElement = createOmiseElement(amount);
     modalCheckOutFormElement.parentNode.replaceChild(omiseElement, modalCheckOutFormElement);
   }
 }
@@ -195,7 +197,7 @@ export const createOmiseElement = (amount: number) => {
 
   // Creating a form element
   const formElement = document.createElement('form');
-  formElement.id = 'checkoutForm';
+  formElement.id = EL_ID_CHECKOUT_OMISE_FORM;
   formElement.method = 'GET';
   formElement.action = '/';
 
@@ -274,11 +276,10 @@ export const CartListener = (): void => {
     load();
   }
 
-  // const form = document.getElementById('checkoutForm') as HTMLFormElement;
-  // console.log(form);
-  
-  const omiseElement = createOmiseElement(0);
-  console.log(omiseElement);
-  document.querySelector('body')?.appendChild(omiseElement);
+  const checkoutElement = document.getElementById(EL_ID_CHECKOUT_BTN) as HTMLElement;
+  if (checkoutElement) {
+    const omiseElement = createOmiseElement(0);
+    checkoutElement.parentElement.replaceChild(omiseElement, checkoutElement);
+  }
 
 }

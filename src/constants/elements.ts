@@ -21,3 +21,5 @@ export const EL_ID_FACE_SCAN_BTN = 'face-scan-button';
 export const EL_ID_FB_BTN = 'fb-login-button';
 export const EL_ID_GOOGLE_BTN = 'google-login-button';
 export const EL_ID_LINE_BTN = 'line-login-button';
+export const EL_ID_CHECKOUT_BTN = 'commerce-cart-quick-checkout-actions';
+export const EL_ID_CHECKOUT_OMISE_FORM = 'checkout-omise-form';
