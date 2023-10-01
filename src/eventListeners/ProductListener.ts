@@ -139,6 +139,7 @@ export const ProductListener = (): void => {
             cardElement.removeAttribute('data-w-id');
             cardElement.setAttribute('id', `product-${item.id}`);
             cardElement.style.opacity = '1';
+            cardElement.style.display = 'flex';
 
             // Init image
             const imgElement: HTMLImageElement = cardElement.querySelector('img');
