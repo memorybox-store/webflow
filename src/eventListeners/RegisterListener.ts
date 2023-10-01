@@ -6,14 +6,16 @@ import { signin } from "../api/user";
 import { Session } from "../models/user";
 
 export const LoginListener = (): void => {
-	const form = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
-	form?.addEventListener('submit', (event) => {
+	const formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
+	formElement?.addEventListener('submit', (event) => {
 
 		event.preventDefault();
 		event.stopPropagation();
+		
+		const formData = new FormData(formElement);
 
-		let username = getElementValueByName('username');
-		let password = getElementValueByName('password');
+		const username = formData.get('username') as string || '';
+		const password = formData.get('password_input') as string || '';
 
 		signin(username, password).then((data: Session) => {
 			location.href = '/finder';

@@ -189,12 +189,18 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const form = document.getElementById(EL_ID_FIND_FORM) as HTMLFormElement;
-	if (form) {
-		form.addEventListener('submit', (event) => {
+	const formElement = document.getElementById(EL_ID_FIND_FORM) as HTMLFormElement;
+	if (formElement) {
+		formElement.addEventListener('submit', (event) => {
 
 			event.preventDefault();
 			event.stopPropagation();
+
+			const formData = new FormData(formElement);
+
+			const boat = formData.get('boat') as string || '';
+			const company = formData.get('company') as string || '';
+			const date = formData.get('date') as string || '';
 
 			if (boat) {
 				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';

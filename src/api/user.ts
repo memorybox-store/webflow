@@ -1,4 +1,9 @@
-import { LINE_CHANNEL_ID, LINE_CHANNEL_SECRET, SERVER, SOCIAL_LOGIN_REDIRECT } from '../constants/configs';
+import { 
+  LINE_CHANNEL_ID, 
+  LINE_CHANNEL_SECRET, 
+  SERVER, 
+  SOCIAL_LOGIN_REDIRECT 
+} from '../constants/configs';
 import { MSG_ERR_EMP_DATA, MSG_ERR_EMP_RES } from '../constants/messages';
 
 import axios, { AxiosResponse } from 'axios';
@@ -236,7 +241,7 @@ export const saveSocialAuthen = async (platform: string, socialId: string) => {
   });
 }
 
-export const lineAccessTokenFromCode = async (code: string) => {
+export const lineTokenFromCode = async (code: string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
       grant_type: 'authorization_code',
@@ -246,16 +251,43 @@ export const lineAccessTokenFromCode = async (code: string) => {
       client_secret: LINE_CHANNEL_SECRET,
     }
     await axios.post(
-      `https://api.line.me/v2/oauth/accessToken`,
+      `https://api.line.me/oauth2/v2.1/token`,
       payload,
       {
+        withCredentials: false,
         ...{
           headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
       if (response.data) {
-        console.log(response);
+        resolve(response.data);
+      } else {
+        reject(MSG_ERR_EMP_RES);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
+  });
+}
+
+export const lineVerify = async (idToken: string) => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      id_token: idToken,
+      client_id: LINE_CHANNEL_ID,
+    }
+    await axios.post(
+      `https://api.line.me/oauth2/v2.1/verify`,
+      payload,
+      {
+        withCredentials: false,
+        ...{
+          headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
+        }
+      }
+    ).then(async (response: AxiosResponse<any, any>) => {
+      if (response.data) {
         resolve(response.data);
       } else {
         reject(MSG_ERR_EMP_RES);
@@ -269,15 +301,15 @@ export const lineAccessTokenFromCode = async (code: string) => {
 export const lineProfile = async (accessToken: string) => {
   return new Promise(async (resolve, reject) => {
     await axios.get(
-      `https://api.line.me/v2/profile`,
+      `https://api.line.me/oauth2/v2.1/userinfo`,
       {
+        withCredentials: false,
         ...{
-          headers: await createRequestHeader(accessToken, false)
+          headers: await createRequestHeader(accessToken)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
       if (response.data) {
-        console.log(response);
         resolve(response.data);
       } else {
         reject(MSG_ERR_EMP_RES);

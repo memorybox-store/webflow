@@ -8,5 +8,5 @@ export const LINE_CHANNEL_ID = '2000967285';
 export const LINE_CHANNEL_SECRET = 'd9b64e13f5c925d99fce9d2530fa3670';
 export const OMISE_PUBLIC_KEY = 'pkey_test_5x66z2s0d6z4aobvn7f';
 export const OMISE_SECRET_KEY = 'pkey_test_5x66z2s0d6z4aobvn7f';
-// export const SOCIAL_LOGIN_REDIRECT = 'http://localhost:8080/';
-export const SOCIAL_LOGIN_REDIRECT = 'https://memorybox.webflow.io/log-in';
+export const SOCIAL_LOGIN_REDIRECT = 'http://localhost:8080/';
+// export const SOCIAL_LOGIN_REDIRECT = 'https://memorybox.webflow.io/log-in';

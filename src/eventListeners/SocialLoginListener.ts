@@ -1,11 +1,9 @@
 import { EL_ID_FB_BTN, EL_ID_GOOGLE_BTN, EL_ID_LINE_BTN, EL_ID_LOGIN_FORM } from "../constants/elements";
 
 import hello from '../config/hellojs';
-import { getElementValueByName } from "../utils/form";
-import { checkSocialAuthen, lineAccessTokenFromCode, lineProfile, register, retrieveProfile, saveSocialAuthen, signin } from "../api/user";
+import { checkSocialAuthen, lineTokenFromCode, lineProfile, register, retrieveProfile, saveSocialAuthen, signin, lineVerify } from "../api/user";
 
-import { Profile, Session } from "../models/user";
-import { HelloJSAuthResponse, HelloJSLoginEventArguement } from "hellojs";
+import { HelloJSLoginEventArguement } from "hellojs";
 import { LINE_CHANNEL_ID, SOCIAL_LOGIN_REDIRECT } from "../constants/configs";
 
 export const SocialLoginListener = (): void => {
@@ -106,17 +104,15 @@ export const SocialLoginListener = (): void => {
 			location.href = loginUrl;
 		});
 		if (state === 'Line') {
-			console.log(code);
-			lineAccessTokenFromCode(code).then((data: any) => {
-				const accessToken = data.access_token;
-				console.log(data);
-				lineProfile(accessToken).then((data: any) => {
-					console.log(data);
-				}).then((error) => {
-					console.log(error);
+			lineTokenFromCode(code).then((data: any) => {
+				const idToken = data.id_token;
+				lineVerify(idToken).then((data: any) => {
+					afterSocial('line', data.sub, data.name, password);
+				}).catch((message) => {
+					alert(message);
 				});
-			}).then((error) => {
-				console.log(error);
+			}).catch((message) => {
+				alert(message);
 			});
 		}
 	}
