@@ -6,7 +6,7 @@ import {
   EL_CLASS_CART_LIST,
   EL_ID_CART_BADGE
 } from "../constants/elements";
-import { cartItemTemplate, cartModalTemplate, omiseFormTemplate } from "../templates/cart";
+import { cartItemTemplate } from "../templates/cart";
 
 import { getCartItems, removeItemFromCart } from "../api/cart";
 import { CartItem } from "../models/cart";
@@ -157,10 +157,8 @@ const updateCartAmount = async (data: CartItem[]) => {
   }
   const modalCheckOutFormElement: HTMLElement = document.querySelector('.omise-checkout-form-wraper');
   if (modalCheckOutFormElement) {
-    const container = document.createElement('div');
-    container.classList.add('omise-checkout-form-wraper');
-    container.innerHTML = omiseFormTemplate.replace('{{amount}}', amount.toString());
-    modalCheckOutFormElement.parentNode.replaceChild(container, modalCheckOutFormElement);
+    const omiseElement = createOmiseElement(0);
+    modalCheckOutFormElement.parentNode.replaceChild(omiseElement, modalCheckOutFormElement);
   }
 }
 
@@ -190,6 +188,46 @@ export const updateCartItems = (data: CartItem[]) => {
       }
     }
   }
+
+}
+
+export const createOmiseElement = (amount: number) => {
+
+  // Creating a form element
+  const formElement = document.createElement('form');
+  formElement.id = 'checkoutForm';
+  formElement.method = 'GET';
+  formElement.action = '/';
+
+  // Creating a script element
+  const scriptElement = document.createElement('script');
+  scriptElement.type = 'text/javascript';
+  scriptElement.src = 'https://cdn.omise.co/omise.js';
+  scriptElement.setAttribute('data-key', 'pkey_test_5x66z2s0d6z4aobvn7f');
+  scriptElement.setAttribute('data-amount', amount.toString());
+  scriptElement.setAttribute('data-currency', 'THB');
+  scriptElement.setAttribute('data-default-payment-method', 'credit_card');
+  scriptElement.setAttribute('data-other-payment-methods', 'alipay,alipay_cn,alipay_hk,promptpay,truemoney,rabbit_linepay');
+
+  // Appending the script element to the form element
+  formElement.appendChild(scriptElement);
+
+  formElement?.addEventListener('submit', (event) => {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const formData = new FormData(formElement);
+
+    for (const entry of (formData as any).entries()) {
+      const [key, value] = entry;
+      console.log(`${key}: ${value}`);
+    }
+
+  });
+
+  // Appending the form element to the target element
+  return formElement;
 
 }
 
@@ -226,10 +264,8 @@ export const CartListener = (): void => {
     });
     const modalCheckOutButtonElement: HTMLElement = document.querySelector('[data-node-type="cart-checkout-button"]');
     if (modalCheckOutButtonElement) {
-      const container = document.createElement('div');
-      container.classList.add('omise-checkout-form-wraper');
-      container.innerHTML = omiseFormTemplate.replace('{{amount}}', '0');
-      modalCheckOutButtonElement.parentNode.replaceChild(container, modalCheckOutButtonElement);
+      // const omiseElement = createOmiseElement(0);
+      // modalCheckOutButtonElement.parentNode.replaceChild(omiseElement, modalCheckOutButtonElement);
     }
   }
 
@@ -237,5 +273,12 @@ export const CartListener = (): void => {
   if (element) {
     load();
   }
+
+  // const form = document.getElementById('checkoutForm') as HTMLFormElement;
+  // console.log(form);
+  
+  const omiseElement = createOmiseElement(0);
+  console.log(omiseElement);
+  document.querySelector('body')?.appendChild(omiseElement);
 
 }

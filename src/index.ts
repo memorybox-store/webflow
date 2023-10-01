@@ -10,6 +10,7 @@ import { CartListener } from './eventListeners/CartListener';
 import { ProductListener } from './eventListeners/ProductListener';
 import { CartItem } from './models/cart';
 import { SocialLoginListener } from './eventListeners/SocialLoginListener';
+import { createOmiseToken } from './api/payment';
 
 const publicUrls = [
   '/',
@@ -59,4 +60,5 @@ const initialize = () => {
 
 document.addEventListener("DOMContentLoaded", () => {
   initialize();
+  createOmiseToken();
 });

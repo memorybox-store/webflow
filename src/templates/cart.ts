@@ -16,16 +16,6 @@ export const cartItemTemplate = `
 </div>
 `;
 
-export const omiseFormTemplate = `
-<form id="checkoutForm" method="POST" action="/charge">
-  <script type="text/javascript" src="https://cdn.omise.co/omise.js"
-          data-key="${OMISE_PUBLIC_KEY}"
-          data-amount="{{amount}}"
-          data-currency="THB"
-          data-default-payment-method="credit_card">
-  </script>
-</form>`;
-
 export const cartModalTemplate = `
 <div data-node-type="commerce-cart-container-wrapper" 
   style="opacity: 1; transition: opacity 300ms ease 0s;"

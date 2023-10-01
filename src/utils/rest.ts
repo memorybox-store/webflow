@@ -6,7 +6,7 @@ import { Session } from '../models/user';
 import { MSG_ERR_API_NOT_PERMIT, MSG_ERR_UNKNOWN } from '../constants/messages';
 
 export const createRequestHeader = async (
-  requireSession: boolean = false,
+  requireSession: boolean | string = false,
   requireKey: boolean = false,
   contentType: string = 'application/json'
 ) => {
@@ -24,9 +24,13 @@ export const createRequestHeader = async (
     headers['Content-Type'] = 'text/plain';
   }
   if (requireSession) {
-    const loginToken = await getAccessToken();
-    if (loginToken) {
-      headers['Authorization'] = `Bearer ${loginToken}`;
+    if (typeof requireSession === 'string') {
+      headers['Authorization'] = `Bearer ${requireSession}`;
+    } else {
+      const loginToken = await getAccessToken();
+      if (loginToken) {
+        headers['Authorization'] = `Bearer ${loginToken}`;
+      }
     }
   }
   return headers;
