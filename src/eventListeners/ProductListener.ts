@@ -40,6 +40,7 @@ export const ProductListener = (): void => {
       // Get sample element and hide
       const sampleElement = document.getElementById(EL_ID_RESULT_SAMPLE) as HTMLElement;
       sampleElement.style.opacity = '0';
+      sampleElement.style.display = 'none';
       sampleElement?.classList.add("hidden-force");
 
       // Init summary of image includes my picture

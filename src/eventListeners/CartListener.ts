@@ -4,8 +4,11 @@ import {
   EL_CLASS_CART_EMPTY,
   EL_CLASS_CART_FORM,
   EL_CLASS_CART_LIST,
+  EL_DNT_CHECKOUT_BTN,
+  EL_DNT_MODAL_CART,
+  EL_DNT_MODAL_CART_CLOSE_LINK,
+  EL_DNT_MODAL_CART_OPEN_LINK,
   EL_ID_CART_BADGE,
-  EL_ID_CHECKOUT_BTN,
   EL_ID_CHECKOUT_OMISE_FORM
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
@@ -250,25 +253,20 @@ export const CartListener = (): void => {
     });
   }
 
-  const modalElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-container-wrapper"]');
+  const modalElement: HTMLElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART}"]`);
   if (modalElement) {
     modalElement.parentNode.removeChild(modalElement);
     document.querySelector('body')?.appendChild(modalElement);
-    const modalLinkElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-open-link"]');
+    const modalLinkElement: HTMLElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART_OPEN_LINK}"]`);
     modalLinkElement?.addEventListener('click', async () => {
       modalElement.classList.remove('hidden-force');
       modalElement.classList.add('flex-force');
     });
-    const modalCloseElement: HTMLElement = document.querySelector('[data-node-type="commerce-cart-close-link"]');
+    const modalCloseElement: HTMLElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART_CLOSE_LINK}"]`);
     modalCloseElement?.addEventListener('click', async () => {
       modalElement.classList.remove('flex-force');
       modalElement.classList.add('hidden-force');
     });
-    const modalCheckOutButtonElement: HTMLElement = document.querySelector('[data-node-type="cart-checkout-button"]');
-    if (modalCheckOutButtonElement) {
-      // const omiseElement = createOmiseElement(0);
-      // modalCheckOutButtonElement.parentNode.replaceChild(omiseElement, modalCheckOutButtonElement);
-    }
   }
 
   const element = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
@@ -276,7 +274,7 @@ export const CartListener = (): void => {
     load();
   }
 
-  const checkoutElement = document.getElementById(EL_ID_CHECKOUT_BTN) as HTMLElement;
+  const checkoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (checkoutElement) {
     const omiseElement = createOmiseElement(0);
     checkoutElement.parentElement.replaceChild(omiseElement, checkoutElement);

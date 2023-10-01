@@ -28,10 +28,6 @@
   max-height: calc(100vh - 226px) !important;
 }
 
-.popup a:not(.add, .add-to-cart, .hide-mobile, .close-button-popup-module) {
-  display: none !important;
-}
-
 .disabled {
   pointer-events: none;
   opacity: 0.5;
