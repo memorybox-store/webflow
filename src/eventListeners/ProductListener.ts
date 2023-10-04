@@ -4,7 +4,12 @@ import {
   EL_ID_RESULT_SUM_MY_PIC,
   EL_ID_RESULT_SUM_TOTAL,
   EL_ID_RESULT_SUM_BOAT,
-  EL_ID_RESULT_SUM_COMPANY
+  EL_ID_RESULT_SUM_COMPANY,
+  EL_CLASS_ADD_TO_CART_BTN,
+  EL_CLASS_POPUP,
+  EL_CLASS_POPUP_TITLE,
+  EL_CLASS_POPUP_SUBTITLE,
+  EL_CLASS_POPUP_CLOSE_BTN
 } from "../constants/elements";
 
 import moment from '../config/moment';
@@ -43,33 +48,32 @@ export const ProductListener = (): void => {
       sampleElement.style.display = 'none';
       sampleElement?.classList.add("hidden-force");
 
-      // Init summary of image includes my picture
-      const sumMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
-      if (sumMyPicElement) {
-        sumMyPicElement.innerText = 'N/A';
+      // Init resultmary of image includes my picture
+      const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+      if (resultMyPicElement) {
+        resultMyPicElement.innerText = 'N/A';
       }
 
-      // Init summary of total image
-      const sumTotalElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
-      if (sumTotalElement) {
-        sumTotalElement.innerText = '0';
+      // Init resultmary of total image
+      const resultTotalElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
+      if (resultTotalElement) {
+        resultTotalElement.innerText = '0';
       }
 
-      // Init summary of boat name
-      const sumBoatElement = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
-      if (sumBoatElement) {
-        sumBoatElement.innerText = '-';
+      // Init resultmary of boat name
+      const resultBoatElement = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
+      if (resultBoatElement) {
+        resultBoatElement.innerText = '-';
       }
 
-      // Init summary of comapny
-      const sumCompanyElement = document.getElementById(EL_ID_RESULT_SUM_COMPANY) as HTMLElement;
-      if (sumCompanyElement) {
-        sumCompanyElement.innerText = '-';
+      // Init resultmary of comapny
+      const resultCompanyElement = document.getElementById(EL_ID_RESULT_SUM_COMPANY) as HTMLElement;
+      if (resultCompanyElement) {
+        resultCompanyElement.innerText = '-';
       }
 
       const initAddToCartElement = (element: HTMLElement, item: Product, addedItems: Array<any>) => {
         if (element) {
-          element.classList.add('product-add-button');
           element.setAttribute('data-target', item.id);
           // If item was added then disable button
           if (addedItems.includes(item.id.toString())) {
@@ -116,19 +120,19 @@ export const ProductListener = (): void => {
         // Get products from boat via API
         await getProducts(boatId).then(async (data: Product[]) => {
 
-          // Update summary of image includes my picture
-          if (sumTotalElement) {
-            sumTotalElement.innerText = data.length.toString();
+          // Update resultmary of image includes my picture
+          if (resultTotalElement) {
+            resultTotalElement.innerText = data.length.toString();
           }
 
-          // Update summary of total image
-          if (sumBoatElement) {
-            sumBoatElement.innerText = data.length ? data[0].boat?.name : '-';
+          // Update resultmary of total image
+          if (resultBoatElement) {
+            resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
           }
 
-          // Update summary of comapny
-          if (sumCompanyElement) {
-            sumCompanyElement.innerText = data.length ? data[0].company?.name : '-';
+          // Update resultmary of comapny
+          if (resultCompanyElement) {
+            resultCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }
 
           for (let item of data) {
@@ -146,42 +150,44 @@ export const ProductListener = (): void => {
             if (imgElement) {
               imgElement.src = item.image;
               imgElement.srcset = item.image;
-              imgElement.classList.add('open-popup-button');
-              imgElement.classList.add('clickable');
               // Register click event to open popup
               imgElement.addEventListener('click', async () => {
-                const popupElement: HTMLElement = document.querySelector(`[data-popup="${item.image}"]`);
-                popupElement?.classList.add('lightbox-display-force');
+                const popupElement: HTMLElement = document.querySelector(`[data-popup="${item.id}"]`);
+                popupElement?.classList.add('popup-display-force');
+                popupElement.style.opacity = '1';
+                popupElement.style.pointerEvents = 'all';
               });
             }
 
             // Init add to cart button
-            const addButtonElement: HTMLElement = cardElement.querySelector('a.cart');
+            const addButtonElement: HTMLElement = cardElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`);
             initAddToCartElement(addButtonElement, item, addedItems);
 
             // Init popup
-            const innerPopupElement: HTMLElement = cardElement.querySelector('.popup-wrapper-photo');
+            const innerPopupElement: HTMLElement = cardElement.querySelector(`.${EL_CLASS_POPUP}`);
             if (innerPopupElement) {
 
               // Init popup
               const popupElement = innerPopupElement.cloneNode(true) as HTMLElement;
 
-              popupElement.setAttribute('data-popup', item.image);
+              popupElement.setAttribute('data-popup', item.id);
+              popupElement.style.opacity = '0';
+              popupElement.style.pointerEvents = 'none';
 
               // Init title
-              const titlePopupElements: HTMLElement = popupElement.querySelector('.display-4');
+              const titlePopupElements: HTMLElement = popupElement.querySelector(`.${EL_CLASS_POPUP_TITLE}`);
               if (titlePopupElements) {
                 titlePopupElements.innerText = moment(date).format('DD.MM.YYYY');
               }
 
               // Init subtitle
-              const subtitlePopupElements: HTMLElement = popupElement.querySelector('.mg-bottom-24px');
+              const subtitlePopupElements: HTMLElement = popupElement.querySelector(`.${EL_CLASS_POPUP_SUBTITLE}`);
               if (subtitlePopupElements) {
                 subtitlePopupElements.innerText = `${data.length ? data[0].boat?.name : '-'} x ${companyName}`;
               }
 
               // Init add to cart button in popup
-              const addPopupButtonElement: HTMLElement = popupElement.querySelector('a.add-to-cart');
+              const addPopupButtonElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`);
               initAddToCartElement(addPopupButtonElement, item, addedItems);
 
               // Init image in popup
@@ -192,16 +198,20 @@ export const ProductListener = (): void => {
               }
 
               // Register click event to dismiss popup
-              const closePopupMobileButtonElement: HTMLElement = popupElement.querySelector('a.hide-mobile');
-              closePopupMobileButtonElement?.addEventListener('click', async () => {
-                popupElement.classList.remove('lightbox-display-force');
-              });
+              const closePopupButtonElements: NodeListOf<HTMLElement> = popupElement.querySelectorAll(`.${EL_CLASS_POPUP_CLOSE_BTN}`);
+              for (const [_, closePopupButtonElement] of Object.entries(closePopupButtonElements)) {
+                closePopupButtonElement?.addEventListener('click', async () => {
+                  popupElement.classList.remove('popup-display-force');
+                  popupElement.style.opacity = '0';
+                  popupElement.style.pointerEvents = 'none';
+                });
+              }
 
               // Register click event to dismiss popup
-              const closePopupButtonElements: HTMLElement = popupElement.querySelector('.close-button-popup-module');
-              closePopupButtonElements?.addEventListener('click', async () => {
-                popupElement.classList.remove('lightbox-display-force');
-              });
+              // const closePopupButtonElements: HTMLElement = popupElement.querySelector('.close-button-popup-module');
+              // closePopupButtonElements?.addEventListener('click', async () => {
+              //   popupElement.classList.remove('popup-display-force');
+              // });
 
               // Change popup location
               document.querySelector('body')?.appendChild(popupElement);

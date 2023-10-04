@@ -8,6 +8,7 @@ import {
   EL_DNT_MODAL_CART,
   EL_DNT_MODAL_CART_CLOSE_LINK,
   EL_DNT_MODAL_CART_OPEN_LINK,
+  EL_CLASS_ADD_TO_CART_BTN,
   EL_ID_CART_BADGE,
   EL_ID_CHECKOUT_OMISE_BTN,
   EL_ID_CHECKOUT_OMISE_FORM,
@@ -202,7 +203,7 @@ export const updateCartItems = (data: CartItem[]) => {
 
   const addedItems = data.map((item: CartItem) => item.product.id.toString());
   const addButtonElements: HTMLCollectionOf<HTMLElement>
-    = document.getElementsByClassName('product-add-button') as HTMLCollectionOf<HTMLElement>;
+    = document.getElementsByClassName(EL_CLASS_ADD_TO_CART_BTN) as HTMLCollectionOf<HTMLElement>;
   if (addButtonElements) {
     for (const [_, addNode] of Object.entries(addButtonElements)) {
       const productId = addNode.getAttribute('data-target');
