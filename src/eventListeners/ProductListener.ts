@@ -44,9 +44,11 @@ export const ProductListener = (): void => {
 
       // Get sample element and hide
       const sampleElement = document.getElementById(EL_ID_RESULT_SAMPLE) as HTMLElement;
-      sampleElement.style.opacity = '0';
-      sampleElement.style.display = 'none';
-      sampleElement?.classList.add("hidden-force");
+      if (sampleElement) {
+        sampleElement.style.opacity = '0';
+        sampleElement.style.display = 'none';
+        sampleElement.classList.add("hidden-force");
+      }
 
       // Init resultmary of image includes my picture
       const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
@@ -153,9 +155,11 @@ export const ProductListener = (): void => {
               // Register click event to open popup
               imgElement.addEventListener('click', async () => {
                 const popupElement: HTMLElement = document.querySelector(`[data-popup="${item.id}"]`);
-                popupElement?.classList.add('popup-display-force');
-                popupElement.style.opacity = '1';
-                popupElement.style.pointerEvents = 'all';
+                if (popupElement) {
+                  popupElement.classList.add('popup-display-force');
+                  popupElement.style.opacity = '1';
+                  popupElement.style.pointerEvents = 'all';
+                }
               });
             }
 
