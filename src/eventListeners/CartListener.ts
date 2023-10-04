@@ -9,12 +9,31 @@ import {
   EL_DNT_MODAL_CART_CLOSE_LINK,
   EL_DNT_MODAL_CART_OPEN_LINK,
   EL_ID_CART_BADGE,
-  EL_ID_CHECKOUT_OMISE_FORM
+  EL_ID_CHECKOUT_OMISE_BTN,
+  EL_ID_CHECKOUT_OMISE_FORM,
+  EL_ID_CHECKOUT_OMISE_SCRIPT
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
 import { getCartItems, removeItemFromCart } from "../api/cart";
 import { CartItem } from "../models/cart";
+import omise from "../config/omise";
+
+const THB = new Intl.NumberFormat(
+  'th-TH',
+  {
+    style: "currency",
+    currency: "THB",
+    minimumFractionDigits: 2,
+  }
+);
+
+const THBcompact = new Intl.NumberFormat(
+  'th-TH',
+  {
+    minimumFractionDigits: 2,
+  }
+);
 
 const removeCartItem = (cartId: string, cartName: string) => {
   return new Promise(async (resolve, reject) => {
@@ -156,14 +175,22 @@ const updateCartAmount = async (data: CartItem[]) => {
       const replacedElement: HTMLElement = node.cloneNode(true) as HTMLElement;
       replacedElement.removeAttribute('data-wf-bindings');
       replacedElement.innerText = data.length.toString();
-      replacedElement.innerText = `฿ ${amount.toFixed()} THB`;
+      replacedElement.innerText = `฿ ${THB.format(amount/100 || 0)} THB`;
       node.parentNode.replaceChild(replacedElement, node);
     }
   }
-  const modalCheckOutFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLElement;
-  if (modalCheckOutFormElement) {
-    const omiseElement = createOmiseElement(amount);
-    modalCheckOutFormElement.parentNode.replaceChild(omiseElement, modalCheckOutFormElement);
+  const modalCheckOutFormScript = document.getElementById(EL_ID_CHECKOUT_OMISE_SCRIPT) as HTMLElement;
+  if (modalCheckOutFormScript) {
+    modalCheckOutFormScript.setAttribute('data-amount', amount.toString());
+    modalCheckOutFormScript.setAttribute(
+      'data-button-label',
+      `Pay ${THBcompact.format(amount/100 || 0)} THB`
+    );
+    const checkoutButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`);
+    if (checkoutButtonElement) {
+      console.log(checkoutButtonElement);
+      checkoutButtonElement.innerHTML = `Pay ${THBcompact.format(amount/100 || 0)} THB`;
+    }
   }
 }
 
@@ -202,17 +229,19 @@ export const createOmiseElement = (amount: number) => {
   const formElement = document.createElement('form');
   formElement.id = EL_ID_CHECKOUT_OMISE_FORM;
   formElement.method = 'GET';
-  formElement.action = '/';
+  formElement.action = 'https://hooks.webflow.com/logic/64bf3a6357b2eb45b38e5e39/o-fFRyRn1mQ/';
 
   // Creating a script element
   const scriptElement = document.createElement('script');
+  scriptElement.id = EL_ID_CHECKOUT_OMISE_SCRIPT;
   scriptElement.type = 'text/javascript';
   scriptElement.src = 'https://cdn.omise.co/omise.js';
   scriptElement.setAttribute('data-key', 'pkey_test_5x66z2s0d6z4aobvn7f');
+  scriptElement.setAttribute('data-button-label', `Pay 0.00 THB`);
   scriptElement.setAttribute('data-amount', amount.toString());
   scriptElement.setAttribute('data-currency', 'THB');
   scriptElement.setAttribute('data-default-payment-method', 'credit_card');
-  scriptElement.setAttribute('data-other-payment-methods', 'alipay,alipay_cn,alipay_hk,promptpay,truemoney,rabbit_linepay');
+  scriptElement.setAttribute('data-other-payment-methods', 'alipay,alipay_cn,alipay_hk,convenience_store,pay_easy,net_banking,googlepay,internet_banking,internet_banking_bay,internet_banking_bbl,mobile_banking_bay,mobile_banking_bbl,mobile_banking_kbank,mobile_banking_ktb,mobile_banking_scb,promptpay,points_citi,rabbit_linepay,shopeepay,truemoney');
 
   // Appending the script element to the form element
   formElement.appendChild(scriptElement);
@@ -236,7 +265,7 @@ export const createOmiseElement = (amount: number) => {
 
 }
 
-export const CartListener = (): void => {
+export const CartListener = async (): Promise<void> => {
 
   const initializeElements = (data: CartItem[]) => {
     updateCartItems(data);
@@ -278,6 +307,11 @@ export const CartListener = (): void => {
   if (checkoutElement) {
     const omiseElement = createOmiseElement(0);
     checkoutElement.parentElement.replaceChild(omiseElement, checkoutElement);
+    const checkoutButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`);
+    if (checkoutButtonElement) {
+      console.log(checkoutButtonElement);
+      checkoutButtonElement.innerHTML = 'Pay';
+    }
   }
 
 }

@@ -1,12 +1,7 @@
 import { OmiseClient } from 'omise-nodejs';
-import { OMISE_PUBLIC_KEY } from '../constants/configs';
+import omise from '../config/omise';
 
 export const createOmiseToken = async () => {
-
-  const omise = new OmiseClient({
-    publicKey: OMISE_PUBLIC_KEY,
-    secretKey: ''
-  });
 
   const token = await omise.token.create({
     card: {

@@ -7,7 +7,6 @@ import {
 import { MSG_ERR_EMP_DATA, MSG_ERR_EMP_RES } from '../constants/messages';
 
 import axios, { AxiosResponse } from 'axios';
-axios.defaults.withCredentials = true;
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
@@ -42,7 +41,6 @@ export const register = async (username: string, password: string, name: string 
       `${SERVER}/api/Main/Register`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(false, true)
         }
@@ -74,12 +72,15 @@ export const signin = async (username: string, password: string) => {
       `${SERVER}/token`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(false, true, 'application/x-www-form-urlencoded')
         }
       }
-    ).then(async (response: AxiosResponse<any, any>) => {
+    ).then(async (response: any) => {
+      console.log(response);
+      // await response.headers.getSetCookie()
+      // document.cookie = await response.headers.get('Set-Cookie');
+      // console.log(document.cookie);
       if (response.data) {
         const data = response.data;
         const session: Session = {
@@ -179,7 +180,6 @@ export const checkSocialAuthen = async (platform: string, socialId: string) => {
       `${SERVER}/api/Main/CheckPlatform_Authencode`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(false, true)
         }
@@ -220,7 +220,6 @@ export const saveSocialAuthen = async (platform: string, socialId: string) => {
       `${SERVER}/api/Main/SaveAuthenCode`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }
@@ -334,7 +333,6 @@ export const test = async (username: string, password: string) => {
       `${SERVER}/token`,
       {
         params,
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }

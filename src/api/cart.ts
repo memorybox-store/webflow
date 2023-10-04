@@ -2,7 +2,6 @@ import { SERVER } from '../constants/configs';
 import { MSG_ERR_EMP_RES } from '../constants/messages';
 
 import axios, { AxiosResponse } from 'axios';
-axios.defaults.withCredentials = true;
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
