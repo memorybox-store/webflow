@@ -225,22 +225,17 @@ export const ProductListener = (): void => {
               // Register click event to dismiss popup
               const reportButtonElement = popupElement.querySelector(`.${EL_CLASS_REPORT_BTN}`) as HTMLElement;
               reportButtonElement?.addEventListener('click', async () => {
-                reportElement.classList.remove('hidden-force');
-                reportElement.classList.add('display-force');
-                reportElement.style.opacity = '1';
-                reportElement.style.display = 'flex';
-                reportElement.style.pointerEvents = 'all';
+                reportElement.classList.add('popup-display-force');
               });
 
               // Init report
-              const reportElement: HTMLElement = innerPopupElement.querySelector(`.${EL_CLASS_REPORT}`);
+              const reportElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`);
               if (reportElement) {
 
                 reportElement.style.opacity = '0';
                 reportElement.style.display = 'none';
-                reportElement.style.pointerEvents = 'all';
-                reportElement.classList.remove('display-force');
-                reportElement.classList.add('hidden-force');
+                reportElement.style.pointerEvents = 'none';
+                reportElement.classList.remove('popup-display-force');
 
                 // Register click event to dismiss popup
                 const reportSubmitButtonElement = reportElement.querySelector(`.${EL_CLASS_REPORT_SUBMIT_BTN}`) as HTMLElement;
@@ -249,18 +244,17 @@ export const ProductListener = (): void => {
                 });
 
                 // Register click event to dismiss popup
-                const closeReportButtonElements = popupElement.querySelectorAll(`.${EL_CLASS_REPORT_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
+                const closeReportButtonElements = reportElement.querySelectorAll(`.${EL_CLASS_REPORT_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
                 if (closeReportButtonElements) {
                   for (const [_, closeReportButtonElement] of Object.entries(closeReportButtonElements)) {
                     closeReportButtonElement?.addEventListener('click', async () => {
-                      reportElement.classList.remove('hidden-force');
-                      reportElement.classList.add('display-force');
-                      reportElement.style.opacity = '0';
-                      reportElement.style.display = 'none';
-                      reportElement.style.pointerEvents = 'none';
+                      reportElement.classList.remove('popup-display-force');
                     });
                   }
                 }
+
+                popupElement.appendChild(reportElement);
+                reportElement.parentElement.removeChild(reportElement);
 
               }
 

@@ -17,6 +17,7 @@
 .popup-display-force {
   opacity: 1 !important;
   display: flex !important;
+  pointer-events: all !important;
 }
 
 .popup-display-force .popup {
@@ -29,6 +30,14 @@
 }
 
 .popup.photo img {
+  max-height: calc(100vh - 226px) !important;
+}
+
+.popup.scanning {
+  max-height: 100% !important;
+}
+
+.popup.scanning img {
   max-height: calc(100vh - 226px) !important;
 }
 

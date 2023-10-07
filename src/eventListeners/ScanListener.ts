@@ -5,7 +5,13 @@ import {
   drawFaceDetections,
   loadFaceModels
 } from "../common/faceScan";
-import { EL_CLASS_PHOTO, EL_CLASS_PHOTO_IMAGE, EL_ID_FACESCAN_BTN, EL_ID_FACESCAN_UPLOADER, EL_ID_PHOTO_SCANNING, EL_ID_RESULT_SUM_MY_PIC } from "../constants/elements";
+import { 
+  EL_CLASS_CARD_PHOTO,
+  EL_ID_FACESCAN_BTN, 
+  EL_ID_FACESCAN_UPLOADER, 
+  EL_ID_PHOTO_SCANNING, 
+  EL_ID_RESULT_SUM_MY_PIC 
+} from "../constants/elements";
 import { Product } from "../models/product";
 
 export const ScanListener = (): void => {
@@ -22,8 +28,7 @@ export const ScanListener = (): void => {
   if (element) {
 
     const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-    scanningElement?.classList.remove('display-force');
-    scanningElement?.classList.add('hidden-force');
+    scanningElement?.classList.remove('popup-display-force');
 
     loadFaceModels(options).then(() => {
 
@@ -38,7 +43,7 @@ export const ScanListener = (): void => {
 
         if (files && files.length > 0) {
 
-          const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_PHOTO}`) as NodeListOf<HTMLElement>;
+          const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
           if (imageMarkElements) {
             for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
               imageMarkElement.classList.remove('display-force');
@@ -60,8 +65,7 @@ export const ScanListener = (): void => {
               imgElement.style.objectFit = 'cover';
 
               const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-              scanningElement?.classList.remove('hidden-force');
-              scanningElement?.classList.add('display-force');
+              scanningElement?.classList.add('popup-display-force');
 
               detectFace('facescan-preview', options).then(async (resultSource: any) => {
                 console.log(resultSource);
@@ -113,8 +117,7 @@ export const ScanListener = (): void => {
                                 }
                                 if (parseInt(index) === parseInt(total)) {
                                   const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                                  scanningElement?.classList.remove('display-force');
-                                  scanningElement?.classList.add('hidden-force');
+                                  scanningElement?.classList.remove('popup-display-force');
                                 }
                               });
                             }
