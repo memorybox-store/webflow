@@ -152,6 +152,10 @@ export const ScanListener = (): void => {
                       }
                     }
                   }
+                  const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+                  if (resultMyPicElement) {
+                    resultMyPicElement.innerText = 'N/A';
+                  }
                 }
               }).catch((message) => {
                 alert(message);
@@ -172,6 +176,10 @@ export const ScanListener = (): void => {
                   imageMarkElement.classList.add('flex-force');
                 }
               }
+            }
+            const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+            if (resultMyPicElement) {
+              resultMyPicElement.innerText = 'N/A';
             }
           }
         }
