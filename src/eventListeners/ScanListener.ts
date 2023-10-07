@@ -46,7 +46,7 @@ export const ScanListener = (): void => {
           const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
           if (imageMarkElements) {
             for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
-              imageMarkElement.classList.remove('display-force');
+              imageMarkElement.classList.remove('flex-force');
               imageMarkElement.classList.add('hidden-force');
             }
           }
@@ -97,7 +97,7 @@ export const ScanListener = (): void => {
                           const total: string = imgElement.getAttribute('data-total');
                           detectFace(imgElement, options).then(async (resultTarget: any) => {
                             const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
-                            imgTargetElement.classList.remove('display-force');
+                            imgTargetElement.classList.remove('flex-force');
                             imgTargetElement.classList.add('hidden-force');
                             imgTargetElement.classList.remove('found-face');
                             if (!resultTarget || !resultTarget.detections.length) {
@@ -109,7 +109,7 @@ export const ScanListener = (): void => {
                                 compareFaces(resultSource.detections[0], detection).then((recognitionResult) => {
                                   if (recognitionResult) {
                                     imgTargetElement.classList.remove('hidden-force');
-                                    imgTargetElement.classList.add('display-force');
+                                    imgTargetElement.classList.add('flex-force');
                                     imgTargetElement.classList.add('found-face');
                                     const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
                                     if (countElements) {

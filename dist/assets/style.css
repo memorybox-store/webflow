@@ -31,7 +31,7 @@
 }
 
 .popup.scanning img {
-  max-height: calc(100vh - 226px) !important;
+  max-height: calc(100vh - 246px) !important;
 }
 
 .disabled {
