@@ -144,8 +144,8 @@ export const ScanListener = (): void => {
                   const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
                   if (imageMarkElements) {
                     for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
-                      imageMarkElement.classList.remove('flex-force');
-                      imageMarkElement.classList.add('hidden-force');
+                      imageMarkElement.classList.remove('hidden-force');
+                      imageMarkElement.classList.add('flex-force');
                     }
                   }
                 }
@@ -163,8 +163,8 @@ export const ScanListener = (): void => {
             const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
             if (imageMarkElements) {
               for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
-                imageMarkElement.classList.remove('flex-force');
-                imageMarkElement.classList.add('hidden-force');
+                imageMarkElement.classList.remove('hidden-force');
+                imageMarkElement.classList.add('flex-force');
               }
             }
           }
