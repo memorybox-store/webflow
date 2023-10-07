@@ -230,9 +230,10 @@ export const ProductListener = (): void => {
               });
 
               // Init report
-              const reportElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`);
-              if (reportElement) {
+              const innerReportElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`);
+              if (innerReportElement) {
 
+                const reportElement = innerReportElement.cloneNode(true) as HTMLElement;
                 reportElement.style.opacity = '0';
                 reportElement.style.display = 'none';
                 reportElement.style.pointerEvents = 'none';
@@ -255,7 +256,7 @@ export const ProductListener = (): void => {
                 }
 
                 popupElement.appendChild(reportElement);
-                reportElement.parentElement.removeChild(reportElement);
+                innerReportElement.parentElement.removeChild(innerReportElement);
 
               }
 
