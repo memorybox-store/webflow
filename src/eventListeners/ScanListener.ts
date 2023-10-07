@@ -180,7 +180,7 @@ export const ScanListener = (): void => {
       const selectButtonElement = document.getElementById(EL_ID_FACESCAN_BTN) as HTMLInputElement;
       if (selectButtonElement) {
         const clonedElement: any = selectButtonElement.cloneNode(true);
-        selectButtonElement.addEventListener('click', async () => {
+        clonedElement.addEventListener('click', async () => {
           inputFileElement.click();
         });
         selectButtonElement.parentElement.replaceChild(clonedElement, selectButtonElement);
