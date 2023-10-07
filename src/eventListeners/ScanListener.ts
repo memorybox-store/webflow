@@ -99,6 +99,7 @@ export const ScanListener = (): void => {
                             const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
                             imgTargetElement.classList.remove('display-force');
                             imgTargetElement.classList.add('hidden-force');
+                            imgTargetElement.classList.remove('found-face');
                             if (!resultTarget || !resultTarget.detections.length) {
                               const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
                               scanningElement?.classList.remove('popup-display-force');
