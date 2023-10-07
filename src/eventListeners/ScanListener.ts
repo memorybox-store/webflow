@@ -5,12 +5,12 @@ import {
   drawFaceDetections,
   loadFaceModels
 } from "../common/faceScan";
-import { 
+import {
   EL_CLASS_CARD_PHOTO,
-  EL_ID_FACESCAN_BTN, 
-  EL_ID_FACESCAN_UPLOADER, 
-  EL_ID_PHOTO_SCANNING, 
-  EL_ID_RESULT_SUM_MY_PIC 
+  EL_ID_FACESCAN_BTN,
+  EL_ID_FACESCAN_UPLOADER,
+  EL_ID_PHOTO_SCANNING,
+  EL_ID_RESULT_SUM_MY_PIC
 } from "../constants/elements";
 import { MSG_ERR_NO_FACE } from "../constants/messages";
 import { Product } from "../models/product";
@@ -74,7 +74,7 @@ export const ScanListener = (): void => {
                   const url = new URL(window.location.href);
                   const boatId = url.searchParams.get("fid");
                   if (boatId) {
-  
+
                     await getProductsScan(boatId).then(async (data: Product[]) => {
                       let index: number = 0;
                       for (let item of data) {
@@ -106,27 +106,29 @@ export const ScanListener = (): void => {
                                 scanningElement?.classList.remove('popup-display-force');
                               }
                               if (imgTargetElement) {
-                                for (let detection of resultTarget.detections) {
-                                  compareFaces(resultSource.detections[0], detection).then((recognitionResult) => {
-                                    if (recognitionResult) {
-                                      imgTargetElement.classList.remove('hidden-force');
-                                      imgTargetElement.classList.add('flex-force');
-                                      imgTargetElement.classList.add('found-face');
-                                      const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
-                                      if (countElements) {
-                                        const countAvailable = Object.entries(countElements).length || 0;
-                                        // Init result of image includes my picture
-                                        const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
-                                        if (resultMyPicElement) {
-                                          resultMyPicElement.innerText = countAvailable.toString();
+                                if (imgTargetElement.id !== 'result-sample') {
+                                  for (let detection of resultTarget.detections) {
+                                    compareFaces(resultSource.detections[0], detection).then((recognitionResult) => {
+                                      if (recognitionResult) {
+                                        imgTargetElement.classList.remove('hidden-force');
+                                        imgTargetElement.classList.add('flex-force');
+                                        imgTargetElement.classList.add('found-face');
+                                        const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
+                                        if (countElements) {
+                                          const countAvailable = Object.entries(countElements).length || 0;
+                                          // Init result of image includes my picture
+                                          const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+                                          if (resultMyPicElement) {
+                                            resultMyPicElement.innerText = countAvailable.toString();
+                                          }
                                         }
                                       }
-                                    }
-                                    if (parseInt(index) === parseInt(total)) {
-                                      const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                                      scanningElement?.classList.remove('popup-display-force');
-                                    }
-                                  });
+                                      if (parseInt(index) === parseInt(total)) {
+                                        const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                                        scanningElement?.classList.remove('popup-display-force');
+                                      }
+                                    });
+                                  }
                                 }
                               }
                             });
@@ -144,8 +146,10 @@ export const ScanListener = (): void => {
                   const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
                   if (imageMarkElements) {
                     for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
-                      imageMarkElement.classList.remove('hidden-force');
-                      imageMarkElement.classList.add('flex-force');
+                      if (imageMarkElement.id !== 'result-sample') {
+                        imageMarkElement.classList.remove('hidden-force');
+                        imageMarkElement.classList.add('flex-force');
+                      }
                     }
                   }
                 }
@@ -163,8 +167,10 @@ export const ScanListener = (): void => {
             const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
             if (imageMarkElements) {
               for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
-                imageMarkElement.classList.remove('hidden-force');
-                imageMarkElement.classList.add('flex-force');
+                if (imageMarkElement.id !== 'result-sample') {
+                  imageMarkElement.classList.remove('hidden-force');
+                  imageMarkElement.classList.add('flex-force');
+                }
               }
             }
           }
