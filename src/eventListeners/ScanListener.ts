@@ -96,31 +96,36 @@ export const ScanListener = (): void => {
                           const index: string = imgElement.getAttribute('data-index');
                           const total: string = imgElement.getAttribute('data-total');
                           detectFace(imgElement, options).then(async (resultTarget: any) => {
-                            for (let detection of resultTarget.detections) {
-                              compareFaces(resultSource.detections[0], detection).then((recognitionResult) => {
-                                const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
-                                if (recognitionResult) {
-                                  imgTargetElement.classList.remove('hidden-force');
-                                  imgTargetElement.classList.add('display-force');
-                                  imgTargetElement.classList.add('found-face');
-                                  const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
-                                  if (countElements) {
-                                    const countAvailable = Object.entries(countElements).length.toString();
-                                    // Init result of image includes my picture
-                                    const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
-                                    if (resultMyPicElement) {
-                                      resultMyPicElement.innerText = countAvailable;
+                            const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
+                            imgTargetElement.classList.remove('display-force');
+                            imgTargetElement.classList.add('hidden-force');
+                            if (!resultTarget || !resultTarget.detections.length) {
+                              const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                              scanningElement?.classList.remove('popup-display-force');
+                            }
+                            if (imgTargetElement) {
+                              for (let detection of resultTarget.detections) {
+                                compareFaces(resultSource.detections[0], detection).then((recognitionResult) => {
+                                  if (recognitionResult) {
+                                    imgTargetElement.classList.remove('hidden-force');
+                                    imgTargetElement.classList.add('display-force');
+                                    imgTargetElement.classList.add('found-face');
+                                    const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
+                                    if (countElements) {
+                                      const countAvailable = Object.entries(countElements).length - 1 || 0;
+                                      // Init result of image includes my picture
+                                      const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+                                      if (resultMyPicElement) {
+                                        resultMyPicElement.innerText = countAvailable.toString();
+                                      }
                                     }
                                   }
-                                } else {
-                                  imgTargetElement.classList.remove('display-force');
-                                  imgTargetElement.classList.add('hidden-force');
-                                }
-                                if (parseInt(index) === parseInt(total)) {
-                                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                                  scanningElement?.classList.remove('popup-display-force');
-                                }
-                              });
+                                  if (parseInt(index) === parseInt(total)) {
+                                    const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                                    scanningElement?.classList.remove('popup-display-force');
+                                  }
+                                });
+                              }
                             }
                           });
                           imgElement.parentElement.removeChild(imgElement);
