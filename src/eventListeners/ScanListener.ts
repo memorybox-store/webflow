@@ -113,7 +113,7 @@ export const ScanListener = (): void => {
                                     imgTargetElement.classList.add('found-face');
                                     const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
                                     if (countElements) {
-                                      const countAvailable = Object.entries(countElements).length - 1 || 0;
+                                      const countAvailable = Object.entries(countElements).length || 0;
                                       // Init result of image includes my picture
                                       const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
                                       if (resultMyPicElement) {
@@ -183,7 +183,7 @@ export const ScanListener = (): void => {
         selectButtonElement.addEventListener('click', async () => {
           inputFileElement.click();
         });
-        selectButtonElement.parentElement.replaceChild(clonedElement, clonedElement);
+        selectButtonElement.parentElement.replaceChild(clonedElement, selectButtonElement);
       }
 
     }).catch((error) => {
