@@ -141,6 +141,13 @@ export const ScanListener = (): void => {
                   alert(MSG_ERR_NO_FACE);
                   const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
                   scanningElement?.classList.remove('popup-display-force');
+                  const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
+                  if (imageMarkElements) {
+                    for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
+                      imageMarkElement.classList.remove('flex-force');
+                      imageMarkElement.classList.add('hidden-force');
+                    }
+                  }
                 }
               }).catch((message) => {
                 alert(message);
@@ -153,12 +160,16 @@ export const ScanListener = (): void => {
           } else {
             alert("Please select a valid image file.");
             input.value = '';
+            const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
+            if (imageMarkElements) {
+              for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
+                imageMarkElement.classList.remove('flex-force');
+                imageMarkElement.classList.add('hidden-force');
+              }
+            }
           }
         }
-
-        console.log(event);
       });
-
 
       const selectButtonElement = document.getElementById(EL_ID_FACESCAN_BTN) as HTMLInputElement;
       if (selectButtonElement) {
