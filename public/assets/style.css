@@ -18,6 +18,7 @@
   opacity: 1 !important;
   display: flex !important;
   pointer-events: all !important;
+  overflow-y: auto;
 }
 
 .popup-display-force .popup {
@@ -25,16 +26,8 @@
   transform-style: preserve-3d;
 }
 
-.popup.photo {
-  max-height: 100% !important;
-}
-
 .popup.photo img {
   max-height: calc(100vh - 226px) !important;
-}
-
-.popup.scanning {
-  max-height: 100% !important;
 }
 
 .popup.scanning img {
