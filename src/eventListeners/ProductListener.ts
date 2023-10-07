@@ -226,7 +226,7 @@ export const ProductListener = (): void => {
               const reportButtonElement = popupElement.querySelector(`.${EL_CLASS_REPORT_BTN}`) as HTMLElement;
               reportButtonElement?.addEventListener('click', async () => {
                 const reportElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`);
-                reportElement.classList.add('popup-display-force');
+                reportElement?.classList.add('popup-display-force');
               });
 
               // Init report
