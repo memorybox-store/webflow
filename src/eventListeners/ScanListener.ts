@@ -12,6 +12,7 @@ import {
   EL_ID_PHOTO_SCANNING, 
   EL_ID_RESULT_SUM_MY_PIC 
 } from "../constants/elements";
+import { MSG_ERR_NO_FACE } from "../constants/messages";
 import { Product } from "../models/product";
 
 export const ScanListener = (): void => {
@@ -68,100 +69,80 @@ export const ScanListener = (): void => {
               scanningElement?.classList.add('popup-display-force');
 
               detectFace('facescan-preview', options).then(async (resultSource: any) => {
-                console.log(resultSource);
+                if (resultSource && resultSource.detections.length) {
 
-                const url = new URL(window.location.href);
-                const boatId = url.searchParams.get("fid");
-                if (boatId) {
-
-                  await getProductsScan(boatId).then(async (data: Product[]) => {
-                    let index: number = 0;
-                    for (let item of data) {
-                      index += 1;
-                      if (item.imageNoMark) {
-                        const imgElement: HTMLImageElement = document.createElement("img");
-                        imgElement.crossOrigin = 'anonymous';
-                        imgElement.setAttribute('crossorigin', 'anonymous');
-                        imgElement.setAttribute('data-target', item.id);
-                        imgElement.setAttribute('data-index', `${index}`);
-                        imgElement.setAttribute('data-total', `${data.length}`);
-                        imgElement.src = item.imageNoMark;
-                        imgElement.style.display = 'none';
-                        imgElement.onload = async () => {
-                          const width = imgElement.width;
-                          const height = imgElement.height;
-                          imgElement.width = width;
-                          imgElement.height = height;
-                          const id: string = imgElement.getAttribute('data-target');
-                          const index: string = imgElement.getAttribute('data-index');
-                          const total: string = imgElement.getAttribute('data-total');
-                          detectFace(imgElement, options).then(async (resultTarget: any) => {
-                            const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
-                            imgTargetElement.classList.remove('flex-force');
-                            imgTargetElement.classList.add('hidden-force');
-                            imgTargetElement.classList.remove('found-face');
-                            if (!resultTarget || !resultTarget.detections.length) {
-                              const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                              scanningElement?.classList.remove('popup-display-force');
-                            }
-                            if (imgTargetElement) {
-                              for (let detection of resultTarget.detections) {
-                                compareFaces(resultSource.detections[0], detection).then((recognitionResult) => {
-                                  if (recognitionResult) {
-                                    imgTargetElement.classList.remove('hidden-force');
-                                    imgTargetElement.classList.add('flex-force');
-                                    imgTargetElement.classList.add('found-face');
-                                    const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
-                                    if (countElements) {
-                                      const countAvailable = Object.entries(countElements).length || 0;
-                                      // Init result of image includes my picture
-                                      const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
-                                      if (resultMyPicElement) {
-                                        resultMyPicElement.innerText = countAvailable.toString();
+                  const url = new URL(window.location.href);
+                  const boatId = url.searchParams.get("fid");
+                  if (boatId) {
+  
+                    await getProductsScan(boatId).then(async (data: Product[]) => {
+                      let index: number = 0;
+                      for (let item of data) {
+                        index += 1;
+                        if (item.imageNoMark) {
+                          const imgElement: HTMLImageElement = document.createElement("img");
+                          imgElement.crossOrigin = 'anonymous';
+                          imgElement.setAttribute('crossorigin', 'anonymous');
+                          imgElement.setAttribute('data-target', item.id);
+                          imgElement.setAttribute('data-index', `${index}`);
+                          imgElement.setAttribute('data-total', `${data.length}`);
+                          imgElement.src = item.imageNoMark;
+                          imgElement.style.display = 'none';
+                          imgElement.onload = async () => {
+                            const width = imgElement.width;
+                            const height = imgElement.height;
+                            imgElement.width = width;
+                            imgElement.height = height;
+                            const id: string = imgElement.getAttribute('data-target');
+                            const index: string = imgElement.getAttribute('data-index');
+                            const total: string = imgElement.getAttribute('data-total');
+                            detectFace(imgElement, options).then(async (resultTarget: any) => {
+                              const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
+                              imgTargetElement.classList.remove('flex-force');
+                              imgTargetElement.classList.add('hidden-force');
+                              imgTargetElement.classList.remove('found-face');
+                              if (!resultTarget || !resultTarget.detections.length) {
+                                const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                                scanningElement?.classList.remove('popup-display-force');
+                              }
+                              if (imgTargetElement) {
+                                for (let detection of resultTarget.detections) {
+                                  compareFaces(resultSource.detections[0], detection).then((recognitionResult) => {
+                                    if (recognitionResult) {
+                                      imgTargetElement.classList.remove('hidden-force');
+                                      imgTargetElement.classList.add('flex-force');
+                                      imgTargetElement.classList.add('found-face');
+                                      const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
+                                      if (countElements) {
+                                        const countAvailable = Object.entries(countElements).length || 0;
+                                        // Init result of image includes my picture
+                                        const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+                                        if (resultMyPicElement) {
+                                          resultMyPicElement.innerText = countAvailable.toString();
+                                        }
                                       }
                                     }
-                                  }
-                                  if (parseInt(index) === parseInt(total)) {
-                                    const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                                    scanningElement?.classList.remove('popup-display-force');
-                                  }
-                                });
+                                    if (parseInt(index) === parseInt(total)) {
+                                      const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                                      scanningElement?.classList.remove('popup-display-force');
+                                    }
+                                  });
+                                }
                               }
-                            }
-                          });
-                          imgElement.parentElement.removeChild(imgElement);
-                        };
-                        document.body.append(imgElement);
+                            });
+                            imgElement.parentElement.removeChild(imgElement);
+                          };
+                          document.body.append(imgElement);
+                        }
                       }
-                    }
-                  });
+                    });
+                  }
+                } else {
+                  alert(MSG_ERR_NO_FACE);
                 }
               }).catch((message) => {
                 alert(message);
               });
-
-              // detectFace('facescan-test', options).then((resultTarget: any) => {
-              //   console.log(resultTarget);
-
-              //   // compareFaces(resultSource.detections[0], resultTarget.detections[0]).then((recognitionResult) => {
-              //   //   console.log(recognitionResult);
-              //   // });
-              //   // drawFaceDetections(
-              //   //   'myCanvas2',
-              //   //   resultTarget.detections,
-              //   //   resultTarget.source,
-              //   //   options
-              //   // ).then(async (outputTarget) => {
-              //   //   console.log(outputTarget);
-              //   //   compareFaces(resultSource.detections[0], resultTarget.detections[0]).then((recognitionResult) => {
-              //   //     console.log(recognitionResult);
-              //   //   });
-              //   // }).catch(() => {
-
-              //   // });
-              // }).catch(() => {
-
-              // });
 
             };
 
