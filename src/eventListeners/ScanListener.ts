@@ -102,9 +102,10 @@ export const ScanListener = (): void => {
                                 if (recognitionResult) {
                                   imgTargetElement.classList.remove('hidden-force');
                                   imgTargetElement.classList.add('display-force');
-                                  const countElements = document.querySelectorAll('.display-force') as NodeListOf<HTMLElement>;
+                                  imgTargetElement.classList.add('found-face');
+                                  const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
                                   if (countElements) {
-                                    const countAvailable = Object.entries(imageMarkElements).length.toString();
+                                    const countAvailable = Object.entries(countElements).length.toString();
                                     // Init result of image includes my picture
                                     const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
                                     if (resultMyPicElement) {
