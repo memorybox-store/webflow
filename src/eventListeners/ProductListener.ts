@@ -51,25 +51,25 @@ export const ProductListener = (): void => {
         sampleElement.classList.add("hidden-force");
       }
 
-      // Init resultmary of image includes my picture
+      // Init result of image includes my picture
       const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
       if (resultMyPicElement) {
         resultMyPicElement.innerText = 'N/A';
       }
 
-      // Init resultmary of total image
+      // Init result of total image
       const resultTotalElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
       if (resultTotalElement) {
         resultTotalElement.innerText = '0';
       }
 
-      // Init resultmary of boat name
+      // Init result of boat name
       const resultBoatElement = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
       if (resultBoatElement) {
         resultBoatElement.innerText = '-';
       }
 
-      // Init resultmary of comapny
+      // Init result of comapny
       const resultCompanyElement = document.getElementById(EL_ID_RESULT_SUM_COMPANY) as HTMLElement;
       if (resultCompanyElement) {
         resultCompanyElement.innerText = '-';
@@ -123,17 +123,17 @@ export const ProductListener = (): void => {
         // Get products from boat via API
         await getProducts(boatId).then(async (data: Product[]) => {
 
-          // Update resultmary of image includes my picture
+          // Update result of image includes my picture
           if (resultTotalElement) {
             resultTotalElement.innerText = data.length.toString();
           }
 
-          // Update resultmary of total image
+          // Update result of total image
           if (resultBoatElement) {
             resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
           }
 
-          // Update resultmary of comapny
+          // Update result of comapny
           if (resultCompanyElement) {
             resultCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }
@@ -222,7 +222,7 @@ export const ProductListener = (): void => {
               }
 
               // Register click event to dismiss popup
-              const closePopupButtonElements: NodeListOf<HTMLElement> = popupElement.querySelectorAll(`.${EL_CLASS_POPUP_CLOSE_BTN}`);
+              const closePopupButtonElements = popupElement.querySelectorAll(`.${EL_CLASS_POPUP_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
               if (closePopupButtonElements) {
                 for (const [_, closePopupButtonElement] of Object.entries(closePopupButtonElements)) {
                   closePopupButtonElement?.addEventListener('click', async () => {

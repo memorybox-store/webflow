@@ -5,7 +5,7 @@ import {
   drawFaceDetections,
   loadFaceModels
 } from "../common/faceScan";
-import { EL_CLASS_PHOTO, EL_CLASS_PHOTO_IMAGE, EL_ID_FACESCAN_BTN, EL_ID_FACESCAN_UPLOADER, EL_ID_PHOTO_SCANNING } from "../constants/elements";
+import { EL_CLASS_PHOTO, EL_CLASS_PHOTO_IMAGE, EL_ID_FACESCAN_BTN, EL_ID_FACESCAN_UPLOADER, EL_ID_PHOTO_SCANNING, EL_ID_RESULT_SUM_MY_PIC } from "../constants/elements";
 import { Product } from "../models/product";
 
 export const ScanListener = (): void => {
@@ -25,12 +25,6 @@ export const ScanListener = (): void => {
     scanningElement?.classList.remove('display-force');
     scanningElement?.classList.add('hidden-force');
 
-    const selectButtonElement = document.getElementById(EL_ID_FACESCAN_BTN) as HTMLInputElement;
-    if (selectButtonElement) {
-      selectButtonElement.innerHTML = 'Loading...';
-      selectButtonElement.disabled = true;
-    }
-
     loadFaceModels(options).then(() => {
 
       const inputFileElement = document.createElement('input') as HTMLInputElement;
@@ -44,7 +38,7 @@ export const ScanListener = (): void => {
 
         if (files && files.length > 0) {
 
-          const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_PHOTO}`);
+          const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_PHOTO}`) as NodeListOf<HTMLElement>;
           if (imageMarkElements) {
             for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
               imageMarkElement.classList.remove('display-force');
@@ -74,7 +68,7 @@ export const ScanListener = (): void => {
                   const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
                   scanningElement?.classList.remove('hidden-force');
                   scanningElement?.classList.add('display-force');
-                  
+
                   await getProductsScan(boatId).then(async (data: Product[]) => {
                     let index: number = 0;
                     for (let item of data) {
@@ -103,6 +97,15 @@ export const ScanListener = (): void => {
                                 if (recognitionResult) {
                                   imgTargetElement.classList.remove('hidden-force');
                                   imgTargetElement.classList.add('display-force');
+                                  const countElements = document.querySelectorAll('.display-force') as NodeListOf<HTMLElement>;
+                                  if (countElements) {
+                                    const countAvailable = Object.entries(imageMarkElements).length.toString();
+                                    // Init result of image includes my picture
+                                    const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+                                    if (resultMyPicElement) {
+                                      resultMyPicElement.innerText = countAvailable;
+                                    }
+                                  }
                                 } else {
                                   imgTargetElement.classList.remove('display-force');
                                   imgTargetElement.classList.add('hidden-force');
@@ -164,12 +167,14 @@ export const ScanListener = (): void => {
         console.log(event);
       });
 
+
+      const selectButtonElement = document.getElementById(EL_ID_FACESCAN_BTN) as HTMLInputElement;
       if (selectButtonElement) {
-        selectButtonElement.disabled = false;
-        selectButtonElement.innerHTML = 'เลือกรูปภาพ';
+        const clonedElement: any = selectButtonElement.cloneNode(true);
         selectButtonElement.addEventListener('click', async () => {
           inputFileElement.click();
         });
+        selectButtonElement.parentElement.replaceChild(clonedElement, clonedElement);
       }
 
     }).catch((error) => {
