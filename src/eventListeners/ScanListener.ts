@@ -59,15 +59,16 @@ export const ScanListener = (): void => {
               imgElement.alt = "My picture preview";
               imgElement.style.objectFit = 'cover';
 
+              const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+              scanningElement?.classList.remove('hidden-force');
+              scanningElement?.classList.add('display-force');
+
               detectFace('facescan-preview', options).then(async (resultSource: any) => {
                 console.log(resultSource);
 
                 const url = new URL(window.location.href);
                 const boatId = url.searchParams.get("fid");
                 if (boatId) {
-                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                  scanningElement?.classList.remove('hidden-force');
-                  scanningElement?.classList.add('display-force');
 
                   await getProductsScan(boatId).then(async (data: Product[]) => {
                     let index: number = 0;
@@ -110,10 +111,8 @@ export const ScanListener = (): void => {
                                   imgTargetElement.classList.remove('display-force');
                                   imgTargetElement.classList.add('hidden-force');
                                 }
-                                const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                                scanningElement?.classList.remove('hidden-force');
-                                scanningElement?.classList.add('display-force');
                                 if (parseInt(index) === parseInt(total)) {
+                                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
                                   scanningElement?.classList.remove('display-force');
                                   scanningElement?.classList.add('hidden-force');
                                 }

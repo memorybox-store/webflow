@@ -10,7 +10,11 @@ import {
   EL_CLASS_POPUP_TITLE,
   EL_CLASS_POPUP_SUBTITLE,
   EL_CLASS_POPUP_CLOSE_BTN,
-  EL_CLASS_PHOTO_IMAGE
+  EL_CLASS_PHOTO_IMAGE,
+  EL_CLASS_REPORT,
+  EL_CLASS_REPORT_CLOSE_BTN,
+  EL_CLASS_REPORT_BTN,
+  EL_CLASS_REPORT_SUBMIT_BTN
 } from "../constants/elements";
 
 import moment from '../config/moment';
@@ -154,21 +158,6 @@ export const ProductListener = (): void => {
               imgElement.crossOrigin = 'anonymous';
               imgElement.setAttribute('crossorigin', 'anonymous');
 
-              // imgElement.onload = (e: any) => {
-              //   console.log(e);
-              //   const canvas = document.createElement("canvas");
-              //   // canvas.width = imgElement.width;
-              //   // canvas.height = imgElement.height;
-              //   console.log(imgElement.width);
-              //   console.log(imgElement.height);
-              //   const ctx = canvas.getContext("2d");
-              //   ctx.drawImage(imgElement, 0, 0);
-              //   const src = canvas.toDataURL("image/png");
-              //   const imgEncElement = new Image();
-              //   imgEncElement.src = src;
-              //   imgElement.parentElement.replaceChild(imgEncElement, imgElement);
-              // };
-
               imgElement.src = item.image;
               imgElement.srcset = item.image;
               imgElement.classList.add(EL_CLASS_PHOTO_IMAGE);
@@ -234,10 +223,46 @@ export const ProductListener = (): void => {
               }
 
               // Register click event to dismiss popup
-              // const closePopupButtonElements: HTMLElement = popupElement.querySelector('.close-button-popup-module');
-              // closePopupButtonElements?.addEventListener('click', async () => {
-              //   popupElement.classList.remove('popup-display-force');
-              // });
+              const reportButtonElement = popupElement.querySelector(`.${EL_CLASS_REPORT_BTN}`) as HTMLElement;
+              reportButtonElement?.addEventListener('click', async () => {
+                reportElement.classList.remove('hidden-force');
+                reportElement.classList.add('display-force');
+                reportElement.style.opacity = '1';
+                reportElement.style.display = 'flex';
+                reportElement.style.pointerEvents = 'all';
+              });
+
+              // Init report
+              const reportElement: HTMLElement = innerPopupElement.querySelector(`.${EL_CLASS_REPORT}`);
+              if (reportElement) {
+
+                reportElement.style.opacity = '0';
+                reportElement.style.display = 'none';
+                reportElement.style.pointerEvents = 'all';
+                reportElement.classList.remove('display-force');
+                reportElement.classList.add('hidden-force');
+
+                // Register click event to dismiss popup
+                const reportSubmitButtonElement = reportElement.querySelector(`.${EL_CLASS_REPORT_SUBMIT_BTN}`) as HTMLElement;
+                reportSubmitButtonElement?.addEventListener('click', async () => {
+                  // Do submit
+                });
+
+                // Register click event to dismiss popup
+                const closeReportButtonElements = popupElement.querySelectorAll(`.${EL_CLASS_REPORT_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
+                if (closeReportButtonElements) {
+                  for (const [_, closeReportButtonElement] of Object.entries(closeReportButtonElements)) {
+                    closeReportButtonElement?.addEventListener('click', async () => {
+                      reportElement.classList.remove('hidden-force');
+                      reportElement.classList.add('display-force');
+                      reportElement.style.opacity = '0';
+                      reportElement.style.display = 'none';
+                      reportElement.style.pointerEvents = 'none';
+                    });
+                  }
+                }
+
+              }
 
               // Change popup location
               document.querySelector('body')?.appendChild(popupElement);
