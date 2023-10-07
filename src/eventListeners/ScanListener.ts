@@ -139,6 +139,8 @@ export const ScanListener = (): void => {
                   }
                 } else {
                   alert(MSG_ERR_NO_FACE);
+                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                  scanningElement?.classList.remove('popup-display-force');
                 }
               }).catch((message) => {
                 alert(message);
