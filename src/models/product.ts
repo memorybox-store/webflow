@@ -10,6 +10,7 @@ export interface Product {
   maxPrice: number | null;
   price: number | null;
   image: string | null;
+  imageNoMark?: string | null;
   details: ProductDetail;
   boat: Boat;
   company: Company;

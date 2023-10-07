@@ -44,7 +44,7 @@ const checkAuthen = () => {
 }
 
 const initialize = () => {
-  // LoginListener();
+  LoginListener();
   LogoutListener();
   SocialLoginListener();
   ScanListener();

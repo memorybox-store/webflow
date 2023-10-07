@@ -18,7 +18,7 @@ export const LoginListener = (): void => {
 		const password = formData.get('password') as string || '';
 
 		signin(username, password).then((data: Session) => {
-			// location.href = '/finder';
+			location.href = '/finder';
 		}).catch((message) => {
 			alert(message);
 		});

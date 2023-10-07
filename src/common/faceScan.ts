@@ -47,76 +47,62 @@ export const loadFaceModels = (options?: Array<any>) => {
   });
 }
 
-export const detectFace = async (imageId: string, options?: Array<any>) => {
-  return new Promise(async (resolve, reject) => {
+export const detectFace = async (image: string | HTMLImageElement, options?: Array<any>) => {
+  return await new Promise(async (resolve, reject) => {
     try {
       const faceDetectionOptions = new SsdMobilenetv1Options({ minConfidence });
-      const inputElement: HTMLImageElement
-        = document.getElementById(imageId) as HTMLImageElement;
-      let imgElement: HTMLImageElement = document.createElement("img");
-      imgElement.src = inputElement.src;
-      console.log(imgElement.width, imgElement.height);
-      imgElement.onload = () => {
-        // Access the width and height properties
-        const width = imgElement.width;
-        const height = imgElement.height;
-        console.log(width, height);
-        imgElement.width = width;
-        imgElement.height = height;
-        console.log(imgElement);
-
-        let imageContainer = document.getElementById("source-image");
-        imageContainer.appendChild(imgElement);
-      };
-
-      // const test = await canvas.loadImage(inputElement.src);
+      const inputElement: HTMLImageElement | undefined | null = (typeof image === 'string')
+        ? document.getElementById(image) as HTMLImageElement
+        : image;
       let detections = null;
-      if (options && options.length) {
-        if (
-          options.includes('landmark')
-          && options.includes('ageGender')
-          && options.includes('expression')
-        ) {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions)
-            .withFaceLandmarks()
-            .withFaceDescriptors()
-            .withAgeAndGender()
-            .withFaceExpressions();
-        } else if (
-          options.includes('landmark')
-          && options.includes('ageGender')
-        ) {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions)
-            .withFaceLandmarks()
-            .withFaceDescriptors()
-            .withAgeAndGender();
-        } else if (
-          options.includes('landmark')
-          && options.includes('expression')
-        ) {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions)
-            .withFaceLandmarks()
-            .withFaceDescriptors()
-            .withFaceExpressions();
-        } else if (
-          options.includes('ageGender')
-          && options.includes('expression')
-        ) {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions)
-            .withAgeAndGender()
-            .withFaceExpressions();
-        } else if (options.includes('landmark')) {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions)
-            .withFaceLandmarks()
-            .withFaceDescriptors();
-        } else if (options.includes('ageGender')) {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions)
-            .withAgeAndGender();
-        } else if (options.includes('expression')) {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions)
-            .withFaceExpressions();
-        } else {
-          detections = await detectAllFaces(inputElement, faceDetectionOptions);
+      if (inputElement) {
+        if (options && options.length) {
+          if (
+            options.includes('landmark')
+            && options.includes('ageGender')
+            && options.includes('expression')
+          ) {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions)
+              .withFaceLandmarks()
+              .withFaceDescriptors()
+              .withAgeAndGender()
+              .withFaceExpressions();
+          } else if (
+            options.includes('landmark')
+            && options.includes('ageGender')
+          ) {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions)
+              .withFaceLandmarks()
+              .withFaceDescriptors()
+              .withAgeAndGender();
+          } else if (
+            options.includes('landmark')
+            && options.includes('expression')
+          ) {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions)
+              .withFaceLandmarks()
+              .withFaceDescriptors()
+              .withFaceExpressions();
+          } else if (
+            options.includes('ageGender')
+            && options.includes('expression')
+          ) {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions)
+              .withAgeAndGender()
+              .withFaceExpressions();
+          } else if (options.includes('landmark')) {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions)
+              .withFaceLandmarks()
+              .withFaceDescriptors();
+          } else if (options.includes('ageGender')) {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions)
+              .withAgeAndGender();
+          } else if (options.includes('expression')) {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions)
+              .withFaceExpressions();
+          } else {
+            detections = await detectAllFaces(inputElement, faceDetectionOptions);
+          }
         }
       }
       resolve(
@@ -200,7 +186,6 @@ export const compareFaces = (source: any, target: any) => {
     const sourceDescriptor = source.descriptor;
     const targetDescriptor = target.descriptor;
     const distance = euclideanDistance(sourceDescriptor, targetDescriptor);
-    console.log(distance);
     if (distance < recognitionTreshold) {
       resolve(true);
     } else {

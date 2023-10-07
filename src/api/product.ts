@@ -77,6 +77,75 @@ export const getProducts = async (boatId: string) => {
   });
 }
 
+export const getProductsScan = async (boatId: string) => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      PageNumber: 0,
+      RowsOfPage: 0,
+      Category: boatId
+    }
+    await axios.post(
+      `${SERVER}/api/MemoryBox/SelectDataSaleList`,
+      payload,
+      {
+        withCredentials: true,
+        ...{
+          headers: await createRequestHeader(true)
+        }
+      }
+    ).then(async (response: AxiosResponse<any, any>) => {
+      if (response.data) {
+        if (response.data.Status === 'Success') {
+          const data: Array<any> = response.data.Data;
+          const products: Product[] = data.map((item: any) => {
+            const boat: Boat = {
+              id: item.mst_id,
+              name: item.mst_name,
+              prefix: item.mst_code_prefix,
+              createdAt: null
+            };
+            const company: Company = {
+              id: item.parentcomp_id,
+              title: null,
+              name: null,
+              branch: null,
+              contactPerson: null,
+              tel: null,
+              email: null,
+              address: null,
+              website: null,
+              image: null,
+            };
+            const product: Product = {
+              id: item.slist_id,
+              itemId: item.fitem_id,
+              name: item.slist_name,
+              description: item.slist_details,
+              tag: item.Tag,
+              minPrice: item.minprice,
+              maxPrice: item.maxprice,
+              price: item.maxprice,
+              image: item.img_path,
+              imageNoMark: item.img_path2,
+              details: null,
+              boat: boat,
+              company: company,
+            }
+            return product;
+          });
+          resolve(products);
+        } else {
+          reject(response.data.Message);
+        }
+      } else {
+        reject(MSG_ERR_EMP_RES);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
+  });
+}
+
 export const getProductDetails = async (productId: number | string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {

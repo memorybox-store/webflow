@@ -9,7 +9,8 @@ import {
   EL_CLASS_POPUP,
   EL_CLASS_POPUP_TITLE,
   EL_CLASS_POPUP_SUBTITLE,
-  EL_CLASS_POPUP_CLOSE_BTN
+  EL_CLASS_POPUP_CLOSE_BTN,
+  EL_CLASS_PHOTO_IMAGE
 } from "../constants/elements";
 
 import moment from '../config/moment';
@@ -150,9 +151,28 @@ export const ProductListener = (): void => {
             // Init image
             const imgElement: HTMLImageElement = cardElement.querySelector('img');
             if (imgElement) {
+              imgElement.crossOrigin = 'anonymous';
+              imgElement.setAttribute('crossorigin', 'anonymous');
+
+              // imgElement.onload = (e: any) => {
+              //   console.log(e);
+              //   const canvas = document.createElement("canvas");
+              //   // canvas.width = imgElement.width;
+              //   // canvas.height = imgElement.height;
+              //   console.log(imgElement.width);
+              //   console.log(imgElement.height);
+              //   const ctx = canvas.getContext("2d");
+              //   ctx.drawImage(imgElement, 0, 0);
+              //   const src = canvas.toDataURL("image/png");
+              //   const imgEncElement = new Image();
+              //   imgEncElement.src = src;
+              //   imgElement.parentElement.replaceChild(imgEncElement, imgElement);
+              // };
+
               imgElement.src = item.image;
               imgElement.srcset = item.image;
-              // Register click event to open popup
+              imgElement.classList.add(EL_CLASS_PHOTO_IMAGE);
+              imgElement.setAttribute('id', `image-${item.id}`);
               imgElement.addEventListener('click', async () => {
                 const popupElement: HTMLElement = document.querySelector(`[data-popup="${item.id}"]`);
                 if (popupElement) {
@@ -203,12 +223,14 @@ export const ProductListener = (): void => {
 
               // Register click event to dismiss popup
               const closePopupButtonElements: NodeListOf<HTMLElement> = popupElement.querySelectorAll(`.${EL_CLASS_POPUP_CLOSE_BTN}`);
-              for (const [_, closePopupButtonElement] of Object.entries(closePopupButtonElements)) {
-                closePopupButtonElement?.addEventListener('click', async () => {
-                  popupElement.classList.remove('popup-display-force');
-                  popupElement.style.opacity = '0';
-                  popupElement.style.pointerEvents = 'none';
-                });
+              if (closePopupButtonElements) {
+                for (const [_, closePopupButtonElement] of Object.entries(closePopupButtonElements)) {
+                  closePopupButtonElement?.addEventListener('click', async () => {
+                    popupElement.classList.remove('popup-display-force');
+                    popupElement.style.opacity = '0';
+                    popupElement.style.pointerEvents = 'none';
+                  });
+                }
               }
 
               // Register click event to dismiss popup
@@ -243,15 +265,15 @@ export const ProductListener = (): void => {
 
   // Load on specific page
   const path: string = window.location.pathname;
-  if (path === '/result') {
-    const url = new URL(window.location.href);
-    const boatId = url.searchParams.get("fid");
-    const date = url.searchParams.get("date");
-    const companyName = decodeURI(url.searchParams.get("company") || '');
-    const imageId = url.searchParams.get("mid");
-    if (boatId) {
-      load(boatId, date, companyName);
-    }
+  // if (path === '/result') {
+  const url = new URL(window.location.href);
+  const boatId = url.searchParams.get("fid");
+  const date = url.searchParams.get("date");
+  const companyName = decodeURI(url.searchParams.get("company") || '');
+  const imageId = url.searchParams.get("mid");
+  if (boatId) {
+    load(boatId, date, companyName);
   }
+  // }
 
 }
