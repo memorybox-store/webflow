@@ -1,4 +1,4 @@
-export const EL_ID_LOGIN_FORM = 'login-form';
+export const EL_ID_LOGIN_FORM = 'email-form';
 export const EL_ID_LOGOUT_BTN = 'logout-button';
 export const EL_ID_SELECT_COMPANY = 'company-select';
 export const EL_ID_SELECT_TRIP_DATE = 'date-input';

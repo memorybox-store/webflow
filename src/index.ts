@@ -44,12 +44,11 @@ const checkAuthen = () => {
 }
 
 const initialize = () => {
-  LoginListener();
+  // LoginListener();
   LogoutListener();
   SocialLoginListener();
   ScanListener();
   checkAuthen().then((result: boolean) => {
-    console.log(result);
     if (result) {
       CartListener();
       SearchListener();

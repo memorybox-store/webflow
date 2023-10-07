@@ -265,15 +265,15 @@ export const ProductListener = (): void => {
 
   // Load on specific page
   const path: string = window.location.pathname;
-  // if (path === '/result') {
-  const url = new URL(window.location.href);
-  const boatId = url.searchParams.get("fid");
-  const date = url.searchParams.get("date");
-  const companyName = decodeURI(url.searchParams.get("company") || '');
-  const imageId = url.searchParams.get("mid");
-  if (boatId) {
-    load(boatId, date, companyName);
+  if (path === '/result') {
+    const url = new URL(window.location.href);
+    const boatId = url.searchParams.get("fid");
+    const date = url.searchParams.get("date");
+    const companyName = decodeURI(url.searchParams.get("company") || '');
+    const imageId = url.searchParams.get("mid");
+    if (boatId) {
+      load(boatId, date, companyName);
+    }
   }
-  // }
 
 }
