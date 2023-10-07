@@ -225,6 +225,7 @@ export const ProductListener = (): void => {
               // Register click event to dismiss popup
               const reportButtonElement = popupElement.querySelector(`.${EL_CLASS_REPORT_BTN}`) as HTMLElement;
               reportButtonElement?.addEventListener('click', async () => {
+                const reportElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`);
                 reportElement.classList.add('popup-display-force');
               });
 
