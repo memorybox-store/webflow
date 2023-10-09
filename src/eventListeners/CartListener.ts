@@ -244,7 +244,10 @@ export const CartListener = async (): Promise<void> => {
   if (ecomCheckoutElement) {
     const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
     checkoutButtonElement.innerHTML = 'Checkout';
-    checkoutButtonElement.addEventListener('click', async () => {
+    checkoutButtonElement.setAttribute('href', '/order-summary');
+    checkoutButtonElement.addEventListener('click', async (event) => {
+      event.preventDefault();
+		  event.stopPropagation();
       location.href = '/order-summary';
     });
     ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
