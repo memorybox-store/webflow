@@ -1,9 +1,10 @@
-import { OmiseClient } from 'omise-nodejs';
+import { OmiseClient, TokenResponse, OmiseError } from 'omise-nodejs';
 import omise from '../config/omise';
+import { PAYMENT_PROCESS_REDIRECT } from '../constants/configs';
 
 export const createOmiseToken = async () => {
 
-  const token = await omise.token.create({
+  const token: any = await omise.token.create({
     card: {
       name: 'JOHN DOE',
       number: '4242424242424242',
@@ -12,23 +13,20 @@ export const createOmiseToken = async () => {
       security_code: '123',
     },
   });
+  console.log(token);
+
+  if (token) {
+    await omise.charge.create({
+      amount: 5000,
+      currency: 'thb',
+      card: token.id,
+      customer: token.card.name,
+      return_uri: PAYMENT_PROCESS_REDIRECT,
+      source: '',
+      description: 'test'
+    });
+  }
 
   console.log(token);
 
-  // Omise.createToken("card",
-  //                 {
-  //                   "expiration_month": 2,
-  //                   "expiration_year": 2022,
-  //                   "name": "Somchai Prasert",
-  //                   "number": "4242424242424242",
-  //                   "security_code": "123",
-  //                   "street1": "476 Fifth Avenue",
-  //                   "city": "New York",
-  //                   "state": "NY",
-  //                   "postal_code": "10320",
-  //                   "country": "US"
-  //                 },
-  //                 function(statusCode, response) {
-  //                   console.log(response["id"])
-  //                 });
 }
