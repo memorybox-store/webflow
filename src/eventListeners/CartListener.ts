@@ -242,14 +242,10 @@ export const CartListener = async (): Promise<void> => {
   // Init checkout button
   const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (ecomCheckoutElement) {
+    ecomCheckoutElement.removeAttribute('data-node-type');
     const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
     checkoutButtonElement.innerHTML = 'Checkout';
     checkoutButtonElement.setAttribute('href', '/order-summary');
-    checkoutButtonElement.addEventListener('click', async (event) => {
-      event.preventDefault();
-		  event.stopPropagation();
-      location.href = '/order-summary';
-    });
     ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
   }
 

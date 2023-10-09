@@ -11,6 +11,7 @@ import { ProductListener } from './eventListeners/ProductListener';
 import { CartItem } from './models/cart';
 import { SocialLoginListener } from './eventListeners/SocialLoginListener';
 import { createOmiseToken } from './api/payment';
+import { PaymentListener } from './eventListeners/PaymentListener';
 
 const publicUrls = [
   '/',
@@ -51,6 +52,7 @@ const initialize = () => {
   checkAuthen().then((result: boolean) => {
     if (result) {
       CartListener();
+      PaymentListener();
       SearchListener();
       ProductListener();
     }
