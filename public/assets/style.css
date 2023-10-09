@@ -60,4 +60,5 @@
   box-shadow: 0 4px 10px rgba(2, 87, 251, .2);
   border: 0;
   cursor: pointer;
+  width: 100%;
 }

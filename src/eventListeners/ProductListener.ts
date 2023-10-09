@@ -163,7 +163,7 @@ export const ProductListener = (): void => {
               imgElement.classList.add(EL_CLASS_PHOTO_IMAGE);
               imgElement.setAttribute('id', `image-${item.id}`);
               imgElement.addEventListener('click', async () => {
-                const popupElement: HTMLElement = document.querySelector(`[data-popup="${item.id}"]`);
+                const popupElement = document.querySelector(`[data-popup="${item.id}"]`) as HTMLElement;
                 if (popupElement) {
                   popupElement.classList.add('popup-display-force');
                   popupElement.style.opacity = '1';
@@ -173,11 +173,11 @@ export const ProductListener = (): void => {
             }
 
             // Init add to cart button
-            const addButtonElement: HTMLElement = cardElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`);
+            const addButtonElement = cardElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`) as HTMLElement;
             initAddToCartElement(addButtonElement, item, addedItems);
 
             // Init popup
-            const innerPopupElement: HTMLElement = cardElement.querySelector(`.${EL_CLASS_POPUP}`);
+            const innerPopupElement = cardElement.querySelector(`.${EL_CLASS_POPUP}`) as HTMLElement;
             if (innerPopupElement) {
 
               // Init popup
@@ -188,23 +188,23 @@ export const ProductListener = (): void => {
               popupElement.style.pointerEvents = 'none';
 
               // Init title
-              const titlePopupElements: HTMLElement = popupElement.querySelector(`.${EL_CLASS_POPUP_TITLE}`);
+              const titlePopupElements = popupElement.querySelector(`.${EL_CLASS_POPUP_TITLE}`) as HTMLElement;
               if (titlePopupElements) {
                 titlePopupElements.innerText = moment(date).format('DD.MM.YYYY');
               }
 
               // Init subtitle
-              const subtitlePopupElements: HTMLElement = popupElement.querySelector(`.${EL_CLASS_POPUP_SUBTITLE}`);
+              const subtitlePopupElements = popupElement.querySelector(`.${EL_CLASS_POPUP_SUBTITLE}`) as HTMLElement;
               if (subtitlePopupElements) {
                 subtitlePopupElements.innerText = `${data.length ? data[0].boat?.name : '-'} x ${companyName}`;
               }
 
               // Init add to cart button in popup
-              const addPopupButtonElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`);
+              const addPopupButtonElement = popupElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`) as HTMLElement;
               initAddToCartElement(addPopupButtonElement, item, addedItems);
 
               // Init image in popup
-              const imgPopupElement: HTMLImageElement = popupElement.querySelector('img');
+              const imgPopupElement = popupElement.querySelector('img') as HTMLImageElement;
               if (imgPopupElement) {
                 imgPopupElement.src = item.image;
                 imgPopupElement.srcset = item.image;
@@ -225,12 +225,12 @@ export const ProductListener = (): void => {
               // Register click event to dismiss popup
               const reportButtonElement = popupElement.querySelector(`.${EL_CLASS_REPORT_BTN}`) as HTMLElement;
               reportButtonElement?.addEventListener('click', async () => {
-                const reportElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`);
+                const reportElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`) as HTMLElement;
                 reportElement?.classList.add('popup-display-force');
               });
 
               // Init report
-              const innerReportElement: HTMLElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`);
+              const innerReportElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`) as HTMLElement;
               if (innerReportElement) {
 
                 const reportElement = innerReportElement.cloneNode(true) as HTMLElement;

@@ -16,15 +16,15 @@ export const createOmiseToken = async () => {
   console.log(token);
 
   if (token) {
-    await omise.charge.create({
-      amount: 5000,
-      currency: 'thb',
-      card: token.id,
-      customer: token.card.name,
-      return_uri: PAYMENT_PROCESS_REDIRECT,
-      source: '',
-      description: 'test'
-    });
+    // await omise.charge.create({
+    //   amount: 5000,
+    //   currency: 'thb',
+    //   card: token.id,
+    //   customer: token.card.name,
+    //   return_uri: PAYMENT_PROCESS_REDIRECT,
+    //   source: '',
+    //   description: 'test'
+    // });
   }
 
   console.log(token);

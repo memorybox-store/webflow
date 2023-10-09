@@ -12,4 +12,4 @@ export const OMISE_SECRET_KEY = 'skey_test_5x66z2ssajwaks9s5qf';
 export const SOCIAL_LOGIN_REDIRECT = 'https://memorybox.webflow.io/log-in';
 // export const PAYMENT_PROCESS_PAGE = '/';
 export const PAYMENT_PROCESS_PAGE = 'https://memorybox.webflow.io/payment-process';
-export const PAYMENT_PROCESS_REDIRECT = 'https://memorybox.webflow.io/';
+export const PAYMENT_PROCESS_REDIRECT = 'https://memorybox.webflow.io/user';

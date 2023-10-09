@@ -63,10 +63,10 @@ export const SearchListener = (): void => {
 				if (commonNodes.length) {
 					const optionElementTemplate = commonNodes[0];
 					for (const option of companyOptions) {
-						const clonedElement: any = optionElementTemplate.cloneNode(true);
-						clonedElement.setAttribute('value', option.value);
-						clonedElement.innerText = option.text;
-						element.appendChild(clonedElement);
+						const selectOptionElement: any = optionElementTemplate.cloneNode(true);
+						selectOptionElement.setAttribute('value', option.value);
+						selectOptionElement.innerText = option.text;
+						element.appendChild(selectOptionElement);
 					};
 				}
 			}
@@ -101,10 +101,10 @@ export const SearchListener = (): void => {
 				if (commonNodes.length) {
 					const optionElementTemplate = commonNodes[0];
 					for (const option of boatOptions) {
-						const clonedElement: any = optionElementTemplate.cloneNode(true);
-						clonedElement.setAttribute('value', option.value);
-						clonedElement.innerText = option.text;
-						element.appendChild(clonedElement);
+						const selectOptionElement: any = optionElementTemplate.cloneNode(true);
+						selectOptionElement.setAttribute('value', option.value);
+						selectOptionElement.innerText = option.text;
+						element.appendChild(selectOptionElement);
 					};
 				}
 			}
