@@ -20,7 +20,6 @@ import { cartItemTemplate } from "../templates/cart";
 import { getCartItems, removeItemFromCart } from "../api/cart";
 import { CartItem } from "../models/cart";
 import { createOmiseElement } from "./PaymentListener";
-import { loadImageAsBase64 } from "../utils/image";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -81,21 +80,17 @@ const updateCartList = (data: CartItem[]) => {
     if (ecomListElement) {
 
       const itemsContainer = document.createElement('div');
-      const itemsHTML = data.reduce(async (result: any, item: any) => {
-        await loadImageAsBase64(item.product?.image).then((base64Data) => {
-          return `
+      const itemsHTML = data.reduce((result: any, item: any) => {
+        return `
               ${result} 
               ${cartItemTemplate
             .replace('{{cartImage}}', item.product?.image || '')
             .replace('{{cartId}}', item.id.toString())
-            .replace('{{cartName}}', base64Data)
+            .replace('{{cartName}}', item.product?.name || '')
             .replace('{{cartNamePrompt}}', item.product?.name || '')
             .replace('{{cartCompany}}', item.product?.company?.name || '')
             .replace('{{cartPrice}}', item.product?.price || '')
           }`;
-        }).catch((error) => {
-          console.error(error.message);
-        });
       }, '');
       itemsContainer.innerHTML = itemsHTML;
 
