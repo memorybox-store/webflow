@@ -42,7 +42,7 @@ export const register = async (username: string, password: string, name: string 
       payload,
       {
         ...{
-          headers: await createRequestHeader(false, true)
+          headers: await createRequestHeader(false)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -73,7 +73,7 @@ export const signin = async (username: string, password: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(false, false, true, 'application/x-www-form-urlencoded')
+          headers: await createRequestHeader(false, true, 'application/x-www-form-urlencoded')
         }
       }
     ).then(async (response: any) => {
@@ -91,16 +91,16 @@ export const signin = async (username: string, password: string) => {
         await axios.post(
           `${SERVER}/api/Main/GetAuhv`,
           {
-            auhv: "bqwupydeP2fWsfYvwuN6SQ==",
-            AuthenticateEX: "gQGllPkYcsOSd7pCJ7UJabLV9m6Ua3h7YJ5iikiVLAW643m70iqTV90WRHD394KjG92+TYi/h8zAqZS90zBgaw=="
+            auhv: 'bqwupydeP2fWsfYvwuN6SQ==',
+            AuthenticateEX: 'gQGllPkYcsOSd7pCJ7UJabLV9m6Ua3h7YJ5iikiVLAW643m70iqTV90WRHD394KjG92+TYi/h8zAqZS90zBgaw=='
           },
           {
             ...{
-              headers: await createRequestHeader(true, false, false)
+              headers: await createRequestHeader(true, false)
             }
           }
         ).then(async (response: any) => {
-          await setStorage('cookie', `auhv=${encodeURIComponent(response.data.Data)}`);
+          document.cookie = `auhv=${encodeURIComponent(response.data.Data)}`;
           resolve(session);
         }).catch((error) => {
           reject(handleResponseError(error));
@@ -138,7 +138,7 @@ export const retrieveProfile = async () => {
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -193,7 +193,7 @@ export const checkSocialAuthen = async (platform: string, socialId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(false, true, true)
+          headers: await createRequestHeader(false, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -233,7 +233,7 @@ export const saveSocialAuthen = async (platform: string, socialId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -265,9 +265,8 @@ export const lineTokenFromCode = async (code: string) => {
       `https://api.line.me/oauth2/v2.1/token`,
       payload,
       {
-        withCredentials: false,
         ...{
-          headers: await createRequestHeader(false, true, false, 'application/x-www-form-urlencoded')
+          headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -292,9 +291,8 @@ export const lineVerify = async (idToken: string) => {
       `https://api.line.me/oauth2/v2.1/verify`,
       payload,
       {
-        withCredentials: false,
         ...{
-          headers: await createRequestHeader(false, true, false, 'application/x-www-form-urlencoded')
+          headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -314,7 +312,6 @@ export const lineProfile = async (accessToken: string) => {
     await axios.get(
       `https://api.line.me/oauth2/v2.1/userinfo`,
       {
-        withCredentials: false,
         ...{
           headers: await createRequestHeader(accessToken)
         }
@@ -346,7 +343,7 @@ export const test = async (username: string, password: string) => {
       {
         params,
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {

@@ -7,7 +7,6 @@ import { MSG_ERR_API_NOT_PERMIT, MSG_ERR_UNKNOWN } from '../constants/messages';
 
 export const createRequestHeader = async (
   withSession: boolean | string = false,
-  withCredentials: boolean = false,
   withKey: boolean = false,
   contentType: string = 'application/json'
 ) => {
@@ -15,19 +14,9 @@ export const createRequestHeader = async (
     const session: Session = await getStorage('session', true) as Session || null;
     return session?.accessToken || null;
   }
-  const getCookie = async () => {
-    const cookie: string | unknown = await getStorage('cookie');
-    return cookie;
-  }
   let headers: any = {};
   if (withKey) {
     headers['Authenticate'] = API_KEY;
-  }
-  if (withCredentials) {
-    const cookie = await getCookie();
-    if (cookie) {
-      headers['Cookie'] = cookie;
-    }
   }
   if (contentType) {
     headers['Content-Type'] = contentType;

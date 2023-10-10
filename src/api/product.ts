@@ -22,7 +22,7 @@ export const getProducts = async (boatId: string) => {
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -90,7 +90,7 @@ export const getProductsScan = async (boatId: string) => {
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -157,7 +157,7 @@ export const getProductDetails = async (productId: number | string) => {
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
