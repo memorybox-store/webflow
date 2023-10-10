@@ -63,5 +63,7 @@ export const EL_CLASS_PAYMENT_ITEM_NAME = 'payment-item-name';
 export const EL_CLASS_PAYMENT_ITEM_COMPANY = 'payment-item-company';
 export const EL_CLASS_PAYMENT_ITEM_SIZE = 'payment-item-size';
 export const EL_CLASS_PAYMENT_ITEM_PRICE = 'payment-item-price';
+export const EL_CLASS_PAYMENT_ITEM_IMG = 'payment-item-image';
 export const EL_CLASS_PAYMENT_ITEM_REMOVE_BTN = 'payment-item-remove';
 export const EL_ID_ORDER_SUMMARY = 'order-summary';
+export const EL_ID_CART_CHECKOUT_BTN = 'cart-checkout-button';

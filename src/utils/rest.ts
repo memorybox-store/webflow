@@ -6,26 +6,37 @@ import { Session } from '../models/user';
 import { MSG_ERR_API_NOT_PERMIT, MSG_ERR_UNKNOWN } from '../constants/messages';
 
 export const createRequestHeader = async (
-  requireSession: boolean | string = false,
-  requireKey: boolean = false,
+  withSession: boolean | string = false,
+  withCredentials: boolean = false,
+  withKey: boolean = false,
   contentType: string = 'application/json'
 ) => {
   const getAccessToken = async () => {
     const session: Session = await getStorage('session', true) as Session || null;
     return session?.accessToken || null;
   }
+  const getCookie = async () => {
+    const cookie: string | unknown = await getStorage('cookie');
+    return cookie;
+  }
   let headers: any = {};
-  if (requireKey) {
+  if (withKey) {
     headers['Authenticate'] = API_KEY;
+  }
+  if (withCredentials) {
+    const cookie = await getCookie();
+    if (cookie) {
+      headers['Cookie'] = cookie;
+    }
   }
   if (contentType) {
     headers['Content-Type'] = contentType;
   } else {
     headers['Content-Type'] = 'text/plain';
   }
-  if (requireSession) {
-    if (typeof requireSession === 'string') {
-      headers['Authorization'] = `Bearer ${requireSession}`;
+  if (withSession) {
+    if (typeof withSession === 'string') {
+      headers['Authorization'] = `Bearer ${withSession}`;
     } else {
       const loginToken = await getAccessToken();
       if (loginToken) {

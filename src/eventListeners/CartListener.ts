@@ -12,12 +12,15 @@ import {
   EL_ID_CART_BADGE,
   EL_ID_CHECKOUT_OMISE_BTN,
   EL_ID_CHECKOUT_OMISE_SCRIPT,
-  EL_CLASS_REMOVE_BTN
+  EL_CLASS_REMOVE_BTN,
+  EL_ID_CART_CHECKOUT_BTN
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
 import { getCartItems, removeItemFromCart } from "../api/cart";
 import { CartItem } from "../models/cart";
+import { createOmiseElement } from "./PaymentListener";
+import { loadImageAsBase64 } from "../utils/image";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -78,17 +81,21 @@ const updateCartList = (data: CartItem[]) => {
     if (ecomListElement) {
 
       const itemsContainer = document.createElement('div');
-      const itemsHTML = data.reduce((result: any, item: any) => {
-        return `
+      const itemsHTML = data.reduce(async (result: any, item: any) => {
+        await loadImageAsBase64(item.product?.name).then((base64Data) => {
+          return `
               ${result} 
               ${cartItemTemplate
             .replace('{{cartImage}}', item.product?.image || '')
             .replace('{{cartId}}', item.id.toString())
-            .replace('{{cartName}}', item.product?.name || '')
+            .replace('{{cartName}}', base64Data)
             .replace('{{cartNamePrompt}}', item.product?.name || '')
             .replace('{{cartCompany}}', item.product?.company?.name || '')
             .replace('{{cartPrice}}', item.product?.price || '')
           }`;
+        }).catch((error) => {
+          console.error(error.message);
+        });
       }, '');
       itemsContainer.innerHTML = itemsHTML;
 
@@ -171,17 +178,23 @@ const updateCartAmount = async (data: CartItem[]) => {
     ecomSummaryElement.parentNode.replaceChild(summaryElement, ecomSummaryElement);
   }
 
+  // Update checkout button
+  const checkoutButtonElement = document.getElementById(EL_ID_CHECKOUT_OMISE_BTN);
+  if (checkoutButtonElement) {
+    checkoutButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
+  }
+
   // Update Omise form
   const modalCheckOutFormScript = document.getElementById(EL_ID_CHECKOUT_OMISE_SCRIPT) as HTMLElement;
   if (modalCheckOutFormScript) {
     modalCheckOutFormScript.setAttribute('data-amount', amount.toString());
     modalCheckOutFormScript.setAttribute(
       'data-button-label',
-      `Pay ${THBcompact.format(amount / 100 || 0)} THB`
+      `Checkout ${THBcompact.format(amount / 100 || 0)} THB`
     );
     const checkoutButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
     if (checkoutButtonElement) {
-      checkoutButtonElement.innerHTML = `Pay ${THBcompact.format(amount / 100 || 0)} THB`;
+      checkoutButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
     }
   }
 
@@ -240,13 +253,20 @@ export const CartListener = async (): Promise<void> => {
   }
 
   // Init checkout button
+  // const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
+  // if (ecomCheckoutElement) {
+  //   ecomCheckoutElement.removeAttribute('data-node-type');
+  //   const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
+  //   checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
+  //   checkoutButtonElement.innerHTML = 'Checkout';
+  //   checkoutButtonElement.setAttribute('href', '/order-summary');
+  //   ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
+  // }const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (ecomCheckoutElement) {
     ecomCheckoutElement.removeAttribute('data-node-type');
-    const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
-    checkoutButtonElement.innerHTML = 'Checkout';
-    checkoutButtonElement.setAttribute('href', '/order-summary');
-    ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
+    const omiseElement = createOmiseElement(0);
+    ecomCheckoutElement.parentElement.replaceChild(omiseElement, ecomCheckoutElement);
   }
 
   // Init cart modal

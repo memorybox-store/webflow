@@ -1,6 +1,5 @@
 import { EL_ID_LOGIN_FORM } from "../constants/elements";
 
-import { getElementValueByName } from "../utils/form";
 import { signin } from "../api/user";
 
 import { Session } from "../models/user";

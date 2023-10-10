@@ -18,7 +18,7 @@ export const getCartItems = async () => {
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -109,7 +109,7 @@ export const addItemToCart = async (
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -192,7 +192,7 @@ export const removeItemFromCart = async (cartId: number | string) => {
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {

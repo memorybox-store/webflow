@@ -73,14 +73,10 @@ export const signin = async (username: string, password: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(false, true, 'application/x-www-form-urlencoded')
+          headers: await createRequestHeader(false, false, true, 'application/x-www-form-urlencoded')
         }
       }
     ).then(async (response: any) => {
-      console.log(response);
-      // await response.headers.getSetCookie()
-      // document.cookie = await response.headers.get('Set-Cookie');
-      // console.log(document.cookie);
       if (response.data) {
         const data = response.data;
         const session: Session = {
@@ -92,7 +88,23 @@ export const signin = async (username: string, password: string) => {
           issued: data['.issued'] ? moment(data['.issued']).format() : null,
         };
         await setStorage('session', session, true);
-        resolve(session);
+        await axios.post(
+          `${SERVER}/api/Main/GetAuhv`,
+          {
+            auhv: "bqwupydeP2fWsfYvwuN6SQ==",
+            AuthenticateEX: "gQGllPkYcsOSd7pCJ7UJabLV9m6Ua3h7YJ5iikiVLAW643m70iqTV90WRHD394KjG92+TYi/h8zAqZS90zBgaw=="
+          },
+          {
+            ...{
+              headers: await createRequestHeader(true, false, false)
+            }
+          }
+        ).then(async (response: any) => {
+          await setStorage('cookie', `auhv=${encodeURIComponent(response.data.Data)}`);
+          resolve(session);
+        }).catch((error) => {
+          reject(handleResponseError(error));
+        });
       } else {
         reject(MSG_ERR_EMP_RES);
       }
@@ -126,7 +138,7 @@ export const retrieveProfile = async () => {
       {
         withCredentials: true,
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -181,7 +193,7 @@ export const checkSocialAuthen = async (platform: string, socialId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(false, true)
+          headers: await createRequestHeader(false, true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -221,7 +233,7 @@ export const saveSocialAuthen = async (platform: string, socialId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -255,7 +267,7 @@ export const lineTokenFromCode = async (code: string) => {
       {
         withCredentials: false,
         ...{
-          headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
+          headers: await createRequestHeader(false, true, false, 'application/x-www-form-urlencoded')
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -282,7 +294,7 @@ export const lineVerify = async (idToken: string) => {
       {
         withCredentials: false,
         ...{
-          headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
+          headers: await createRequestHeader(false, true, false, 'application/x-www-form-urlencoded')
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -334,7 +346,7 @@ export const test = async (username: string, password: string) => {
       {
         params,
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {

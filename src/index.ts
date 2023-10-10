@@ -4,13 +4,10 @@ import { LoginListener } from './eventListeners/LoginListener';
 import { LogoutListener } from './eventListeners/LogoutListener';
 import { ScanListener } from './eventListeners/ScanListener';
 
-import { Profile } from './models/user';
 import { SearchListener } from './eventListeners/SearchListener';
 import { CartListener } from './eventListeners/CartListener';
 import { ProductListener } from './eventListeners/ProductListener';
-import { CartItem } from './models/cart';
 import { SocialLoginListener } from './eventListeners/SocialLoginListener';
-import { createOmiseToken } from './api/payment';
 import { PaymentListener } from './eventListeners/PaymentListener';
 
 const publicUrls = [
@@ -45,7 +42,7 @@ const checkAuthen = () => {
 }
 
 const initialize = () => {
-  // LoginListener();
+  LoginListener();
   LogoutListener();
   SocialLoginListener();
   ScanListener();
@@ -59,7 +56,6 @@ const initialize = () => {
   })
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   initialize();
-  createOmiseToken();
 });

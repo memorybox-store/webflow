@@ -26,6 +26,7 @@ import { updateCartItems } from "./CartListener";
 
 import { Product } from "../models/product";
 import { CartItem } from "../models/cart";
+import { loadImageAsBase64 } from "../utils/image";
 
 export const ProductListener = (): void => {
 
@@ -158,8 +159,14 @@ export const ProductListener = (): void => {
               imgElement.crossOrigin = 'anonymous';
               imgElement.setAttribute('crossorigin', 'anonymous');
 
-              imgElement.src = item.image;
-              imgElement.srcset = item.image;
+              loadImageAsBase64(item.image).then((base64Data) => {
+                // Use the base64Data in the src attribute of the img element
+                imgElement.src = base64Data;
+                imgElement.srcset = base64Data;
+              }).catch((error) => {
+                console.error(error.message);
+              });
+
               imgElement.classList.add(EL_CLASS_PHOTO_IMAGE);
               imgElement.setAttribute('id', `image-${item.id}`);
               imgElement.addEventListener('click', async () => {

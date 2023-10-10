@@ -26,7 +26,8 @@ import {
   EL_CLASS_PAYMENT_ITEM_REMOVE_BTN,
   EL_ID_PAYMENT_DISCOUNT_BADGE,
   EL_ID_PAYMENT_SUMMARY,
-  EL_ID_PAYMENT_TOTAL
+  EL_ID_PAYMENT_TOTAL,
+  EL_CLASS_PAYMENT_ITEM_IMG
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
@@ -35,6 +36,7 @@ import { CartItem } from "../models/cart";
 import omise from "../config/omise";
 import { PAYMENT_PROCESS_PAGE } from "../constants/configs";
 import { removeCartItem, updateCartItems } from "./CartListener";
+import { loadImageAsBase64 } from "../utils/image";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -52,7 +54,7 @@ const THBcompact = new Intl.NumberFormat(
   }
 );
 
-const updateSummaryList = (data: CartItem[]) => {
+const updateSummaryList = async (data: CartItem[]) => {
 
   const sampleItemElement = document.getElementById(EL_ID_PAYMENT_ITEM_SAMPLE) as HTMLElement;
   if (sampleItemElement) {
@@ -75,6 +77,17 @@ const updateSummaryList = (data: CartItem[]) => {
         const itemNameElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_NAME}`) as HTMLElement;
         if (itemNameElement) {
           itemNameElement.innerHTML = item.product.name;
+        }
+
+        const itemImgElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_IMG}`) as HTMLImageElement;
+        if (itemImgElement) {
+          loadImageAsBase64(item.product.image).then((base64Data) => {
+            // Use the base64Data in the src attribute of the img element
+            itemImgElement.src = base64Data;
+            itemImgElement.srcset = base64Data;
+          }).catch((error) => {
+            console.error(error.message);
+          });
         }
 
         const itemCompanyElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_COMPANY}`) as HTMLElement;
@@ -131,17 +144,21 @@ const updateSummaryList = (data: CartItem[]) => {
     if (ecomListElement) {
 
       const itemsContainer = document.createElement('div');
-      const itemsHTML = data.reduce((result: any, item: any) => {
-        return `
+      const itemsHTML = data.reduce(async (result: any, item: any) => {
+        await loadImageAsBase64(item.product?.name).then((base64Data) => {
+          return `
               ${result} 
               ${cartItemTemplate
             .replace('{{cartImage}}', item.product?.image || '')
             .replace('{{cartId}}', item.id.toString())
-            .replace('{{cartName}}', item.product?.name || '')
+            .replace('{{cartName}}', base64Data)
             .replace('{{cartNamePrompt}}', item.product?.name || '')
             .replace('{{cartCompany}}', item.product?.company?.name || '')
             .replace('{{cartPrice}}', item.product?.price || '')
           }`;
+        }).catch((error) => {
+          console.error(error.message);
+        });
       }, '');
       itemsContainer.innerHTML = itemsHTML;
 
@@ -235,7 +252,7 @@ export const createOmiseElement = (amount: number) => {
   scriptElement.type = 'text/javascript';
   scriptElement.src = 'https://cdn.omise.co/omise.js';
   scriptElement.setAttribute('data-key', 'pkey_test_5x66z2s0d6z4aobvn7f');
-  scriptElement.setAttribute('data-button-label', `Pay 0.00 THB`);
+  scriptElement.setAttribute('data-button-label', `Checkout 0.00 THB`);
   scriptElement.setAttribute('data-amount', amount.toString());
   scriptElement.setAttribute('data-currency', 'THB');
   scriptElement.setAttribute('data-default-payment-method', 'credit_card');
