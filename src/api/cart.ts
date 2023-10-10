@@ -1,13 +1,14 @@
 import { SERVER } from '../constants/configs';
 import { MSG_ERR_EMP_RES } from '../constants/messages';
 
-import axios, { AxiosResponse } from 'axios';
+import axios from '../config/axios';
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 import { CartItem } from '../models/cart';
 import { Company } from '../models/sale';
 import { Product, ProductDetail } from '../models/product';
+import { AxiosResponse } from 'axios';
 
 export const getCartItems = async () => {
   return new Promise(async (resolve, reject) => {
@@ -16,7 +17,6 @@ export const getCartItems = async () => {
       `${SERVER}/api/MainSale/SelectItemCart`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }
@@ -107,7 +107,6 @@ export const addItemToCart = async (
       `${SERVER}/api/MemoryBox/AddItemToCart`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }
@@ -190,7 +189,6 @@ export const removeItemFromCart = async (cartId: number | string) => {
       `${SERVER}/api/MemoryBox/DeleteItemCart`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }

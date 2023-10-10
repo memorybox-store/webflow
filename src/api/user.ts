@@ -6,13 +6,14 @@ import {
 } from '../constants/configs';
 import { MSG_ERR_EMP_DATA, MSG_ERR_EMP_RES } from '../constants/messages';
 
-import axios, { AxiosResponse } from 'axios';
+import axios from '../config/axios';
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 import { getStorage, removeStorage, setStorage } from '../utils/storage';
 
 import { Profile, Session } from '../models/user';
+import { AxiosResponse } from 'axios';
 
 export const authen = async () => {
   return new Promise(async (resolve, reject) => {
@@ -136,7 +137,6 @@ export const retrieveProfile = async () => {
       `${SERVER}/api/Main/Profile`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }
@@ -265,6 +265,7 @@ export const lineTokenFromCode = async (code: string) => {
       `https://api.line.me/oauth2/v2.1/token`,
       payload,
       {
+        withCredentials: false,
         ...{
           headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
         }
@@ -291,6 +292,7 @@ export const lineVerify = async (idToken: string) => {
       `https://api.line.me/oauth2/v2.1/verify`,
       payload,
       {
+        withCredentials: false,
         ...{
           headers: await createRequestHeader(false, false, 'application/x-www-form-urlencoded')
         }
@@ -312,6 +314,7 @@ export const lineProfile = async (accessToken: string) => {
     await axios.get(
       `https://api.line.me/oauth2/v2.1/userinfo`,
       {
+        withCredentials: false,
         ...{
           headers: await createRequestHeader(accessToken)
         }

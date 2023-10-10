@@ -1,13 +1,14 @@
 import { SERVER } from '../constants/configs';
 import { MSG_ERR_EMP_RES } from '../constants/messages';
 
-import axios, { AxiosResponse } from 'axios';
+import axios from '../config/axios';
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 
 import { Company, Boat } from '../models/sale';
 import { Product, ProductDetail } from '../models/product';
+import { AxiosResponse } from 'axios';
 
 export const getProducts = async (boatId: string) => {
   return new Promise(async (resolve, reject) => {
@@ -20,7 +21,6 @@ export const getProducts = async (boatId: string) => {
       `${SERVER}/api/MainSale/SelectDataSaleList`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }
@@ -88,7 +88,6 @@ export const getProductsScan = async (boatId: string) => {
       `${SERVER}/api/MemoryBox/SelectDataSaleList`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }
@@ -155,7 +154,6 @@ export const getProductDetails = async (productId: number | string) => {
       `${SERVER}/api/MainSale/SelectDataSaleListDetailsItem`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }

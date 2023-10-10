@@ -1,12 +1,13 @@
 import { SERVER } from '../constants/configs';
 import { MSG_ERR_EMP_RES } from '../constants/messages';
 
-import axios, { AxiosResponse } from 'axios';
+import axios from '../config/axios';
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 
 import { Company, Boat } from '../models/sale';
+import { AxiosResponse } from 'axios';
 
 export const getCompanies = async () => {
   return new Promise(async (resolve, reject) => {
@@ -15,7 +16,6 @@ export const getCompanies = async () => {
       `${SERVER}/api/Main/SelectCompany`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }
@@ -61,7 +61,6 @@ export const getBoats = async (compId: string, date: string) => {
       `${SERVER}/api/MainSale/SelectProductCategory`,
       payload,
       {
-        withCredentials: true,
         ...{
           headers: await createRequestHeader(true)
         }

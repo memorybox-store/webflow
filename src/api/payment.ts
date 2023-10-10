@@ -1,9 +1,10 @@
 import { OmiseClient, TokenResponse, OmiseError } from 'omise-nodejs';
 import omise from '../config/omise';
 import { OMISE_PUBLIC_KEY, OMISE_SECRET_KEY, PAYMENT_PROCESS_REDIRECT } from '../constants/configs';
-import axios, { AxiosResponse } from 'axios';
+import axios from '../config/axios';
 import { handleResponseError } from '../utils/rest';
 import { MSG_ERR_EMP_RES } from '../constants/messages';
+import { AxiosResponse } from 'axios';
 
 export const createOmiseToken = async () => {
 
@@ -54,6 +55,7 @@ export const chargeOmise = async (
       `https://api.omise.co/charges`,
       payload,
       {
+        withCredentials: false,
         auth: {
           username: OMISE_SECRET_KEY,
           password: '',
@@ -91,7 +93,7 @@ export const chargeOmise2 = async (
       `https://api.omise.co/charges`,
       payload,
       {
-        withCredentials: true,
+        withCredentials: false,
         auth: {
           username: OMISE_SECRET_KEY,
           password: '',
