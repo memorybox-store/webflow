@@ -145,7 +145,7 @@ const updateSummaryList = async (data: CartItem[]) => {
 
       const itemsContainer = document.createElement('div');
       const itemsHTML = data.reduce(async (result: any, item: any) => {
-        await loadImageAsBase64(item.product?.name).then((base64Data) => {
+        await loadImageAsBase64(item.product?.image).then((base64Data) => {
           return `
               ${result} 
               ${cartItemTemplate
