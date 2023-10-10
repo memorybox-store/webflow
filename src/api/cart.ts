@@ -18,7 +18,7 @@ export const getCartItems = async () => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -108,7 +108,7 @@ export const addItemToCart = async (
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -190,7 +190,7 @@ export const removeItemFromCart = async (cartId: number | string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {

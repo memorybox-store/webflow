@@ -11,12 +11,17 @@ export const createRequestHeader = async (
   contentType: string = 'application/json'
 ) => {
   const getAccessToken = async () => {
-    const session: Session = await getStorage('session', true) as Session || null;
+    const session = await getStorage('session', true) as Session | null;
     return session?.accessToken || null;
   }
   let headers: any = {};
   if (withKey) {
-    headers['Authenticate'] = API_KEY;
+    const cookie = await getStorage('cookie') as string | unknown | null;
+    if (cookie) {
+      headers['Authenticate'] = cookie;
+    } else {
+      headers['Authenticate'] = API_KEY;
+    }
   }
   if (contentType) {
     headers['Content-Type'] = contentType;

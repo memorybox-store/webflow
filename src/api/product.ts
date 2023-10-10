@@ -22,7 +22,7 @@ export const getProducts = async (boatId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -89,7 +89,7 @@ export const getProductsScan = async (boatId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -155,7 +155,7 @@ export const getProductDetails = async (productId: number | string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {

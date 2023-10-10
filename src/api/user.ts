@@ -43,7 +43,7 @@ export const register = async (username: string, password: string, name: string 
       payload,
       {
         ...{
-          headers: await createRequestHeader(false)
+          headers: await createRequestHeader(false, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -101,7 +101,7 @@ export const signin = async (username: string, password: string) => {
             }
           }
         ).then(async (response: any) => {
-          document.cookie = `auhv=${encodeURIComponent(response.data.Data)}`;
+          await setStorage('cookie', response.data.Data);
           resolve(session);
         }).catch((error) => {
           reject(handleResponseError(error));
@@ -138,7 +138,7 @@ export const retrieveProfile = async () => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -233,7 +233,7 @@ export const saveSocialAuthen = async (platform: string, socialId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true)
+          headers: await createRequestHeader(true, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
