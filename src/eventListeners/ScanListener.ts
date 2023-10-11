@@ -51,17 +51,11 @@ export const ScanListener = (): void => {
           resultRealtimeElement.innerText = `Scanning...`;
         }
 
-        const foundElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
-        if (foundElements) {
-          for (const [_, countElement] of Object.entries(foundElements)) {
-            countElement.classList.remove('.found-face');
-          }
-        }
-
-        const scannedElements = document.querySelectorAll('.scanned') as NodeListOf<HTMLElement>;
-        if (scannedElements) {
-          for (const [_, scannedElement] of Object.entries(scannedElements)) {
-            scannedElement.classList.remove('.scanned');
+        const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
+        if (imageMarkElements) {
+          for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
+            imageMarkElement.classList.remove('.found-face');
+            imageMarkElement.classList.remove('.scanned');
           }
         }
 
