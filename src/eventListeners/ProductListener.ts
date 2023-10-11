@@ -79,13 +79,13 @@ export const ProductListener = (): void => {
       // Init result of company
       const resultCompanyElement = document.getElementById(EL_ID_RESULT_SUM_COMPANY) as HTMLElement;
       if (resultCompanyElement) {
-        resultCompanyElement.innerText = '-';
+        resultCompanyElement.innerText = companyName;
       }
 
       // Init result of company
       const resultHeaderCompanyElement = document.getElementById(EL_ID_RESULT_HEADER_COMPANY) as HTMLElement;
       if (resultHeaderCompanyElement) {
-        resultHeaderCompanyElement.innerText = '-';
+        resultHeaderCompanyElement.innerText = companyName;
       }
 
       // Init result of date
@@ -150,16 +150,6 @@ export const ProductListener = (): void => {
           // Update result of total image
           if (resultBoatElement) {
             resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
-          }
-
-          // Update result of company
-          if (resultCompanyElement) {
-            resultCompanyElement.innerText = data.length ? data[0].company?.name : '-';
-          }
-
-          // Init result of company
-          if (resultHeaderCompanyElement) {
-            resultHeaderCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }
 
           for (let item of data) {
