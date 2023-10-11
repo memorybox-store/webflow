@@ -14,7 +14,8 @@ import {
   EL_CLASS_REPORT,
   EL_CLASS_REPORT_CLOSE_BTN,
   EL_CLASS_REPORT_BTN,
-  EL_CLASS_REPORT_SUBMIT_BTN
+  EL_CLASS_REPORT_SUBMIT_BTN,
+  EL_ID_RESULT_SUM_DATE
 } from "../constants/elements";
 
 import moment from '../config/moment';
@@ -74,10 +75,16 @@ export const ProductListener = (): void => {
         resultBoatElement.innerText = '-';
       }
 
-      // Init result of comapny
+      // Init result of company
       const resultCompanyElement = document.getElementById(EL_ID_RESULT_SUM_COMPANY) as HTMLElement;
       if (resultCompanyElement) {
         resultCompanyElement.innerText = '-';
+      }
+
+      // Init result of date
+      const resultDateElement = document.getElementById(EL_ID_RESULT_SUM_DATE) as HTMLElement;
+      if (resultDateElement) {
+        resultDateElement.innerText = moment(date).format('LL');
       }
 
       const initAddToCartElement = (element: HTMLElement, item: Product, addedItems: Array<any>) => {
@@ -138,7 +145,7 @@ export const ProductListener = (): void => {
             resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
           }
 
-          // Update result of comapny
+          // Update result of company
           if (resultCompanyElement) {
             resultCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }

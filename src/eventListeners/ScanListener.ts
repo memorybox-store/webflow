@@ -94,7 +94,6 @@ export const ScanListener = (): void => {
                       });
                       imgTargetElement.classList.add('scanned');
                       if (results.includes(true)) {
-                        console.log('FOUND');
                         imgTargetElement.classList.remove('hidden-force');
                         imgTargetElement.classList.add('flex-force');
                         imgTargetElement.classList.add('found-face');
@@ -114,7 +113,7 @@ export const ScanListener = (): void => {
                         const countScanned = Object.entries(scannedElements).length || 0;
                         const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
                         if (resultRealtimeElement) {
-                          resultRealtimeElement.innerText = `Scanning ${countScanned} from ${items.length}, Found ${countAvailable}`;
+                          resultRealtimeElement.innerText = `Scanning ${countScanned} from ${items.length}... (Found ${countAvailable})`;
                         }
                       }
                     }
@@ -153,7 +152,6 @@ export const ScanListener = (): void => {
                     await getProductsScan(boatId).then(async (data: Product[]) => {
                       const chunkSize = 1;
                       defer(0, data, resultSource.detections[0], chunkSize, () => {
-                        console.log('Processing complete');
                         const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
                         scanningElement?.classList.remove('popup-display-force');
                         const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
