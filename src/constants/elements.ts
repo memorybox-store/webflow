@@ -12,6 +12,7 @@ export const EL_CLASS_CART_AMOUNT = 'w-commerce-commercecartordervalue';
 export const EL_CLASS_CART_EMPTY = 'w-commerce-commercecartemptystate';
 export const EL_CLASS_CART_ERROR = 'w-commerce-commercecarterrorstate';
 export const EL_ID_RESULT_SUM_MY_PIC = 'result-my-pic';
+export const EL_ID_PHOTO_SCANNING_STATUS = 'photo-scanning-status';
 export const EL_ID_RESULT_SUM_TOTAL = 'result-total-pic';
 export const EL_ID_RESULT_SUM_BOAT = 'result-boat';
 export const EL_ID_RESULT_SUM_COMPANY = 'result-company';

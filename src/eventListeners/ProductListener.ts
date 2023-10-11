@@ -293,7 +293,7 @@ export const ProductListener = (): void => {
 
   // Load on specific page
   const path: string = window.location.pathname;
-  if (path === '/result') {
+  // if (path === '/result') {
     const url = new URL(window.location.href);
     const boatId = url.searchParams.get("fid");
     const date = url.searchParams.get("date");
@@ -302,6 +302,6 @@ export const ProductListener = (): void => {
     if (boatId) {
       load(boatId, date, companyName);
     }
-  }
+  // }
 
 }

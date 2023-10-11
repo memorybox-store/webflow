@@ -194,6 +194,13 @@ export const compareFaces = (source: any, target: any) => {
   });
 }
 
+export const matchFaces = (source: any, target: any) => {
+  const sourceDescriptor = source.descriptor;
+  const targetDescriptor = target.descriptor;
+  const distance = euclideanDistance(sourceDescriptor, targetDescriptor);
+  return (distance < recognitionTreshold) ? true : false;
+}
+
 export const saveResultToImage = async (targetFile: string, canvas: any) => {
   return new Promise(async (resolve, reject) => {
     try {

@@ -169,7 +169,7 @@ const updateCartAmount = async (data: CartItem[]) => {
   if (ecomSummaryElement) {
     const summaryElement = ecomSummaryElement.cloneNode(true) as HTMLElement;
     summaryElement.removeAttribute('data-wf-bindings');
-    summaryElement.innerText = `฿ ${THB.format(amount / 100 || 0)} THB`;
+    summaryElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)} THB`;
     ecomSummaryElement.parentNode.replaceChild(summaryElement, ecomSummaryElement);
   }
 

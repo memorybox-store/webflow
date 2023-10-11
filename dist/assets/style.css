@@ -66,3 +66,7 @@
 #checkout-omise-form {
   width: 100%;
 }
+
+.popup-wrapper-photo {
+  display: none;
+}

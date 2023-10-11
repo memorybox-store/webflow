@@ -102,7 +102,7 @@ const updateSummaryList = async (data: CartItem[]) => {
 
         const itemPriceElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_PRICE}`) as HTMLElement;
         if (itemPriceElement) {
-          itemPriceElement.innerHTML = `฿ ${THB.format(item.product.price || 0)}`;
+          itemPriceElement.innerHTML = `฿ ${THBcompact.format(item.product.price || 0)}`;
         }
 
         const itemRemoveButtonElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_REMOVE_BTN}`) as HTMLElement;
@@ -221,13 +221,13 @@ const updateSummaryAmount = async (data: CartItem[]) => {
   // Update payment summary
   const summaryElement = document.getElementById(`.${EL_ID_PAYMENT_SUMMARY}`) as HTMLElement;
   if (summaryElement) {
-    summaryElement.innerText = `฿ ${THB.format(amount / 100 || 0)}`;
+    summaryElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
   }
 
   // Update payment total
   const totalElement = document.getElementById(`.${EL_ID_PAYMENT_TOTAL}`) as HTMLElement;
   if (totalElement) {
-    totalElement.innerText = `฿ ${THB.format(amount / 100 || 0)}`;
+    totalElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
   }
 
 }
