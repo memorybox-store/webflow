@@ -41,6 +41,11 @@ export const ScanListener = (): void => {
       element.parentElement.appendChild(inputFileElement);
       inputFileElement.addEventListener('change', async (event) => {
 
+        const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+        if (resultMyPicElement) {
+          resultMyPicElement.innerText = 'N/A';
+        }
+
         const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
         if (resultRealtimeElement) {
           resultRealtimeElement.innerText = `Scanning...`;
