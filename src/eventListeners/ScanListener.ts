@@ -41,6 +41,25 @@ export const ScanListener = (): void => {
       element.parentElement.appendChild(inputFileElement);
       inputFileElement.addEventListener('change', async (event) => {
 
+        const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
+        if (resultRealtimeElement) {
+          resultRealtimeElement.innerText = `Scanning...`;
+        }
+
+        const foundElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
+        if (foundElements) {
+          for (const [_, countElement] of Object.entries(foundElements)) {
+            countElement.classList.remove('.found-face');
+          }
+        }
+
+        const scannedElements = document.querySelectorAll('.scanned') as NodeListOf<HTMLElement>;
+        if (scannedElements) {
+          for (const [_, scannedElement] of Object.entries(scannedElements)) {
+            scannedElement.classList.remove('.scanned');
+          }
+        }
+
         const input = event.target as HTMLInputElement;
         const files = input.files;
 
