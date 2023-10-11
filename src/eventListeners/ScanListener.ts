@@ -9,7 +9,6 @@ import {
 import {
   EL_CLASS_CARD_PHOTO,
   EL_ID_FACESCAN_BTN,
-  EL_ID_FACESCAN_UPLOADER,
   EL_ID_PHOTO_SCANNING,
   EL_ID_PHOTO_SCANNING_STATUS,
   EL_ID_RESULT_SAMPLE,
@@ -28,7 +27,7 @@ export const ScanListener = (): void => {
     // 'expression'
   ];
 
-  const element = document.getElementById(EL_ID_FACESCAN_UPLOADER) as HTMLElement;
+  const element = document.getElementById(EL_ID_FACESCAN_BTN) as HTMLElement;
   if (element) {
 
     const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
@@ -39,7 +38,7 @@ export const ScanListener = (): void => {
       const inputFileElement = document.createElement('input') as HTMLInputElement;
       inputFileElement.type = 'file';
       inputFileElement.style.display = 'none';
-      element.appendChild(inputFileElement);
+      element.parentElement.appendChild(inputFileElement);
       inputFileElement.addEventListener('change', async (event) => {
 
         const input = event.target as HTMLInputElement;

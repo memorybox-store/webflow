@@ -15,7 +15,8 @@ import {
   EL_CLASS_REPORT_CLOSE_BTN,
   EL_CLASS_REPORT_BTN,
   EL_CLASS_REPORT_SUBMIT_BTN,
-  EL_ID_RESULT_SUM_DATE
+  EL_ID_RESULT_HEADER_DATE,
+  EL_ID_RESULT_HEADER_COMPANY
 } from "../constants/elements";
 
 import moment from '../config/moment';
@@ -81,10 +82,16 @@ export const ProductListener = (): void => {
         resultCompanyElement.innerText = '-';
       }
 
+      // Init result of company
+      const resultHeaderCompanyElement = document.getElementById(EL_ID_RESULT_HEADER_COMPANY) as HTMLElement;
+      if (resultHeaderCompanyElement) {
+        resultHeaderCompanyElement.innerText = '-';
+      }
+
       // Init result of date
-      const resultDateElement = document.getElementById(EL_ID_RESULT_SUM_DATE) as HTMLElement;
-      if (resultDateElement) {
-        resultDateElement.innerText = moment(date).format('LL');
+      const resultHeaderDateElement = document.getElementById(EL_ID_RESULT_HEADER_DATE) as HTMLElement;
+      if (resultHeaderDateElement) {
+        resultHeaderDateElement.innerText = moment(date).format('LL');
       }
 
       const initAddToCartElement = (element: HTMLElement, item: Product, addedItems: Array<any>) => {
@@ -148,6 +155,11 @@ export const ProductListener = (): void => {
           // Update result of company
           if (resultCompanyElement) {
             resultCompanyElement.innerText = data.length ? data[0].company?.name : '-';
+          }
+
+          // Init result of company
+          if (resultHeaderCompanyElement) {
+            resultHeaderCompanyElement.innerText = data.length ? data[0].company?.name : '-';
           }
 
           for (let item of data) {
