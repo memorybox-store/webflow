@@ -12,7 +12,7 @@ export interface Product {
   image: string | null;
   imageNoMark?: string | null;
   details: ProductDetail;
-  boat: Boat;
+  boat: Boat | null;
   company: Company;
 }
 

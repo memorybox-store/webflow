@@ -23,7 +23,6 @@ export const ScanListener = (): void => {
   const options: Array<any> = [
     'recognition',
     'landmark',
-    'ageGender',
     // 'expression'
   ];
 

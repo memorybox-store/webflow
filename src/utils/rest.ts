@@ -18,9 +18,9 @@ export const createRequestHeader = async (
   if (withKey) {
     const cookie = await getStorage('cookie') as string | unknown | null;
     if (cookie) {
-      headers['Authenticate'] = cookie;
+      headers.Authenticate = cookie;
     } else {
-      headers['Authenticate'] = API_KEY;
+      headers.Authenticate = API_KEY;
     }
   }
   if (contentType) {
@@ -30,11 +30,11 @@ export const createRequestHeader = async (
   }
   if (withSession) {
     if (typeof withSession === 'string') {
-      headers['Authorization'] = `Bearer ${withSession}`;
+      headers.Authorization = `Bearer ${withSession}`;
     } else {
       const loginToken = await getAccessToken();
       if (loginToken) {
-        headers['Authorization'] = `Bearer ${loginToken}`;
+        headers.Authorization = `Bearer ${loginToken}`;
       }
     }
   }

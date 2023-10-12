@@ -1,20 +1,10 @@
 
 import {
-  EL_CLASS_CART_AMOUNT,
   EL_CLASS_CART_EMPTY,
   EL_CLASS_CART_FORM,
   EL_CLASS_CART_LIST,
-  EL_DNT_CHECKOUT_BTN,
-  EL_DNT_MODAL_CART,
-  EL_DNT_MODAL_CART_CLOSE_LINK,
-  EL_DNT_MODAL_CART_OPEN_LINK,
-  EL_CLASS_ADD_TO_CART_BTN,
-  EL_ID_CART_BADGE,
-  EL_ID_CHECKOUT_OMISE_BTN,
   EL_ID_CHECKOUT_OMISE_FORM,
-  EL_ID_CHECKOUT_OMISE_SCRIPT,
   EL_ID_CHART_BTN,
-  EL_CLASS_REMOVE_BTN,
   EL_ID_ORDER_SUMMARY,
   EL_ID_PAYMENT_ITEM_SAMPLE,
   EL_CLASS_PAYMENT_ITEM,
@@ -238,43 +228,6 @@ export const updateSummaryItems = (data: CartItem[]) => {
   updateSummaryAmount(data);
 }
 
-export const createOmiseElement = (amount: number) => {
-
-  // Init form
-  const formElement = document.createElement('form');
-  formElement.id = EL_ID_CHECKOUT_OMISE_FORM;
-  formElement.method = 'GET';
-  formElement.action = PAYMENT_PROCESS_PAGE;
-
-  // Config form
-  const scriptElement = document.createElement('script');
-  scriptElement.id = EL_ID_CHECKOUT_OMISE_SCRIPT;
-  scriptElement.type = 'text/javascript';
-  scriptElement.src = 'https://cdn.omise.co/omise.js';
-  scriptElement.setAttribute('data-key', 'pkey_test_5x66z2s0d6z4aobvn7f');
-  scriptElement.setAttribute('data-button-label', `Checkout 0.00 THB`);
-  scriptElement.setAttribute('data-amount', amount.toString());
-  scriptElement.setAttribute('data-currency', 'THB');
-  scriptElement.setAttribute('data-default-payment-method', 'credit_card');
-  scriptElement.setAttribute('data-other-payment-methods', 'alipay,alipay_cn,alipay_hk,convenience_store,pay_easy,net_banking,googlepay,internet_banking,internet_banking_bay,internet_banking_bbl,mobile_banking_bay,mobile_banking_bbl,mobile_banking_kbank,mobile_banking_ktb,mobile_banking_scb,promptpay,points_citi,rabbit_linepay,shopeepay,truemoney');
-
-  // Set script to form
-  formElement.appendChild(scriptElement);
-
-  formElement?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const formData = new FormData(formElement);
-    for (const entry of (formData as any).entries()) {
-      const [key, value] = entry;
-      console.log(`${key}: ${value}`);
-    }
-  });
-
-  return formElement;
-
-}
-
 export const PaymentListener = async (): Promise<void> => {
 
   const initializeElements = (data: CartItem[]) => {
@@ -299,8 +252,11 @@ export const PaymentListener = async (): Promise<void> => {
 
   const chargeElement = document.getElementById(EL_ID_CHART_BTN) as HTMLElement;
   if (chargeElement) {
-    const omiseElement = createOmiseElement(0);
-    chargeElement.parentElement.replaceChild(omiseElement, chargeElement);
+    const omiseElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLElement;
+    if (omiseElement) {
+      omiseElement.style.display = '';
+      chargeElement.parentElement.replaceChild(omiseElement, chargeElement);
+    }
   }
 
 }

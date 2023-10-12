@@ -9,7 +9,6 @@ import {
   euclideanDistance
 } from 'face-api.js';
 
-import * as canvas from '@napi-rs/canvas';
 import { FACE_MODEL_PATH } from '../constants/configs';
 
 // SsdMobilenetv1Options
@@ -19,7 +18,6 @@ const recognitionTreshold = 0.5;
 export const loadFaceModels = (options?: Array<any>) => {
   return new Promise(async (resolve, reject) => {
 
-    // const MODEL_URL = './assets/models';
     const MODEL_URL = FACE_MODEL_PATH;
 
     const models: Array<any> = [nets.ssdMobilenetv1.loadFromUri(MODEL_URL)];

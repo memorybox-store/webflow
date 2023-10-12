@@ -153,6 +153,29 @@
 
   <button data-node-type="cart-checkout-button">Pay</button>
 
+  <form id="checkout-omise-form" method="POST" action="http://localhost:5001/memorybox-store/us-central1/app/opn/charge" style="display: none">
+    <script type="text/javascript" src="https://cdn.omise.co/omise.js" data-key="pkey_test_5x66z2s0d6z4aobvn7f"
+      data-button-label="Checkout 0.00 THB" data-amount="0" data-currency="THB"
+      data-default-payment-method="credit_card"
+      data-other-payment-methods="alipay,alipay_cn,alipay_hk,convenience_store,pay_easy,net_banking,googlepay,internet_banking,internet_banking_bay,internet_banking_bbl,mobile_banking_bay,mobile_banking_bbl,mobile_banking_kbank,mobile_banking_ktb,mobile_banking_scb,promptpay,points_citi,rabbit_linepay,shopeepay,truemoney">
+      </script>
+      <input type="hidden" name="omiseDescription" value="0" />
+      <input type="hidden" name="Authorization" value="" />
+  </form>
+
+  <div id="payment-process" style="text-align: center;">
+    <img id="payment-process-scannable" width="500" height="500" />
+    <div id="payment-process-scannable-helper">
+      Open your bank app and scan with this QR Code
+      <br />
+      After your payment is succeeded, click on "Proceed" button below
+    </div>
+    <div>
+      <button id="payment-process-authorize">Proceed</button>
+      <button id="payment-process-cancel">Cancel</button>
+    </div>
+  </div>
+
 </body>
 
 <style>

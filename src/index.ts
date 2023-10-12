@@ -9,6 +9,7 @@ import { CartListener } from './eventListeners/CartListener';
 import { ProductListener } from './eventListeners/ProductListener';
 import { SocialLoginListener } from './eventListeners/SocialLoginListener';
 import { PaymentListener } from './eventListeners/PaymentListener';
+import { ProcessPaymentListener } from './eventListeners/ProcessPaymentListener';
 
 const publicUrls = [
   '/',
@@ -52,6 +53,7 @@ const initialize = () => {
       PaymentListener();
       SearchListener();
       ProductListener();
+      ProcessPaymentListener();
     }
   })
 }

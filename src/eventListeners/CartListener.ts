@@ -13,13 +13,17 @@ import {
   EL_ID_CHECKOUT_OMISE_BTN,
   EL_ID_CHECKOUT_OMISE_SCRIPT,
   EL_CLASS_REMOVE_BTN,
-  EL_ID_CART_CHECKOUT_BTN
+  EL_ID_CART_CHECKOUT_BTN,
+  EL_ID_CHECKOUT_OMISE_FORM
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
 import { getCartItems, removeItemFromCart } from "../api/cart";
 import { CartItem } from "../models/cart";
-import { createOmiseElement } from "./PaymentListener";
+import { PAYMENT_REDIRECT } from "../constants/configs";
+import { MSG_INFO_OMISE } from "../constants/messages";
+import { getStorage } from "../utils/storage";
+import { Session } from "../models/user";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -173,23 +177,24 @@ const updateCartAmount = async (data: CartItem[]) => {
     ecomSummaryElement.parentNode.replaceChild(summaryElement, ecomSummaryElement);
   }
 
-  // Update checkout button
-  const checkoutButtonElement = document.getElementById(EL_ID_CHECKOUT_OMISE_BTN);
-  if (checkoutButtonElement) {
-    checkoutButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
-  }
-
   // Update Omise form
-  const modalCheckOutFormScript = document.getElementById(EL_ID_CHECKOUT_OMISE_SCRIPT) as HTMLElement;
-  if (modalCheckOutFormScript) {
-    modalCheckOutFormScript.setAttribute('data-amount', amount.toString());
-    modalCheckOutFormScript.setAttribute(
-      'data-button-label',
-      `Checkout ${THBcompact.format(amount / 100 || 0)} THB`
-    );
-    const checkoutButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-    if (checkoutButtonElement) {
-      checkoutButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
+  const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
+  if (omiseFormElement) {
+    const omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
+    if (omiseDescriptionElement) {
+      omiseDescriptionElement.value = MSG_INFO_OMISE;
+    }
+    const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
+    if (omiseScriptElement) {
+      omiseScriptElement.setAttribute('data-amount', amount.toString());
+      omiseScriptElement.setAttribute(
+        'data-button-label',
+        `Checkout ${THBcompact.format(amount / 100 || 0)} THB`
+      );
+    }
+    const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
+    if (omiseButtonElement) {
+      omiseButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
     }
   }
 
@@ -256,12 +261,28 @@ export const CartListener = async (): Promise<void> => {
   //   checkoutButtonElement.innerHTML = 'Checkout';
   //   checkoutButtonElement.setAttribute('href', '/order-summary');
   //   ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
-  // }const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
+  // }
   const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (ecomCheckoutElement) {
     ecomCheckoutElement.removeAttribute('data-node-type');
-    const omiseElement = createOmiseElement(0);
-    ecomCheckoutElement.parentElement.replaceChild(omiseElement, ecomCheckoutElement);
+    const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
+    if (omiseFormElement) {
+      omiseFormElement.style.display = '';
+      const omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
+      if (omiseAuthorizationElement) {
+        const getAccessToken = async () => {
+          const session = await getStorage('session', true) as Session | null;
+          if (session) {
+            return session?.accessToken || '';
+          } else {
+            return '';
+          }
+        }
+        const loginToken = await getAccessToken();
+        omiseAuthorizationElement.value = loginToken;
+      }
+      ecomCheckoutElement.parentElement.replaceChild(omiseFormElement, ecomCheckoutElement);
+    }
   }
 
   // Init cart modal
