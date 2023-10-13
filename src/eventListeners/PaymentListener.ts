@@ -4,7 +4,7 @@ import {
   EL_CLASS_CART_FORM,
   EL_CLASS_CART_LIST,
   EL_ID_CHECKOUT_OMISE_FORM,
-  EL_ID_CHART_BTN,
+  EL_ID_CART_BTN,
   EL_ID_ORDER_SUMMARY,
   EL_ID_PAYMENT_ITEM_SAMPLE,
   EL_CLASS_PAYMENT_ITEM,
@@ -19,7 +19,9 @@ import {
   EL_ID_PAYMENT_TOTAL,
   EL_CLASS_PAYMENT_ITEM_IMG,
   EL_ID_USER_CHECKOUT_BTN,
-  EL_ID_CHECKOUT_OMISE_BTN
+  EL_ID_CHECKOUT_OMISE_BTN,
+  EL_ID_PAYMENT_CHECKOUT_BTN,
+  EL_ID_PAYMENT_FORM
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
@@ -52,6 +54,7 @@ const updateSummaryList = async (data: CartItem[]) => {
   if (sampleItemElement) {
 
     const itemTemplateElement = sampleItemElement.cloneNode(true) as HTMLElement;
+    sampleItemElement.classList.add('hidden-force');
 
     const currentItemElements = document.querySelectorAll(`.${EL_CLASS_PAYMENT_ITEM}`) as NodeListOf<HTMLElement>;
     if (currentItemElements.length) {
@@ -65,6 +68,8 @@ const updateSummaryList = async (data: CartItem[]) => {
       for (const item of data) {
 
         const itemElement = itemTemplateElement.cloneNode(true) as HTMLElement;
+        itemElement.classList.remove('hidden-force');
+        itemElement.style.display = '';
 
         const itemNameElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_NAME}`) as HTMLElement;
         if (itemNameElement) {
@@ -247,31 +252,22 @@ export const PaymentListener = async (): Promise<void> => {
     });
   }
 
-  const element = document.getElementById(EL_ID_ORDER_SUMMARY) as HTMLElement;
+  const element = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLElement;
   if (element) {
     load();
   }
 
-  const chargeElement = document.getElementById(EL_ID_CHART_BTN) as HTMLElement;
-  if (chargeElement) {
-    const omiseElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLElement;
-    if (omiseElement) {
-      omiseElement.style.display = '';
-      chargeElement.parentElement.replaceChild(omiseElement, chargeElement);
-    }
-  }
-
-  const checkoutButtonElement = document.getElementById(EL_ID_USER_CHECKOUT_BTN) as HTMLElement;
-  if (checkoutButtonElement) {
-    const checkoutElement = checkoutButtonElement.cloneNode(true) as HTMLElement;
-    checkoutElement.setAttribute('type', 'button');
-    checkoutElement.addEventListener('click', async () => {
+  const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLElement;
+  if (paymentButtonElement) {
+    const paymentElement = paymentButtonElement.cloneNode(true) as HTMLElement;
+    paymentElement.setAttribute('type', 'button');
+    paymentElement.addEventListener('click', async () => {
       const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
       if (omiseButtonElement) {
         omiseButtonElement.click();
       }
     });
-    checkoutButtonElement.parentElement.replaceChild(checkoutElement, checkoutButtonElement);
+    paymentButtonElement.parentElement.replaceChild(paymentElement, paymentButtonElement);
   }
 
 }

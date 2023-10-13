@@ -138,6 +138,7 @@ const updateCartList = (data: CartItem[]) => {
         });
       }
     }
+    
   }
 
   // Init empty cart
