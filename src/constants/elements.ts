@@ -74,3 +74,4 @@ export const EL_CLASS_PAYMENT_ITEM_IMG = 'payment-item-image';
 export const EL_CLASS_PAYMENT_ITEM_REMOVE_BTN = 'payment-item-remove';
 export const EL_ID_ORDER_SUMMARY = 'order-summary';
 export const EL_ID_CART_CHECKOUT_BTN = 'cart-checkout-button';
+export const EL_ID_USER_CHECKOUT_BTN = 'user-checkout-button';

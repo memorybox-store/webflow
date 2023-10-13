@@ -288,7 +288,7 @@ export const CartListener = async (): Promise<void> => {
     checkoutButtonElement.classList.add('width-100');
     checkoutButtonElement.innerHTML = 'Checkout';
     checkoutButtonElement.addEventListener('click', async () => {
-      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLButtonElement;
+      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
       if (omiseButtonElement) {
         omiseButtonElement.click();
       }

@@ -17,7 +17,9 @@ import {
   EL_ID_PAYMENT_DISCOUNT_BADGE,
   EL_ID_PAYMENT_SUMMARY,
   EL_ID_PAYMENT_TOTAL,
-  EL_CLASS_PAYMENT_ITEM_IMG
+  EL_CLASS_PAYMENT_ITEM_IMG,
+  EL_ID_USER_CHECKOUT_BTN,
+  EL_ID_CHECKOUT_OMISE_BTN
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
@@ -257,6 +259,18 @@ export const PaymentListener = async (): Promise<void> => {
       omiseElement.style.display = '';
       chargeElement.parentElement.replaceChild(omiseElement, chargeElement);
     }
+  }
+
+  const checkoutButtonElement = document.getElementById(EL_ID_USER_CHECKOUT_BTN) as HTMLElement;
+  if (checkoutButtonElement) {
+    const checkoutElement = checkoutButtonElement.cloneNode(true) as HTMLElement;
+    checkoutElement.addEventListener('click', async () => {
+      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
+      if (omiseButtonElement) {
+        omiseButtonElement.click();
+      }
+    });
+    checkoutButtonElement.parentElement.replaceChild(checkoutElement, checkoutButtonElement);
   }
 
 }
