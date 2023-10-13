@@ -264,6 +264,7 @@ export const PaymentListener = async (): Promise<void> => {
   const checkoutButtonElement = document.getElementById(EL_ID_USER_CHECKOUT_BTN) as HTMLElement;
   if (checkoutButtonElement) {
     const checkoutElement = checkoutButtonElement.cloneNode(true) as HTMLElement;
+    checkoutElement.setAttribute('type', 'button');
     checkoutElement.addEventListener('click', async () => {
       const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
       if (omiseButtonElement) {
