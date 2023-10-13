@@ -177,6 +177,12 @@ const updateCartAmount = async (data: CartItem[]) => {
     ecomSummaryElement.parentNode.replaceChild(summaryElement, ecomSummaryElement);
   }
 
+  // Update Button
+  const checkoutButtonElement = document.getElementById(EL_ID_CART_CHECKOUT_BTN) as HTMLButtonElement;
+  if (checkoutButtonElement) {
+    checkoutButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
+  }
+
   // Update Omise form
   const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
   if (omiseFormElement) {
@@ -252,16 +258,6 @@ export const CartListener = async (): Promise<void> => {
     load();
   }
 
-  // Init checkout button
-  // const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
-  // if (ecomCheckoutElement) {
-  //   ecomCheckoutElement.removeAttribute('data-node-type');
-  //   const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
-  //   checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
-  //   checkoutButtonElement.innerHTML = 'Checkout';
-  //   checkoutButtonElement.setAttribute('href', '/order-summary');
-  //   ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
-  // }
   const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
   if (omiseFormElement) {
     omiseFormElement.style.display = '';
@@ -279,17 +275,22 @@ export const CartListener = async (): Promise<void> => {
       omiseAuthorizationElement.value = loginToken;
     }
   }
+
+  // Init checkout button
   const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (ecomCheckoutElement) {
     ecomCheckoutElement.removeAttribute('data-node-type');
-    const checkoutElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
-    checkoutElement.addEventListener('click', async () => {
-      const omiseButtonElement = document.getElementById(EL_ID_CHECKOUT_OMISE_BTN) as HTMLFormElement;
+    const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
+    checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
+    checkoutButtonElement.innerHTML = 'Checkout';
+    checkoutButtonElement.addEventListener('click', async () => {
+      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLButtonElement;
       if (omiseButtonElement) {
         omiseButtonElement.click();
       }
     });
-    ecomCheckoutElement.parentElement.replaceChild(checkoutElement, ecomCheckoutElement);
+    // checkoutButtonElement.setAttribute('href', '/order-summary');
+    ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
   }
 
   // Init cart modal
