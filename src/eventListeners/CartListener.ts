@@ -178,12 +178,6 @@ const updateCartAmount = async (data: CartItem[]) => {
     ecomSummaryElement.parentNode.replaceChild(summaryElement, ecomSummaryElement);
   }
 
-  // Update Button
-  const checkoutButtonElement = document.getElementById(EL_ID_CART_CHECKOUT_BTN) as HTMLButtonElement;
-  if (checkoutButtonElement) {
-    checkoutButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
-  }
-
   // Update Omise form
   const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
   if (omiseFormElement) {
@@ -289,10 +283,7 @@ export const CartListener = async (): Promise<void> => {
     checkoutButtonElement.classList.add('width-100');
     checkoutButtonElement.innerHTML = 'Checkout';
     checkoutButtonElement.addEventListener('click', async () => {
-      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-      if (omiseButtonElement) {
-        omiseButtonElement.click();
-      }
+      location.href = './pay';
     });
     // checkoutButtonElement.setAttribute('href', '/order-summary');
     ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);

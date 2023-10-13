@@ -21,7 +21,9 @@ import {
   EL_ID_USER_CHECKOUT_BTN,
   EL_ID_CHECKOUT_OMISE_BTN,
   EL_ID_PAYMENT_CHECKOUT_BTN,
-  EL_ID_PAYMENT_FORM
+  EL_ID_PAYMENT_FORM,
+  EL_ID_PAYMENT_CHECKBOX_ALL,
+  EL_NAME_PAYMENT_CHECKBOX
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
@@ -69,8 +71,13 @@ const updateSummaryList = async (data: CartItem[]) => {
 
         const itemElement = itemTemplateElement.cloneNode(true) as HTMLElement;
         itemElement.classList.remove('hidden-force');
-        itemElement.classList.add('display-force');
+        itemElement.classList.add('grid-force');
         itemElement.style.display = '';
+
+        const itemCheckboxElement = itemElement.querySelector(`input[name="${EL_NAME_PAYMENT_CHECKBOX}"]`) as HTMLInputElement;
+        if (itemCheckboxElement) {
+          itemCheckboxElement.setAttribute('value', item.product.details.id);
+        }
 
         const itemNameElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_NAME}`) as HTMLElement;
         if (itemNameElement) {
@@ -149,13 +156,13 @@ const updateSummaryList = async (data: CartItem[]) => {
           return `
               ${result} 
               ${cartItemTemplate
-            .replace('{{cartImage}}', item.product?.image || '')
-            .replace('{{cartId}}', item.id.toString())
-            .replace('{{cartName}}', base64Data)
-            .replace('{{cartNamePrompt}}', item.product?.name || '')
-            .replace('{{cartCompany}}', item.product?.company?.name || '')
-            .replace('{{cartPrice}}', item.product?.price || '')
-          }`;
+              .replace('{{cartImage}}', item.product?.image || '')
+              .replace('{{cartId}}', item.id.toString())
+              .replace('{{cartName}}', base64Data)
+              .replace('{{cartNamePrompt}}', item.product?.name || '')
+              .replace('{{cartCompany}}', item.product?.company?.name || '')
+              .replace('{{cartPrice}}', item.product?.price || '')
+            }`;
         }).catch((error) => {
           console.error(error.message);
         });
@@ -255,22 +262,62 @@ export const PaymentListener = async (): Promise<void> => {
     });
   }
 
-  const element = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLElement;
+  const element = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLFormElement;
   if (element) {
+    element.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const formData = new FormData(element);
+      const checks = formData.getAll(EL_NAME_PAYMENT_CHECKBOX) as string[];
+      await getCartItems().then(async (data: CartItem[]) => {
+        console.log(data);
+        const items = data.filter(
+          (item: CartItem) => checks.includes(item.product.details.id.toString())
+        ).map(
+          (item: CartItem) => (
+            {
+              ItemId: item.product.details.id,
+              Qty: item.quantity,
+              Unitprice: item.product.price,
+              ItemDiscount: 0,
+              Total: item.product.price * item.quantity,
+              Remark: ""
+            }
+          )
+        );
+        console.log(items);
+        const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
+        if (omiseButtonElement) {
+          omiseButtonElement.click();
+        }
+      }).catch((error) => {
+        alert(error);
+      });
+    });
     load();
   }
 
-  const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLElement;
-  if (paymentButtonElement) {
-    const paymentElement = paymentButtonElement.cloneNode(true) as HTMLElement;
-    paymentElement.setAttribute('type', 'button');
-    paymentElement.addEventListener('click', async () => {
-      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-      if (omiseButtonElement) {
-        omiseButtonElement.click();
+  // const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLElement;
+  // if (paymentButtonElement) {
+  //   const paymentElement = paymentButtonElement.cloneNode(true) as HTMLElement;
+  //   paymentElement.addEventListener('click', async () => {
+  //     const formElement = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLFormElement;
+  //   });
+  //   paymentButtonElement.parentElement.replaceChild(paymentElement, paymentButtonElement);
+  // }
+
+  const checkboxAllElement = document.getElementById(EL_ID_PAYMENT_CHECKBOX_ALL) as HTMLInputElement;
+  if (checkboxAllElement) {
+    checkboxAllElement.addEventListener('change', async (event: any) => {
+      const checkboxElements = document.querySelectorAll(`[name="${EL_NAME_PAYMENT_CHECKBOX}"]`) as NodeListOf<HTMLInputElement>;
+      if (checkboxElements.length) {
+        for (const [_, checkboxElement] of Object.entries(checkboxElements)) {
+          checkboxElement.checked = event.target.checked;
+        }
       }
     });
-    paymentButtonElement.parentElement.replaceChild(paymentElement, paymentButtonElement);
+  } else {
+    console.log('none');
   }
 
 }

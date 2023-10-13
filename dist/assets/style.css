@@ -10,6 +10,10 @@
   display: flex !important;
 }
 
+.grid-force {
+  display: grid !important;
+}
+
 .open-popup-button {
   cursor: pointer;
 }
