@@ -283,7 +283,9 @@ export const CartListener = async (): Promise<void> => {
     ecomCheckoutElement.removeAttribute('href');
     const checkoutButtonElement = document.createElement("BUTTON");
     checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
+    checkoutButtonElement.setAttribute('type', 'button');
     checkoutButtonElement.classList.add('btn-primary');
+    checkoutButtonElement.classList.add('width-100');
     checkoutButtonElement.innerHTML = 'Checkout';
     checkoutButtonElement.addEventListener('click', async () => {
       const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLButtonElement;
