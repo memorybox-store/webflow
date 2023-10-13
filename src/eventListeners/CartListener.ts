@@ -280,8 +280,10 @@ export const CartListener = async (): Promise<void> => {
   const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (ecomCheckoutElement) {
     ecomCheckoutElement.removeAttribute('data-node-type');
-    const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
+    ecomCheckoutElement.removeAttribute('href');
+    const checkoutButtonElement = document.createElement("BUTTON");
     checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
+    checkoutButtonElement.classList.add('btn-primary');
     checkoutButtonElement.innerHTML = 'Checkout';
     checkoutButtonElement.addEventListener('click', async () => {
       const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLButtonElement;
