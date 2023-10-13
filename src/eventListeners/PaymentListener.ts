@@ -69,6 +69,7 @@ const updateSummaryList = async (data: CartItem[]) => {
 
         const itemElement = itemTemplateElement.cloneNode(true) as HTMLElement;
         itemElement.classList.remove('hidden-force');
+        itemElement.classList.add('display-force');
         itemElement.style.display = '';
 
         const itemNameElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_NAME}`) as HTMLElement;
