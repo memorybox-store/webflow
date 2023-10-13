@@ -37,7 +37,7 @@ export const SocialLoginListener = (): void => {
 			if (result) {
 				signin(socialId, password).then(() => {
 					retrieveProfile().then(() => {
-						location.href = '/finder';
+						location.href = '/.finder';
 					}).catch((message) => {
 						alert(message);
 					});
@@ -48,7 +48,7 @@ export const SocialLoginListener = (): void => {
 				register(socialId, password, socialName).then(() => {
 					signin(socialId, password).then(() => {
 						saveSocialAuthen(platform, socialId).then(() => {
-							location.href = '/finder';
+							location.href = '/.finder';
 						}).catch((message) => {
 							alert(message);
 						});

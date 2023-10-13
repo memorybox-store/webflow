@@ -267,6 +267,12 @@ export const PaymentListener = async (): Promise<void> => {
     element.addEventListener('submit', async (event) => {
       event.preventDefault();
       event.stopPropagation();
+      let paymentButtonLabel = 'Pay';
+      const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLInputElement;
+      if (paymentButtonElement) {
+        paymentButtonLabel = paymentButtonElement.getAttribute('value');
+        paymentButtonElement.setAttribute('value', paymentButtonElement.getAttribute('data-wait'));
+      }
       const formData = new FormData(element);
       const checks = formData.getAll(EL_NAME_PAYMENT_CHECKBOX) as string[];
       await getCartItems().then(async (data: CartItem[]) => {
@@ -293,6 +299,7 @@ export const PaymentListener = async (): Promise<void> => {
       }).catch((error) => {
         alert(error);
       });
+      paymentButtonElement.setAttribute('value', paymentButtonLabel);
     });
     load();
   }
@@ -316,8 +323,6 @@ export const PaymentListener = async (): Promise<void> => {
         }
       }
     });
-  } else {
-    console.log('none');
   }
 
 }

@@ -275,17 +275,9 @@ export const CartListener = async (): Promise<void> => {
   const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (ecomCheckoutElement) {
     ecomCheckoutElement.removeAttribute('data-node-type');
-    ecomCheckoutElement.removeAttribute('href');
-    const checkoutButtonElement = document.createElement("BUTTON");
+    const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
     checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
-    checkoutButtonElement.setAttribute('type', 'button');
-    checkoutButtonElement.classList.add('btn-primary');
-    checkoutButtonElement.classList.add('width-100');
-    checkoutButtonElement.innerHTML = 'Checkout';
-    checkoutButtonElement.addEventListener('click', async () => {
-      location.href = './pay';
-    });
-    // checkoutButtonElement.setAttribute('href', '/order-summary');
+    checkoutButtonElement.setAttribute('href', './pay');
     ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
   }
 
