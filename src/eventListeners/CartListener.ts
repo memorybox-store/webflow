@@ -262,27 +262,34 @@ export const CartListener = async (): Promise<void> => {
   //   checkoutButtonElement.setAttribute('href', '/order-summary');
   //   ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
   // }
+  const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
+  if (omiseFormElement) {
+    omiseFormElement.style.display = '';
+    const omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
+    if (omiseAuthorizationElement) {
+      const getAccessToken = async () => {
+        const session = await getStorage('session', true) as Session | null;
+        if (session) {
+          return session?.accessToken || '';
+        } else {
+          return '';
+        }
+      }
+      const loginToken = await getAccessToken();
+      omiseAuthorizationElement.value = loginToken;
+    }
+  }
   const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
   if (ecomCheckoutElement) {
     ecomCheckoutElement.removeAttribute('data-node-type');
-    const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
-    if (omiseFormElement) {
-      omiseFormElement.style.display = '';
-      const omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
-      if (omiseAuthorizationElement) {
-        const getAccessToken = async () => {
-          const session = await getStorage('session', true) as Session | null;
-          if (session) {
-            return session?.accessToken || '';
-          } else {
-            return '';
-          }
-        }
-        const loginToken = await getAccessToken();
-        omiseAuthorizationElement.value = loginToken;
+    const checkoutElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
+    checkoutElement.addEventListener('click', async () => {
+      const omiseButtonElement = document.getElementById(EL_ID_CHECKOUT_OMISE_BTN) as HTMLFormElement;
+      if (omiseButtonElement) {
+        omiseButtonElement.click();
       }
-      ecomCheckoutElement.parentElement.replaceChild(omiseFormElement, ecomCheckoutElement);
-    }
+    });
+    ecomCheckoutElement.parentElement.replaceChild(checkoutElement, ecomCheckoutElement);
   }
 
   // Init cart modal
