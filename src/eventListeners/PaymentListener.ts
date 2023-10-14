@@ -33,6 +33,7 @@ import omise from "../config/omise";
 import { PAYMENT_PROCESS_PAGE } from "../constants/configs";
 import { removeCartItem, updateCartItems } from "./CartListener";
 import { loadImageAsBase64 } from "../utils/image";
+import { MSG_ERROR_EMPTY_ORDER } from "../constants/messages";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -291,10 +292,13 @@ export const PaymentListener = async (): Promise<void> => {
             }
           )
         );
-        console.log(items);
-        const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-        if (omiseButtonElement) {
-          omiseButtonElement.click();
+        if (items.length) {
+          const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
+          if (omiseButtonElement) {
+            omiseButtonElement.click();
+          }
+        } else {
+          alert(MSG_ERROR_EMPTY_ORDER)
         }
       }).catch((error) => {
         alert(error);
