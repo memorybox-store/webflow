@@ -10,6 +10,7 @@ import moment from '../config/moment';
 import { getCompanies, getBoats } from "../api/sale";
 
 import { Company } from "../models/sale";
+import { MSG_ERR_EMPTY_BOAT, MSG_ERR_EMPTY_COMPANY, MSG_ERR_EMPTY_DATE } from "../constants/messages";
 
 export const SearchListener = (): void => {
 
@@ -193,6 +194,10 @@ export const SearchListener = (): void => {
 	if (formElement) {
 		formElement.addEventListener('submit', (event) => {
 
+			const msgEmptyCompany: string = formElement.getAttribute('data-empty-company') || MSG_ERR_EMPTY_COMPANY;
+			const msgEmptyDate: string = formElement.getAttribute('data-empty-date') || MSG_ERR_EMPTY_DATE;
+			const msgEmptyBoat: string = formElement.getAttribute('data-empty-boat') || MSG_ERR_EMPTY_BOAT;
+
 			event.preventDefault();
 			event.stopPropagation();
 
@@ -202,11 +207,17 @@ export const SearchListener = (): void => {
 			const company = formData.get('company') as string || '';
 			const date = formData.get('date') as string || '';
 
-			if (boat) {
+			if (company && date && boat) {
 				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
 				location.href = `./result?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
 			} else {
-				alert('Please select boat');
+				if (!company) {
+					alert(msgEmptyCompany);
+				} else if (!date) {
+					alert(msgEmptyDate);
+				} else if (!boat) {
+					alert(msgEmptyBoat);
+				}
 			}
 
 		});

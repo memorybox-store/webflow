@@ -33,7 +33,7 @@ import omise from "../config/omise";
 import { PAYMENT_PROCESS_PAGE } from "../constants/configs";
 import { removeCartItem, updateCartItems } from "./CartListener";
 import { loadImageAsBase64 } from "../utils/image";
-import { MSG_ERROR_EMPTY_ORDER, MSG_INFO_OMISE } from "../constants/messages";
+import { MSG_ERR_EMPTY_ORDER, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
 import { createOrder } from "../api/order";
 import { getStorage } from "../utils/storage";
 import { Session } from "../models/user";
@@ -293,6 +293,10 @@ export const PaymentListener = async (): Promise<void> => {
 
   const element = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLFormElement;
   if (element) {
+
+    const msgEmpty: string = element.getAttribute('data-empty') || MSG_ERR_EMPTY_ORDER;
+    const msgWait: string = element.getAttribute('data-wait') || MSG_LOADING;
+
     element.addEventListener('submit', async (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -300,7 +304,7 @@ export const PaymentListener = async (): Promise<void> => {
       const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLInputElement;
       if (paymentButtonElement) {
         paymentButtonLabel = paymentButtonElement.getAttribute('value');
-        paymentButtonElement.setAttribute('value', paymentButtonElement.getAttribute('data-wait'));
+        paymentButtonElement.setAttribute('value', msgWait);
       }
       const formData = new FormData(element);
       const checks = formData.getAll(EL_NAME_PAYMENT_CHECKBOX) as string[];
@@ -317,6 +321,12 @@ export const PaymentListener = async (): Promise<void> => {
               omiseDescriptionElement?.setAttribute('value', `${MSG_INFO_OMISE} (${data.orderIds.join(', ')})`);
               const orderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
               orderIdsElement?.setAttribute('value', data.orderIds.join(','));
+              getCartItems().then(async (updatedData: CartItem[]) => {
+                updateCartItems(updatedData);
+                updateSummaryItems(updatedData);
+              }).catch((error) => {
+                alert(error);
+              });
               const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
               if (omiseScriptElement) {
                 omiseScriptElement.setAttribute('data-amount', (data.total * 100).toString());
@@ -335,7 +345,7 @@ export const PaymentListener = async (): Promise<void> => {
             alert(error);
           });
         } else {
-          alert(MSG_ERROR_EMPTY_ORDER)
+          alert(msgEmpty)
         }
       }).catch((error) => {
         alert(error);

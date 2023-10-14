@@ -1,5 +1,5 @@
 import { SERVER } from '../constants/configs';
-import { MSG_ERR_EMP_RES } from '../constants/messages';
+import { MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
 import moment from '../config/moment';
@@ -110,7 +110,7 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -233,7 +233,7 @@ export const cancelOrder = async (orderId: number | string) => {
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));

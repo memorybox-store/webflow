@@ -1,5 +1,5 @@
 import { SERVER } from '../constants/configs';
-import { MSG_ERR_EMP_RES } from '../constants/messages';
+import { MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
 import moment from '../config/moment';
@@ -77,7 +77,7 @@ export const getProducts = async (boatId: string) => {
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -153,7 +153,7 @@ export const getProductsScan = async (boatId: string) => {
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -209,7 +209,7 @@ export const getProductDetails = async (productId: number | string) => {
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));

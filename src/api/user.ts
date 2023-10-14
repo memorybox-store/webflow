@@ -4,7 +4,7 @@ import {
   SERVER, 
   SOCIAL_LOGIN_REDIRECT 
 } from '../constants/configs';
-import { MSG_ERR_EMP_DATA, MSG_ERR_EMP_RES } from '../constants/messages';
+import { MSG_ERR_EMPTY_DATA, MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
 import moment from '../config/moment';
@@ -54,7 +54,7 @@ export const register = async (username: string, password: string, name: string 
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -109,7 +109,7 @@ export const signin = async (username: string, password: string) => {
           reject(handleResponseError(error));
         });
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -170,10 +170,10 @@ export const retrieveProfile = async () => {
           await setStorage('profile', profile, true);
           stored = profile;
         } else {
-          reject(MSG_ERR_EMP_DATA);
+          reject(MSG_ERR_EMPTY_DATA);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -214,7 +214,7 @@ export const checkSocialAuthen = async (platform: string, socialId: string) => {
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -250,7 +250,7 @@ export const saveSocialAuthen = async (platform: string, socialId: string) => {
           reject(response.data.Message);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -280,7 +280,7 @@ export const lineTokenFromCode = async (code: string) => {
       if (response.data) {
         resolve(response.data);
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -307,7 +307,7 @@ export const lineVerify = async (idToken: string) => {
       if (response.data) {
         resolve(response.data);
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -329,7 +329,7 @@ export const lineProfile = async (accessToken: string) => {
       if (response.data) {
         resolve(response.data);
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));
@@ -360,7 +360,7 @@ export const test = async (username: string, password: string) => {
         const data = response.data;
         resolve(data);
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));

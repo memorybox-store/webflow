@@ -12,7 +12,7 @@ import {
   EL_ID_RESULT_SAMPLE,
   EL_ID_RESULT_SUM_MY_PIC
 } from "../constants/elements";
-import { MSG_ERR_NO_FACE, MSG_INFO_NOT_AVAIL, MSG_INFO_SCANNING_STATUS } from "../constants/messages";
+import { MSG_ERR_INVALID_IMAGE, MSG_ERR_NO_FACE, MSG_FACESCAN_INITIALIZING, MSG_INFO_NOT_AVAIL, MSG_INFO_SCANNING_STATUS } from "../constants/messages";
 import { NAME_SCANNING } from "../constants/names";
 import { Product } from "../models/product";
 
@@ -29,13 +29,20 @@ export const ScanListener = (): void => {
   if (element) {
 
     const msgNoFace: string = element.getAttribute('data-noface') || MSG_ERR_NO_FACE;
+    const msgInvalidImage: string = element.getAttribute('data-invalid') || MSG_ERR_INVALID_IMAGE;
+    const msgInitializing: string = element.getAttribute('data-scanning') || MSG_FACESCAN_INITIALIZING;
     const msgScanning: string = element.getAttribute('data-scanning') || NAME_SCANNING;
     const msgScanningStatus: string = element.getAttribute('data-scanning-status') || MSG_INFO_SCANNING_STATUS;
 
     const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
     scanningElement?.classList.remove('popup-display-force');
 
+    const name = element.innerHTML;
+    element.innerHTML = msgInitializing;
+
     loadFaceModels(options).then(() => {
+
+      element.innerHTML = name;
 
       const inputFileElement = document.createElement('input') as HTMLInputElement;
       inputFileElement.type = 'file';
@@ -45,7 +52,8 @@ export const ScanListener = (): void => {
 
         const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
         if (resultMyPicElement) {
-          resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
+          const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
+          resultMyPicElement.innerText = msgEmptyMyPic;
         }
 
         const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
@@ -197,7 +205,8 @@ export const ScanListener = (): void => {
                   }
                   const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
                   if (resultMyPicElement) {
-                    resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
+                    const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
+                    resultMyPicElement.innerText = msgEmptyMyPic;
                   }
                 }
               }).catch((message) => {
@@ -209,7 +218,7 @@ export const ScanListener = (): void => {
             reader.readAsDataURL(selectedFile);
 
           } else {
-            alert("Please select a valid image file.");
+            alert(msgInvalidImage);
             input.value = '';
             const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
             if (imageMarkElements) {
@@ -222,7 +231,8 @@ export const ScanListener = (): void => {
             }
             const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
             if (resultMyPicElement) {
-              resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
+              const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
+              resultMyPicElement.innerText = msgEmptyMyPic;
             }
           }
         }

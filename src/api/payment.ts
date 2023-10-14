@@ -1,6 +1,6 @@
 import axios from '../config/axios';
 import { createRequestHeader, handleResponseError } from '../utils/rest';
-import { MSG_ERR_EMP_RES, MSG_ERR_UNKNOWN } from '../constants/messages';
+import { MSG_ERR_EMPTY_RES, MSG_ERR_UNKNOWN } from '../constants/messages';
 import { AxiosResponse } from 'axios';
 import { PAYMENT_SERVER } from '../constants/configs';
 
@@ -34,7 +34,7 @@ export const charge = async (
           reject(response.data.message || MSG_ERR_UNKNOWN);
         }
       } else {
-        reject(MSG_ERR_EMP_RES);
+        reject(MSG_ERR_EMPTY_RES);
       }
     }).catch((error) => {
       reject(handleResponseError(error));

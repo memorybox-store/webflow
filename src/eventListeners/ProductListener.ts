@@ -64,19 +64,22 @@ export const ProductListener = (): void => {
       // Init result of image includes my picture
       const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
       if (resultMyPicElement) {
-        resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
+        const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
+        resultMyPicElement.innerText = msgEmptyMyPic;
       }
 
       // Init result of total image
       const resultTotalElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
       if (resultTotalElement) {
-        resultTotalElement.innerText = '0';
+        const msgEmptyTotal: string = resultTotalElement.getAttribute('data-empty') || '0';
+        resultTotalElement.innerText = msgEmptyTotal;
       }
 
       // Init result of boat name
       const resultBoatElement = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
       if (resultBoatElement) {
-        resultBoatElement.innerText = '-';
+        const msgEmptyBoat: string = resultBoatElement.getAttribute('data-empty') || '-';
+        resultBoatElement.innerText = msgEmptyBoat;
       }
 
       // Init result of company
