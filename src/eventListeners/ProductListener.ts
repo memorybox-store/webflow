@@ -16,7 +16,8 @@ import {
   EL_CLASS_REPORT_BTN,
   EL_CLASS_REPORT_SUBMIT_BTN,
   EL_ID_RESULT_HEADER_DATE,
-  EL_ID_RESULT_HEADER_COMPANY
+  EL_ID_RESULT_HEADER_COMPANY,
+  EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
 
 import moment from '../config/moment';
@@ -220,7 +221,7 @@ export const ProductListener = (): void => {
               }
 
               // Init add to cart button in popup
-              const addPopupButtonElement = popupElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`) as HTMLElement;
+              const addPopupButtonElement = popupElement.querySelector(`.${EL_CLASS_ADD_TO_CART_POPUP_BTN}`) as HTMLElement;
               initAddToCartElement(addPopupButtonElement, item, addedItems);
 
               // Init image in popup
