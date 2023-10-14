@@ -84,23 +84,27 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
           itemImgElement.setAttribute('crossorigin', 'anonymous');
           itemImgElement.src = '';
           itemImgElement.srcset = '';
-          loadImageAsBase64(item.product.image.marked).then((base64Data) => {
-            // Use the base64Data in the src attribute of the img element
-            itemImgElement.src = base64Data;
-            itemImgElement.srcset = base64Data;
-          }).catch((error) => {
-            console.error(error.message);
-          });
+          if (item.product.image.marked) {
+            loadImageAsBase64(item.product.image.marked).then((base64Data) => {
+              // Use the base64Data in the src attribute of the img element
+              itemImgElement.src = base64Data;
+              itemImgElement.srcset = base64Data;
+            }).catch((error) => {
+              console.error(error.message);
+            });
+          }
         }
 
         const itemCompanyElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_COMPANY}`) as HTMLElement;
         if (itemCompanyElement) {
-          itemCompanyElement.innerHTML = item.product.company.name;
+          itemCompanyElement.innerHTML = item.product.company?.name || '-';
         }
 
         const itemSizeElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_SIZE}`) as HTMLElement;
         if (itemSizeElement) {
-          itemSizeElement.innerHTML = `${item.product.details.package.width}x${item.product.details.package.height}`;
+          itemSizeElement.innerHTML = item.product.details.package
+            ? `${item.product.details.package.width}x${item.product.details.package.height}`
+            : '-';
         }
 
         const itemPriceElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_PRICE}`) as HTMLElement;

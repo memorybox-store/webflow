@@ -11,6 +11,7 @@ import { Product, ProductDetail } from '../models/product';
 import { AxiosResponse } from 'axios';
 import { Order, OrderItem } from '../models/order';
 import { checkPartnership, savePartnership } from './partner';
+import { getProductDetails } from './product';
 
 export const getOrder = async (success: boolean, orderId: number | string | '' = '') => {
   return new Promise(async (resolve, reject) => {
@@ -30,8 +31,13 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
         if (response.data.Status === 'Success') {
           const data: Array<any> = response.data.Data.sort((a: any, b: any) => b.order_id - a.order_id);
           const orderNos = [...new Set(data.map((item: any) => item.order_no))];
-          const orders = orderNos.map((orderNo: any) => {
-            const orderItems = data.filter((item: any) => item.order_no === orderNo).map((item: any) => {
+          const orders = orderNos.map(async (orderNo: any) => {
+            let orderItems: OrderItem[] = [];
+            for (let item of data.filter((item: any) => item.order_no === orderNo)) {
+              let itemProduct: ProductDetail | null = null;
+              await getProductDetails(item.ms_id).then(async (dataProduct: ProductDetail) => {
+                itemProduct = dataProduct;
+              }).catch(() => {});
               const boat: Boat = {
                 id: null,
                 name: item.mst_name || null,
@@ -50,7 +56,9 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 website: null,
                 image: null,
               };
-              const productDetail: ProductDetail = {
+              const productDetail: ProductDetail = itemProduct 
+              ? itemProduct 
+              : {
                 id: item.item_id,
                 unit: {
                   id: item.unitid || null,
@@ -87,8 +95,72 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 total: item.total,
                 remark: item.remark,
               }
-              return orderItem;
-            });
+              orderItems = [...orderItems, orderItem];
+            }
+            // const orderItems = await data.filter((item: any) => item.order_no === orderNo).map(async (item: any) => {
+            //   let itemProduct: ProductDetail | null = null;
+            //   await getProductDetails(item.ms_id).then(async (dataProduct: ProductDetail) => {
+            //     itemProduct = dataProduct;
+            //   }).catch(() => {});
+            //   const boat: Boat = {
+            //     id: null,
+            //     name: item.mst_name || null,
+            //     prefix: null,
+            //     createdAt: null
+            //   };
+            //   const company: Company = {
+            //     id: item.comp_id,
+            //     title: null,
+            //     name: null,
+            //     branch: null,
+            //     contactPerson: null,
+            //     tel: null,
+            //     email: null,
+            //     address: null,
+            //     website: null,
+            //     image: null,
+            //   };
+            //   const productDetail: ProductDetail = itemProduct 
+            //   ? itemProduct 
+            //   : {
+            //     id: item.item_id,
+            //     unit: {
+            //       id: item.unitid || null,
+            //       name: item.unitname || null,
+            //       price: item.unit_price || null,
+            //     },
+            //     file: {
+            //       name: item.fitem_name
+            //     },
+            //     referenceId: item.ms_id
+            //   }
+            //   const product: Product = {
+            //     id: item.ms_id,
+            //     name: item.slist_name,
+            //     description: item.slist_details,
+            //     tag: item.Tag,
+            //     minPrice: item.minprice,
+            //     maxPrice: item.maxprice,
+            //     price: item.maxprice,
+            //     image: {
+            //       marked: item.img_path || null,
+            //       unmarked: item.img_path || null,
+            //     },
+            //     details: productDetail,
+            //     boat: boat,
+            //     company: company,
+            //   }
+            //   const orderItem: OrderItem = {
+            //     id: item.ms_id,
+            //     product: product,
+            //     quantity: item.qty,
+            //     amount: item.unit_price,
+            //     discount: item.item_discount,
+            //     total: item.total,
+            //     remark: item.remark,
+            //   }
+            //   return orderItem;
+            // });
             const orderSelected = data.find((item: any) => item.order_no === orderNo);
             const order: Order = {
               id: orderSelected.order_id,
