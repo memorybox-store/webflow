@@ -12,7 +12,7 @@ import {
   EL_ID_RESULT_SAMPLE,
   EL_ID_RESULT_SUM_MY_PIC
 } from "../constants/elements";
-import { MSG_ERR_NO_FACE, MSG_INFO_NOT_AVAIL } from "../constants/messages";
+import { MSG_ERR_NO_FACE, MSG_INFO_NOT_AVAIL, MSG_INFO_SCANNING_STATUS } from "../constants/messages";
 import { NAME_SCANNING } from "../constants/names";
 import { Product } from "../models/product";
 
@@ -27,6 +27,10 @@ export const ScanListener = (): void => {
 
   const element = document.getElementById(EL_ID_FACESCAN_BTN) as HTMLElement;
   if (element) {
+
+    const msgNoFace: string = element.getAttribute('data-noface') || MSG_ERR_NO_FACE;
+    const msgScanning: string = element.getAttribute('data-scanning') || NAME_SCANNING;
+    const msgScanningStatus: string = element.getAttribute('data-scanning-status') || MSG_INFO_SCANNING_STATUS;
 
     const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
     scanningElement?.classList.remove('popup-display-force');
@@ -46,7 +50,7 @@ export const ScanListener = (): void => {
 
         const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
         if (resultRealtimeElement) {
-          resultRealtimeElement.innerText = NAME_SCANNING;
+          resultRealtimeElement.innerText = msgScanning;
         }
 
         const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
@@ -128,11 +132,13 @@ export const ScanListener = (): void => {
                         const countScanned = Object.entries(scannedElements).length || 0;
                         const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
                         if (resultRealtimeElement) {
-                          resultRealtimeElement.innerText = `Scanning ${countScanned} from ${items.length}... (Found ${countAvailable})`;
+                          resultRealtimeElement.innerText = msgScanningStatus
+                            .replace('{{scanned}}', countScanned.toString())
+                            .replace('{{total}}', items.length.toString())
+                            .replace('{{total}}', countAvailable.toString());
                         }
                       }
                     }
-  
                   });
                 }
               }
@@ -177,7 +183,7 @@ export const ScanListener = (): void => {
                     });
                   }
                 } else {
-                  alert(MSG_ERR_NO_FACE);
+                  alert(msgNoFace);
                   const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
                   scanningElement?.classList.remove('popup-display-force');
                   const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;

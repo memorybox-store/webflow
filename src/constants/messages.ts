@@ -6,3 +6,4 @@ export const MSG_ERR_NO_FACE = `We couldn't find any faces in this picture, plea
 export const MSG_INFO_OMISE = `Picture(s) from Memory Box`;
 export const MSG_ERROR_EMPTY_ORDER = 'Please select at least 1 item';
 export const MSG_INFO_NOT_AVAIL = 'N/A';
+export const MSG_INFO_SCANNING_STATUS = 'Scanning {{scanned}} from {{total}}... (Found {{found}})';
