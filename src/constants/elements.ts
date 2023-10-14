@@ -81,3 +81,4 @@ export const EL_ID_PAYMENT_CHECKBOX_ALL = 'checkbox-payment-all';
 export const EL_NAME_PAYMENT_CHECKBOX = 'checkbox_payment';
 export const EL_ID_USER_CHECKOUT_BTN = 'user-checkout-button';
 export const EL_CLASS_USER_NAME = 'user-name';
+export const EL_CLASS_USER_AVATAR = 'user-avatar';

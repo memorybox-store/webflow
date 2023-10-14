@@ -11,6 +11,8 @@ import { SocialLoginListener } from './eventListeners/SocialLoginListener';
 import { PaymentListener } from './eventListeners/PaymentListener';
 import { ProcessPaymentListener } from './eventListeners/ProcessPaymentListener';
 import { OrderListener } from './eventListeners/OrderListener';
+import { Profile } from './models/user';
+import { EL_CLASS_USER_NAME, EL_CLASS_USER_AVATAR } from './constants/elements';
 
 const publicUrls = [
   '/',
@@ -27,7 +29,20 @@ const checkAuthen = () => {
       if (path === '/log-in') {
         location.href = './finder';
       } else {
-        await retrieveProfile().catch((message) => {
+        await retrieveProfile().then((profile: Profile) => {
+          const nameElements = document.querySelectorAll(`.${EL_CLASS_USER_NAME}`) as NodeListOf<HTMLElement>;
+          if (nameElements.length) {
+            for (const [_, nameElement] of Object.entries(nameElements)) {
+              nameElement.innerHTML = profile.name;
+            }
+          }
+          const avatarElements = document.querySelectorAll(`.${EL_CLASS_USER_AVATAR}`) as NodeListOf<HTMLImageElement>;
+          if (avatarElements.length) {
+            for (const [_, avatarElement] of Object.entries(avatarElements)) {
+              avatarElement.src = profile.image || '';
+            }
+          }
+        }).catch((message) => {
           alert(message);
         });
       }
