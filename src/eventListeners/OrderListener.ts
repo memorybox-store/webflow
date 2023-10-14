@@ -75,7 +75,7 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
 
         const itemNameElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_NAME}`) as HTMLElement;
         if (itemNameElement) {
-          itemNameElement.innerHTML = item.product.name;
+          itemNameElement.innerHTML = item.product.id;
         }
 
         const itemImgElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_IMG}`) as HTMLImageElement;
@@ -97,13 +97,13 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
 
         const itemCompanyElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_COMPANY}`) as HTMLElement;
         if (itemCompanyElement) {
-          itemCompanyElement.innerHTML = item.product.company?.name || '-';
+          itemCompanyElement.innerHTML = `฿ ${THBcompact.format(item.product.price || 0)}`;
         }
 
         const itemSizeElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_SIZE}`) as HTMLElement;
         if (itemSizeElement) {
           itemSizeElement.innerHTML = item.product.details.package
-            ? `${item.product.details.package.width}x${item.product.details.package.height}`
+            ? `${item.product.details.unit.name}`
             : '-';
         }
 

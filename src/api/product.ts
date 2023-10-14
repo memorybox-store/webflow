@@ -185,6 +185,9 @@ export const getProductDetails = async (productId: number | string) => {
               optionId: data.slist_option_id,
               option: data.itemoption,
               status: data.status,
+              image: {
+                marked: data.img_path
+              },
               unit: {
                 id: data.unitid,
                 name: data.unitname,
