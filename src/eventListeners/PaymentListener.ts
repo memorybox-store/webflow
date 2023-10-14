@@ -150,7 +150,7 @@ const updatePaymentAmount = async (data: CartItem[]) => {
   if (data.length) {
     amount = data.reduce((result: number, item: any) => {
       return result + (item.product?.price || 0);
-    }, 0) * 100;
+    }, 0);
   }
 
   // Update payment discount
@@ -163,13 +163,13 @@ const updatePaymentAmount = async (data: CartItem[]) => {
   // Update payment summary
   const summaryElement = document.getElementById(EL_ID_PAYMENT_SUMMARY) as HTMLElement;
   if (summaryElement) {
-    summaryElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
+    summaryElement.innerText = `฿ ${THBcompact.format(amount || 0)}`;
   }
 
   // Update payment total
   const totalElement = document.getElementById(EL_ID_PAYMENT_TOTAL) as HTMLElement;
   if (totalElement) {
-    totalElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
+    totalElement.innerText = `฿ ${THBcompact.format(amount || 0)}`;
   }
 
 }

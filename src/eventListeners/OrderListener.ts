@@ -123,20 +123,27 @@ const updateOrderAmount = async (formElement: HTMLFormElement, data: OrderItem[]
   let amount: number = 0;
   if (data.length) {
     amount = data.reduce((result: number, item: any) => {
-      return result + (item.product?.price || 0);
-    }, 0) * 100;
+      return result + (item.amount || 0);
+    }, 0);
+  }
+
+  let total: number = 0;
+  if (data.length) {
+    total = data.reduce((result: number, item: any) => {
+      return result + (item.total || 0);
+    }, 0);
   }
 
   // Update payment summary
   const summaryElement = formElement.querySelector(`.${EL_CLASS_ORDER_SUMMARY}`) as HTMLElement;
   if (summaryElement) {
-    summaryElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
+    summaryElement.innerText = `฿ ${THBcompact.format(amount || 0)}`;
   }
 
   // Update payment total
   const totalElement = formElement.querySelector(`.${EL_CLASS_ORDER_TOTAL}`) as HTMLElement;
   if (totalElement) {
-    totalElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
+    totalElement.innerText = `฿ ${THBcompact.format(total || 0)}`;
   }
 
 }
