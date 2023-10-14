@@ -70,7 +70,6 @@ export const signin = async (username: string, password: string) => {
       password: password
     }
 
-    console.log(await createRequestHeader(false, true, 'application/x-www-form-urlencoded'));
     await axios.post(
       `${SERVER}/token`,
       payload,

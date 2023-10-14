@@ -2,14 +2,14 @@
 import {
   EL_ID_CHECKOUT_OMISE_FORM,
   EL_CLASS_ORDER_ITEM_SAMPLE,
-  EL_CLASS_PAYMENT_ITEM_NAME,
-  EL_CLASS_PAYMENT_ITEM_COMPANY,
-  EL_CLASS_PAYMENT_ITEM_SIZE,
-  EL_CLASS_PAYMENT_ITEM_PRICE,
+  EL_CLASS_ORDER_ITEM_NAME,
+  EL_CLASS_ORDER_ITEM_COMPANY,
+  EL_CLASS_ORDER_ITEM_SIZE,
+  EL_CLASS_ORDER_ITEM_PRICE,
   EL_CLASS_ORDER_LIST,
   EL_CLASS_ORDER_SUMMARY,
   EL_CLASS_ORDER_TOTAL,
-  EL_CLASS_PAYMENT_ITEM_IMG,
+  EL_CLASS_ORDER_ITEM_IMG,
   EL_ID_CHECKOUT_OMISE_BTN,
   EL_CLASS_ORDER_CHECKOUT_BTN,
   EL_ID_ORDER_FORM_LIST,
@@ -44,13 +44,13 @@ const THBcompact = new Intl.NumberFormat(
 
 const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) => {
 
-  const sampleItemElement = formElement.querySelector(EL_CLASS_ORDER_ITEM_SAMPLE) as HTMLElement;
+  const sampleItemElement = formElement.querySelector(`.${EL_CLASS_ORDER_ITEM_SAMPLE}`) as HTMLElement;
   if (sampleItemElement) {
 
     const itemTemplateElement = sampleItemElement.cloneNode(true) as HTMLElement;
     sampleItemElement.classList.add('hidden-force');
 
-    const listElement = formElement.querySelector(EL_CLASS_ORDER_LIST) as HTMLElement;
+    const listElement = formElement.querySelector(`.${EL_CLASS_ORDER_LIST}`) as HTMLElement;
     if (listElement) {
 
       // Clear list
@@ -73,12 +73,12 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
         itemElement.style.display = '';
         itemElement.removeAttribute('id');
 
-        const itemNameElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_NAME}`) as HTMLElement;
+        const itemNameElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_NAME}`) as HTMLElement;
         if (itemNameElement) {
           itemNameElement.innerHTML = item.product.name;
         }
 
-        const itemImgElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_IMG}`) as HTMLImageElement;
+        const itemImgElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_IMG}`) as HTMLImageElement;
         if (itemImgElement) {
           itemImgElement.crossOrigin = 'anonymous';
           itemImgElement.setAttribute('crossorigin', 'anonymous');
@@ -93,17 +93,17 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
           });
         }
 
-        const itemCompanyElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_COMPANY}`) as HTMLElement;
+        const itemCompanyElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_COMPANY}`) as HTMLElement;
         if (itemCompanyElement) {
           itemCompanyElement.innerHTML = item.product.company.name;
         }
 
-        const itemSizeElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_SIZE}`) as HTMLElement;
+        const itemSizeElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_SIZE}`) as HTMLElement;
         if (itemSizeElement) {
           itemSizeElement.innerHTML = `${item.product.details.package.width}x${item.product.details.package.height}`;
         }
 
-        const itemPriceElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_PRICE}`) as HTMLElement;
+        const itemPriceElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_PRICE}`) as HTMLElement;
         if (itemPriceElement) {
           itemPriceElement.innerHTML = `฿ ${THBcompact.format(item.product.price || 0)}`;
         }
@@ -128,13 +128,13 @@ const updateOrderAmount = async (formElement: HTMLFormElement, data: OrderItem[]
   }
 
   // Update payment summary
-  const summaryElement = formElement.querySelector(EL_CLASS_ORDER_SUMMARY) as HTMLElement;
+  const summaryElement = formElement.querySelector(`.${EL_CLASS_ORDER_SUMMARY}`) as HTMLElement;
   if (summaryElement) {
     summaryElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
   }
 
   // Update payment total
-  const totalElement = formElement.querySelector(EL_CLASS_ORDER_TOTAL) as HTMLElement;
+  const totalElement = formElement.querySelector(`.${EL_CLASS_ORDER_TOTAL}`) as HTMLElement;
   if (totalElement) {
     totalElement.innerText = `฿ ${THBcompact.format(amount / 100 || 0)}`;
   }
@@ -185,12 +185,12 @@ export const updateOrders = async () => {
           updateOrderItems(formElement, order.items);
 
           // Update order number
-          const orderNoElement = formElement.querySelector(EL_CLASS_ORDER_NO) as HTMLElement;
+          const orderNoElement = formElement.querySelector(`.${EL_CLASS_ORDER_NO}`) as HTMLElement;
           if (orderNoElement) {
             orderNoElement.innerText = `Order Number ${order.orderNo}`;
           }
 
-          const cancelButtonElement = formElement.querySelector(EL_CLASS_ORDER_CANCEL_BTN) as HTMLInputElement;
+          const cancelButtonElement = formElement.querySelector(`.${EL_CLASS_ORDER_CANCEL_BTN}`) as HTMLInputElement;
           if (cancelButtonElement) {
             cancelButtonElement.addEventListener('click', async () => {
               if (confirm(`Do you want to cancel "${order.orderNo}"?`)) {
@@ -207,7 +207,7 @@ export const updateOrders = async () => {
             event.preventDefault();
             event.stopPropagation();
             let paymentButtonLabel = 'Pay';
-            const paymentButtonElement = formElement.querySelector(EL_CLASS_ORDER_CHECKOUT_BTN) as HTMLInputElement;
+            const paymentButtonElement = formElement.querySelector(`.${EL_CLASS_ORDER_CHECKOUT_BTN}`) as HTMLInputElement;
             if (paymentButtonElement) {
               paymentButtonLabel = paymentButtonElement.getAttribute('value');
               paymentButtonElement.setAttribute('value', msgWait);

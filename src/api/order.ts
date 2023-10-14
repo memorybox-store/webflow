@@ -105,6 +105,7 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
             }
             return order;
           });
+          console.log(orders);
           resolve(orders);
         } else {
           reject(response.data.Message);

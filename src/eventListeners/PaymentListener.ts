@@ -259,7 +259,6 @@ export const PaymentListener = async (): Promise<void> => {
       const formData = new FormData(element);
       const checks = formData.getAll(EL_NAME_PAYMENT_CHECKBOX) as string[];
       await getCartItems().then(async (data: CartItem[]) => {
-        console.log(data);
         const items = data.filter(
           (item: CartItem) => checks.includes(item.product.details.id.toString())
         );
