@@ -48,17 +48,25 @@ export const getProducts = async (boatId: string) => {
               website: null,
               image: null,
             };
+            const productDetail: ProductDetail = {
+              id: item.item_id,
+              file: {
+                id: item.fitem_id
+              },
+              referenceId: item.slist_id
+            };
             const product: Product = {
               id: item.slist_id,
-              itemId: item.fitem_id,
               name: item.slist_name,
               description: item.slist_details,
               tag: item.Tag,
               minPrice: item.minprice,
               maxPrice: item.maxprice,
               price: item.maxprice,
-              image: item.img_path,
-              details: null,
+              image: {
+                marked: item.img_path
+              },
+              details: productDetail,
               boat: boat,
               company: company,
             }
@@ -115,20 +123,28 @@ export const getProductsScan = async (boatId: string) => {
               website: null,
               image: null,
             };
+            const productDetail: ProductDetail = {
+              id: item.item_id,
+              file: {
+                id: item.fitem_id
+              },
+              referenceId: item.slist_id
+            };
             const product: Product = {
               id: item.slist_id,
-              itemId: item.fitem_id,
               name: item.slist_name,
               description: item.slist_details,
               tag: item.Tag,
               minPrice: item.minprice,
               maxPrice: item.maxprice,
               price: item.maxprice,
-              image: item.img_path,
-              imageNoMark: item.img_path2,
-              details: null,
+              image: {
+                marked: item.img_path,
+                unmarked: item.img_path2,
+              },
+              details: productDetail,
               boat: boat,
-              company: company,
+              company: company
             }
             return product;
           });
@@ -179,7 +195,11 @@ export const getProductDetails = async (productId: number | string) => {
                 height: data.package_height,
                 width: data.package_width,
                 weight: data.package_weight,
-              }
+              },
+              file: {
+                id: data.fitem_id
+              },
+              referenceId: data.slist_id
             }
             resolve(productDetail);
           } else {

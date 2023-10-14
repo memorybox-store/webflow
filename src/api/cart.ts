@@ -54,18 +54,23 @@ export const getCartItems = async () => {
                 height: item.package_height,
                 width: item.package_width,
                 weight: item.package_weight,
-              }
+              },
+              file: {
+                name: item.fitem_name
+              },
+              referenceId: item.slist_id
             }
             const product: Product = {
               id: item.slist_id,
-              itemId: item.fitem_id,
               name: item.slist_name,
               description: null,
               tag: null,
               minPrice: item.minprice,
               maxPrice: item.maxprice,
               price: item.price_total,
-              image: item.img_path,
+              image: {
+                marked: item.img_path
+              },
               details: productDetail,
               boat: null,
               company: company,
@@ -144,18 +149,23 @@ export const addItemToCart = async (
                 height: item.package_height,
                 width: item.package_width,
                 weight: item.package_weight,
-              }
+              },
+              file: {
+                name: item.fitem_name
+              },
+              referenceId: item.slist_id
             }
             const product: Product = {
               id: item.slist_id,
-              itemId: item.fitem_id,
               name: item.slist_name,
               description: null,
               tag: null,
               minPrice: item.minprice,
               maxPrice: item.maxprice,
               price: item.price_total,
-              image: item.img_path,
+              image: {
+                marked: item.img_path
+              },
               details: productDetail,
               boat: null,
               company: company,

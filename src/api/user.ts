@@ -69,6 +69,8 @@ export const signin = async (username: string, password: string) => {
       username: username,
       password: password
     }
+
+    console.log(await createRequestHeader(false, true, 'application/x-www-form-urlencoded'));
     await axios.post(
       `${SERVER}/token`,
       payload,
@@ -92,7 +94,7 @@ export const signin = async (username: string, password: string) => {
         await axios.post(
           `${SERVER}/api/Main/GetAuhv`,
           {
-            auhv: 'bqwupydeP2fWsfYvwuN6SQ==',
+            auhv: data.auhv,
             AuthenticateEX: 'gQGllPkYcsOSd7pCJ7UJabLV9m6Ua3h7YJ5iikiVLAW643m70iqTV90WRHD394KjG92+TYi/h8zAqZS90zBgaw=='
           },
           {
@@ -119,7 +121,11 @@ export const signout = async () => {
   return new Promise(async (resolve, reject) => {
     removeStorage('session').then(() => {
       removeStorage('profile').then(() => {
-        resolve(true);
+        removeStorage('cookie').then(() => {
+          resolve(true);
+        }).catch(() => {
+          reject();
+        });
       }).catch(() => {
         reject();
       });

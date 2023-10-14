@@ -14,7 +14,8 @@ import {
   EL_ID_RESULT_SAMPLE,
   EL_ID_RESULT_SUM_MY_PIC
 } from "../constants/elements";
-import { MSG_ERR_NO_FACE } from "../constants/messages";
+import { MSG_ERR_NO_FACE, MSG_INFO_NOT_AVAIL } from "../constants/messages";
+import { NAME_SCANNING } from "../constants/names";
 import { Product } from "../models/product";
 
 export const ScanListener = (): void => {
@@ -42,12 +43,12 @@ export const ScanListener = (): void => {
 
         const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
         if (resultMyPicElement) {
-          resultMyPicElement.innerText = 'N/A';
+          resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
         }
 
         const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
         if (resultRealtimeElement) {
-          resultRealtimeElement.innerText = `Scanning...`;
+          resultRealtimeElement.innerText = NAME_SCANNING;
         }
 
         const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
@@ -83,12 +84,12 @@ export const ScanListener = (): void => {
 
               for (let i = startIndex; i < endIndex; i++) {
                 const item: Product = items[i];
-                if (item.imageNoMark) {
+                if (item.image.unmarked) {
                   const imgElement: HTMLImageElement = document.createElement("img");
                   imgElement.crossOrigin = 'anonymous';
                   imgElement.setAttribute('crossorigin', 'anonymous');
                   imgElement.setAttribute('data-target', item.id);
-                  imgElement.src = item.imageNoMark;
+                  imgElement.src = item.image.unmarked;
                   imgElement.style.display = 'none';
                   const width = imgElement.width;
                   const height = imgElement.height;
@@ -192,7 +193,7 @@ export const ScanListener = (): void => {
                   }
                   const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
                   if (resultMyPicElement) {
-                    resultMyPicElement.innerText = 'N/A';
+                    resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
                   }
                 }
               }).catch((message) => {
@@ -217,7 +218,7 @@ export const ScanListener = (): void => {
             }
             const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
             if (resultMyPicElement) {
-              resultMyPicElement.innerText = 'N/A';
+              resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
             }
           }
         }

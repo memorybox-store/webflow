@@ -24,6 +24,7 @@ import { PAYMENT_REDIRECT } from "../constants/configs";
 import { MSG_INFO_OMISE } from "../constants/messages";
 import { getStorage } from "../utils/storage";
 import { Session } from "../models/user";
+import { NAME_CART_ADD, NAME_CART_ADDED } from "../constants/names";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -88,7 +89,7 @@ const updateCartList = (data: CartItem[]) => {
         return `
               ${result} 
               ${cartItemTemplate
-            .replace('{{cartImage}}', item.product?.image || '')
+            .replace('{{cartImage}}', item.product?.image.marked || '')
             .replace('{{cartId}}', item.id.toString())
             .replace('{{cartName}}', item.product?.name || '')
             .replace('{{cartNamePrompt}}', item.product?.name || '')
@@ -217,14 +218,14 @@ export const updateCartItems = (data: CartItem[]) => {
       if (productId) {
         if (addedItems.includes(productId.toString())) {
           addElement.classList.add('disabled');
-          addElement.innerText = 'Added';
+          addElement.innerText = NAME_CART_ADDED;
         } else {
           addElement.classList.remove('disabled');
-          addElement.innerText = 'Add to Cart';
+          addElement.innerText = NAME_CART_ADD;
         }
       } else {
         addElement.classList.remove('disabled');
-        addElement.innerText = 'Add to Cart';
+        addElement.innerText = NAME_CART_ADD;
       }
     }
   }

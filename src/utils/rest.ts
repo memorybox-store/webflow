@@ -16,11 +16,12 @@ export const createRequestHeader = async (
   }
   let headers: any = {};
   if (withKey) {
-    const cookie = await getStorage('cookie') as string | unknown | null;
-    if (cookie) {
-      headers.Authenticate = cookie;
-    } else {
-      headers.Authenticate = API_KEY;
+    headers.Authenticate = API_KEY;
+    if (withSession) {
+      const cookie = await getStorage('cookie') as string | unknown | null;
+      if (cookie) {
+        headers.Authenticate = cookie;
+      }
     }
   }
   if (contentType) {

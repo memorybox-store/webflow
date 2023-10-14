@@ -29,6 +29,8 @@ import { updateCartItems } from "./CartListener";
 import { Product } from "../models/product";
 import { CartItem } from "../models/cart";
 import { loadImageAsBase64 } from "../utils/image";
+import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING } from "../constants/names";
+import { MSG_INFO_NOT_AVAIL } from "../constants/messages";
 
 export const ProductListener = (): void => {
 
@@ -61,7 +63,7 @@ export const ProductListener = (): void => {
       // Init result of image includes my picture
       const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
       if (resultMyPicElement) {
-        resultMyPicElement.innerText = 'N/A';
+        resultMyPicElement.innerText = MSG_INFO_NOT_AVAIL;
       }
 
       // Init result of total image
@@ -100,25 +102,25 @@ export const ProductListener = (): void => {
           // If item was added then disable button
           if (addedItems.includes(item.id.toString())) {
             element.classList.add('disabled');
-            element.innerText = 'Added';
+            element.innerText = NAME_CART_ADDED;
           } else {
             element.classList.remove('disabled');
-            element.innerText = 'Add to Cart';
+            element.innerText = NAME_CART_ADD;
           }
           // Register add to cart event
           element.addEventListener('click', async () => {
             const reset = () => {
               element.classList.remove('disabled');
-              element.innerText = 'Add to Cart';
+              element.innerText = NAME_CART_ADD;
             }
             element.classList.add('disabled');
-            element.innerText = 'Adding...';
+            element.innerText = NAME_CART_ADDING;
             add(
               item.id,
               item.company?.id.toString() || '',
-              item.itemId.toString() || ''
+              item.details.id.toString() || ''
             ).then(async () => {
-              element.innerText = 'Added';
+              element.innerText = NAME_CART_ADDED;
               // Get updated items from cart for checking via API
               await getCartItems().then(async (updatedData: CartItem[]) => {
                 // Update cart count badges in header
@@ -168,7 +170,9 @@ export const ProductListener = (): void => {
               imgElement.crossOrigin = 'anonymous';
               imgElement.setAttribute('crossorigin', 'anonymous');
 
-              loadImageAsBase64(item.image).then((base64Data) => {
+              imgElement.src = '';
+              imgElement.srcset = '';
+              loadImageAsBase64(item.image.marked).then((base64Data) => {
                 // Use the base64Data in the src attribute of the img element
                 imgElement.src = base64Data;
                 imgElement.srcset = base64Data;
@@ -222,8 +226,8 @@ export const ProductListener = (): void => {
               // Init image in popup
               const imgPopupElement = popupElement.querySelector('img') as HTMLImageElement;
               if (imgPopupElement) {
-                imgPopupElement.src = item.image;
-                imgPopupElement.srcset = item.image;
+                imgPopupElement.src = item.image.marked;
+                imgPopupElement.srcset = item.image.marked;
               }
 
               // Register click event to dismiss popup

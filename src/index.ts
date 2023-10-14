@@ -10,6 +10,7 @@ import { ProductListener } from './eventListeners/ProductListener';
 import { SocialLoginListener } from './eventListeners/SocialLoginListener';
 import { PaymentListener } from './eventListeners/PaymentListener';
 import { ProcessPaymentListener } from './eventListeners/ProcessPaymentListener';
+import { OrderListener } from './eventListeners/OrderListener';
 
 const publicUrls = [
   '/',
@@ -54,6 +55,7 @@ const initialize = () => {
       SearchListener();
       ProductListener();
       ProcessPaymentListener();
+      OrderListener();
     }
   })
 }

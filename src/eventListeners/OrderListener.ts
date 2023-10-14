@@ -30,6 +30,8 @@ import omise from "../config/omise";
 import { PAYMENT_PROCESS_PAGE } from "../constants/configs";
 import { removeCartItem, updateCartItems } from "./CartListener";
 import { loadImageAsBase64 } from "../utils/image";
+import { getOrder } from "../api/order";
+import { Order } from "../models/order";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -74,7 +76,7 @@ const updateSummaryList = async (data: CartItem[]) => {
 
         const itemImgElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_IMG}`) as HTMLImageElement;
         if (itemImgElement) {
-          loadImageAsBase64(item.product.image).then((base64Data) => {
+          loadImageAsBase64(item.product.image.marked).then((base64Data) => {
             // Use the base64Data in the src attribute of the img element
             itemImgElement.src = base64Data;
             itemImgElement.srcset = base64Data;
@@ -139,11 +141,11 @@ const updateSummaryList = async (data: CartItem[]) => {
 
       const itemsContainer = document.createElement('div');
       const itemsHTML = data.reduce(async (result: any, item: any) => {
-        await loadImageAsBase64(item.product?.image).then((base64Data) => {
+        await loadImageAsBase64(item.product?.image.marked).then((base64Data) => {
           return `
               ${result} 
               ${cartItemTemplate
-            .replace('{{cartImage}}', item.product?.image || '')
+            .replace('{{cartImage}}', item.product?.image.marked || '')
             .replace('{{cartId}}', item.id.toString())
             .replace('{{cartName}}', base64Data)
             .replace('{{cartNamePrompt}}', item.product?.name || '')
@@ -238,10 +240,10 @@ export const OrderListener = async (): Promise<void> => {
     updateSummaryItems(data);
   }
 
-  const load = () => {
+  const loadSuccuess = () => {
     return new Promise(async (resolve) => {
-      await getCartItems().then(async (data: CartItem[]) => {
-        initializeElements(data);
+      await getOrder(true).then(async (data: Order[]) => {
+        // initializeElements(data);
         resolve(data);
       }).catch((error) => {
         alert(error);
@@ -251,42 +253,42 @@ export const OrderListener = async (): Promise<void> => {
 
   const element = document.getElementById(EL_ID_ORDER_SUMMARY) as HTMLElement;
   if (element) {
-    load();
+    loadSuccuess();
   }
 
-  const chargeElement = document.getElementById(EL_ID_CART_BTN) as HTMLElement;
-  if (chargeElement) {
-    const omiseElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLElement;
-    if (omiseElement) {
-      omiseElement.style.display = '';
-      chargeElement.parentElement.replaceChild(omiseElement, chargeElement);
-    }
-  }
+  // const chargeElement = document.getElementById(EL_ID_CART_BTN) as HTMLElement;
+  // if (chargeElement) {
+  //   const omiseElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLElement;
+  //   if (omiseElement) {
+  //     omiseElement.style.display = '';
+  //     chargeElement.parentElement.replaceChild(omiseElement, chargeElement);
+  //   }
+  // }
 
-  const checkoutButtonElement = document.getElementById(EL_ID_USER_CHECKOUT_BTN) as HTMLElement;
-  if (checkoutButtonElement) {
-    const checkoutElement = checkoutButtonElement.cloneNode(true) as HTMLElement;
-    checkoutElement.setAttribute('type', 'button');
-    checkoutElement.addEventListener('click', async () => {
-      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-      if (omiseButtonElement) {
-        omiseButtonElement.click();
-      }
-    });
-    checkoutButtonElement.parentElement.replaceChild(checkoutElement, checkoutButtonElement);
-  }
+  // const checkoutButtonElement = document.getElementById(EL_ID_USER_CHECKOUT_BTN) as HTMLElement;
+  // if (checkoutButtonElement) {
+  //   const checkoutElement = checkoutButtonElement.cloneNode(true) as HTMLElement;
+  //   checkoutElement.setAttribute('type', 'button');
+  //   checkoutElement.addEventListener('click', async () => {
+  //     const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
+  //     if (omiseButtonElement) {
+  //       omiseButtonElement.click();
+  //     }
+  //   });
+  //   checkoutButtonElement.parentElement.replaceChild(checkoutElement, checkoutButtonElement);
+  // }
 
-  const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLElement;
-  if (paymentButtonElement) {
-    const paymentElement = paymentButtonElement.cloneNode(true) as HTMLElement;
-    paymentElement.setAttribute('type', 'button');
-    paymentElement.addEventListener('click', async () => {
-      const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-      if (omiseButtonElement) {
-        omiseButtonElement.click();
-      }
-    });
-    paymentButtonElement.parentElement.replaceChild(paymentElement, paymentButtonElement);
-  }
+  // const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLElement;
+  // if (paymentButtonElement) {
+  //   const paymentElement = paymentButtonElement.cloneNode(true) as HTMLElement;
+  //   paymentElement.setAttribute('type', 'button');
+  //   paymentElement.addEventListener('click', async () => {
+  //     const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
+  //     if (omiseButtonElement) {
+  //       omiseButtonElement.click();
+  //     }
+  //   });
+  //   paymentButtonElement.parentElement.replaceChild(paymentElement, paymentButtonElement);
+  // }
 
 }

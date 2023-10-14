@@ -87,7 +87,11 @@ const updateSummaryList = async (data: CartItem[]) => {
 
         const itemImgElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_IMG}`) as HTMLImageElement;
         if (itemImgElement) {
-          loadImageAsBase64(item.product.image).then((base64Data) => {
+          itemImgElement.crossOrigin = 'anonymous';
+          itemImgElement.setAttribute('crossorigin', 'anonymous');
+          itemImgElement.src = '';
+          itemImgElement.srcset = '';
+          loadImageAsBase64(item.product.image.marked).then((base64Data) => {
             // Use the base64Data in the src attribute of the img element
             itemImgElement.src = base64Data;
             itemImgElement.srcset = base64Data;
@@ -153,11 +157,11 @@ const updateSummaryList = async (data: CartItem[]) => {
 
       const itemsContainer = document.createElement('div');
       const itemsHTML = data.reduce(async (result: any, item: any) => {
-        await loadImageAsBase64(item.product?.image).then((base64Data) => {
+        await loadImageAsBase64(item.product?.image.marked).then((base64Data) => {
           return `
               ${result} 
               ${cartItemTemplate
-              .replace('{{cartImage}}', item.product?.image || '')
+              .replace('{{cartImage}}', item.product?.image.marked || '')
               .replace('{{cartId}}', item.id.toString())
               .replace('{{cartName}}', base64Data)
               .replace('{{cartNamePrompt}}', item.product?.name || '')
@@ -293,6 +297,7 @@ export const PaymentListener = async (): Promise<void> => {
           )
         );
         if (items.length) {
+
           const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
           if (omiseButtonElement) {
             omiseButtonElement.click();
