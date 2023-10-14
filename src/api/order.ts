@@ -11,7 +11,7 @@ import { Product, ProductDetail } from '../models/product';
 import { AxiosResponse } from 'axios';
 import { Order, OrderItem } from '../models/order';
 import { checkPartnership, savePartnership } from './partner';
-import { getProductDetails } from './product';
+import { getProduct, getProductDetails } from './product';
 
 export const getOrder = async (success: boolean, orderId: number | string | '' = '') => {
   return new Promise(async (resolve, reject) => {
@@ -35,9 +35,13 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
           for (let orderNo of orderNos) {
             let orderItems: OrderItem[] = [];
             for (let item of data.filter((item: any) => item.order_no === orderNo)) {
-              let itemProduct: ProductDetail | null = null;
-              await getProductDetails(item.ms_id).then(async (dataProduct: ProductDetail) => {
+              let itemProduct: Product | null = null;
+              let itemProductDetails: ProductDetail | null = null;
+              await getProduct(item.item_id).then(async (dataProduct: Product) => {
                 itemProduct = dataProduct;
+              }).catch(() => { });
+              await getProductDetails(item.item_id).then(async (dataProductDetail: ProductDetail) => {
+                itemProductDetails = dataProductDetail;
               }).catch(() => { });
               const boat: Boat = {
                 id: null,
@@ -57,14 +61,20 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 website: null,
                 image: null,
               };
-              const productDetail: ProductDetail = itemProduct
-                ? itemProduct
+              const productDetail: ProductDetail = itemProductDetails
+                ? itemProductDetails
                 : {
                   id: item.item_id,
                   unit: {
-                    id: item.unitid || itemProduct?.unit?.id || null,
-                    name: item.unitname || itemProduct?.unit?.name || null,
-                    price: item.unit_price || itemProduct?.unit?.price || null,
+                    id: item.unitid || null,
+                    name: item.unitname || null,
+                    price: item.unit_price || null,
+                  },
+                  package: {
+                    depth: item.package_depth,
+                    height: item.package_height,
+                    width: item.package_width,
+                    weight: item.package_weight,
                   },
                   file: {
                     name: item.fitem_name
@@ -72,16 +82,16 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                   referenceId: item.ms_id
                 }
               const product: Product = {
-                id: item.ms_id,
-                name: item.slist_name,
-                description: item.slist_details,
+                id: item.item_id,
+                name: item.slist_name || itemProduct?.name || null,
+                description: item.slist_details || itemProduct?.description || null,
                 tag: item.Tag,
-                minPrice: item.minprice || item.unit_price || itemProduct?.unit?.price || null,
-                maxPrice: item.maxprice || item.unit_price || itemProduct?.unit?.price || null,
-                price: item.maxprice || item.unit_price || itemProduct?.unit?.price || null,
+                minPrice: item.minprice || item.unit_price || itemProductDetails?.unit?.price || null,
+                maxPrice: item.maxprice || item.unit_price || itemProductDetails?.unit?.price || null,
+                price: item.maxprice || item.unit_price || itemProductDetails?.unit?.price || null,
                 image: {
-                  marked: item.img_path || itemProduct?.image.marked || null,
-                  unmarked: item.img_path || itemProduct?.image.marked || null,
+                  marked: itemProduct?.image.marked || null,
+                  unmarked: itemProduct?.image.marked || null,
                 },
                 details: productDetail,
                 boat: boat,
@@ -91,7 +101,7 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 id: item.ms_id,
                 product: product,
                 quantity: item.qty,
-                amount: item.unit_price || itemProduct?.unit?.price || null,
+                amount: item.unit_price || itemProductDetails?.unit?.price || null,
                 discount: item.item_discount,
                 total: item.total,
                 remark: item.remark,

@@ -161,6 +161,81 @@ export const getProductsScan = async (boatId: string) => {
   });
 }
 
+export const getProduct = async (productId: number | string) => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      slist_id: parseInt(productId.toString())
+    }
+    await axios.post(
+      `${SERVER}/api/MainSale/SelectDataSaleListDetails`,
+      payload,
+      {
+        ...{
+          headers: await createRequestHeader(true, true)
+        }
+      }
+    ).then(async (response: AxiosResponse<any, any>) => {
+      if (response.data) {
+        if (response.data.Status === 'Success') {
+          if (response.data.Data && response.data.Data.length) {
+            const data: any = response.data.Data[0];
+            const boat: Boat = {
+              id: data.mst_id,
+              name: data.mst_name,
+              prefix: data.mst_code_prefix,
+              createdAt: null
+            };
+            const company: Company = {
+              id: null,
+              title: null,
+              name: null,
+              branch: null,
+              contactPerson: null,
+              tel: null,
+              email: null,
+              address: null,
+              website: null,
+              image: null,
+            };
+            const productDetail: ProductDetail = {
+              id: data.item_id,
+              file: {
+                id: null
+              },
+              referenceId: data.slist_id
+            };
+            const product: Product = {
+              id: data.slist_id,
+              name: data.slist_name,
+              description: data.slist_details,
+              tag: data.Tag,
+              minPrice: null,
+              maxPrice: null,
+              price: null,
+              image: {
+                marked: data.img_path,
+                unmarked: data.img_path2,
+              },
+              details: productDetail,
+              boat: boat,
+              company: company
+            }
+            resolve(product);
+          } else {
+            resolve(null);
+          }
+        } else {
+          reject(response.data.Message);
+        }
+      } else {
+        reject(MSG_ERR_EMPTY_RES);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
+  });
+}
+
 export const getProductDetails = async (productId: number | string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
@@ -185,9 +260,6 @@ export const getProductDetails = async (productId: number | string) => {
               optionId: data.slist_option_id,
               option: data.itemoption,
               status: data.status,
-              image: {
-                marked: data.img_path
-              },
               unit: {
                 id: data.unitid,
                 name: data.unitname,

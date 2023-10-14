@@ -23,10 +23,6 @@ export interface ProductDetail {
   optionId?: string | null;
   option?: string | null;
   status?: string | null;
-  image?: {
-    marked: string | null;
-    unmarked?: string | null;
-  };
   unit?: {
     id?: number | null;
     name?: number | null;

@@ -109,7 +109,9 @@ const updatePaymentList = async (data: CartItem[]) => {
 
         const itemSizeElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_SIZE}`) as HTMLElement;
         if (itemSizeElement) {
-          itemSizeElement.innerHTML = `${item.product.details.package.width}x${item.product.details.package.height}`;
+          itemSizeElement.innerHTML = item.product.details.package
+            ? `${item.product.details.package.width}x${item.product.details.package.height}`
+            : '-';
         }
 
         const itemPriceElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_PRICE}`) as HTMLElement;

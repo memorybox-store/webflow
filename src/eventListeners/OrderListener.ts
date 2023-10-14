@@ -75,7 +75,7 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
 
         const itemNameElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_NAME}`) as HTMLElement;
         if (itemNameElement) {
-          itemNameElement.innerHTML = item.product.id;
+          itemNameElement.innerHTML = `${item.product.name}`;
         }
 
         const itemImgElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_IMG}`) as HTMLImageElement;
@@ -103,7 +103,7 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
         const itemSizeElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_SIZE}`) as HTMLElement;
         if (itemSizeElement) {
           itemSizeElement.innerHTML = item.product.details.package
-            ? `${item.product.details.unit.name}`
+            ? `${item.product.details.package.width}x${item.product.details.package.height}`
             : '-';
         }
 
@@ -205,7 +205,7 @@ export const updateOrders = async () => {
           if (cancelButtonElement) {
             cancelButtonElement.addEventListener('click', async () => {
               if (confirm(`Do you want to cancel "${order.orderNo}"?`)) {
-                await cancelOrder(order.orderNo).then(async () => {
+                await cancelOrder(order.id).then(async () => {
                   updateOrders();
                 }).catch((message) => {
                   alert(message);
