@@ -13,6 +13,7 @@ import { ProcessPaymentListener } from './eventListeners/ProcessPaymentListener'
 import { OrderListener } from './eventListeners/OrderListener';
 import { Profile } from './models/user';
 import { EL_CLASS_USER_NAME, EL_CLASS_USER_AVATAR } from './constants/elements';
+import { UserListener } from './eventListeners/UserListener';
 
 const publicUrls = [
   '/',
@@ -77,6 +78,7 @@ const initialize = () => {
       ProductListener();
       ProcessPaymentListener();
       OrderListener();
+      UserListener();
     }
   })
 }

@@ -16,7 +16,8 @@ import {
   EL_ID_PAYMENT_CHECKOUT_BTN,
   EL_ID_PAYMENT_FORM,
   EL_ID_PAYMENT_CHECKBOX_ALL,
-  EL_NAME_PAYMENT_CHECKBOX
+  EL_NAME_PAYMENT_CHECKBOX,
+  EL_ID_USER_TAB_PAYMENT
 } from "../constants/elements";
 
 import { getCartItems } from "../api/cart";
@@ -27,6 +28,7 @@ import { MSG_ERR_EMPTY_ORDER, MSG_INFO_OMISE, MSG_LOADING } from "../constants/m
 import { createOrder } from "../api/order";
 import { getStorage } from "../utils/storage";
 import { Session } from "../models/user";
+import { updateOrders } from "./OrderListener";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -44,7 +46,7 @@ const THBcompact = new Intl.NumberFormat(
   }
 );
 
-const updateSummaryList = async (data: CartItem[]) => {
+const updatePaymentList = async (data: CartItem[]) => {
 
   const sampleItemElement = document.getElementById(EL_ID_PAYMENT_ITEM_SAMPLE) as HTMLElement;
   if (sampleItemElement) {
@@ -122,7 +124,7 @@ const updateSummaryList = async (data: CartItem[]) => {
             removeCartItem(item.id, item.product.name).then(async () => {
               await getCartItems().then(async (updatedData: CartItem[]) => {
                 updateCartItems(updatedData);
-                updateSummaryItems(updatedData);
+                updatePaymentItems(updatedData);
               }).catch((error) => {
                 alert(error);
               });
@@ -141,7 +143,7 @@ const updateSummaryList = async (data: CartItem[]) => {
 
 }
 
-const updateSummaryAmount = async (data: CartItem[]) => {
+const updatePaymentAmount = async (data: CartItem[]) => {
 
   // Init amount
   let amount: number = 0;
@@ -172,16 +174,42 @@ const updateSummaryAmount = async (data: CartItem[]) => {
 
 }
 
-export const updateSummaryItems = (data: CartItem[]) => {
+const resetPaymentAmount = async () => {
+
+  // Init amount
+  let amount: number = 0;
+
+  // Update payment discount
+  const discountElement = document.getElementById(EL_ID_PAYMENT_DISCOUNT_BADGE) as HTMLElement;
+  if (discountElement) {
+    discountElement.classList.add('hidden-force');
+    discountElement.innerHTML = `Discount ฿ ${0}`;
+  }
+
+  // Update payment summary
+  const summaryElement = document.getElementById(EL_ID_PAYMENT_SUMMARY) as HTMLElement;
+  if (summaryElement) {
+    summaryElement.innerText = `฿ 0`;
+  }
+
+  // Update payment total
+  const totalElement = document.getElementById(EL_ID_PAYMENT_TOTAL) as HTMLElement;
+  if (totalElement) {
+    totalElement.innerText = `฿ 0`;
+  }
+
+}
+
+export const updatePaymentItems = (data: CartItem[]) => {
   // Batch update summary
-  updateSummaryList(data);
-  updateSummaryAmount(data);
+  updatePaymentList(data);
+  resetPaymentAmount();
 }
 
 export const PaymentListener = async (): Promise<void> => {
 
   const initializeElements = (data: CartItem[]) => {
-    updateSummaryItems(data);
+    updatePaymentItems(data);
   }
 
   const load = () => {
@@ -259,10 +287,16 @@ export const PaymentListener = async (): Promise<void> => {
             }
             getCartItems().then((updatedData: CartItem[]) => {
               updateCartItems(updatedData);
-              updateSummaryItems(updatedData);
+              updatePaymentItems(updatedData);
             }).catch((error) => {
               alert(error);
             });
+            updateOrders();
+            const path: string = window.location.pathname;
+            if (path === '/user') {
+              const tabPaymentElement = document.getElementById(EL_ID_USER_TAB_PAYMENT) as HTMLElement;
+              tabPaymentElement?.click();
+            }
           }).catch((error) => {
             alert(error);
           });
@@ -274,7 +308,22 @@ export const PaymentListener = async (): Promise<void> => {
       });
       paymentButtonElement.setAttribute('value', paymentButtonLabel);
     });
+
+    element.addEventListener('change', async () => {
+      const formData = new FormData(element);
+      const checks = formData.getAll(EL_NAME_PAYMENT_CHECKBOX) as string[];
+      await getCartItems().then(async (data: CartItem[]) => {
+        const items = data.filter(
+          (item: CartItem) => checks.includes(item.product.details.id.toString())
+        );
+        updatePaymentAmount(items);
+      }).catch((error) => {
+        alert(error);
+      });
+    });
+
     load();
+
   }
 
   const checkboxAllElement = document.getElementById(EL_ID_PAYMENT_CHECKBOX_ALL) as HTMLInputElement;

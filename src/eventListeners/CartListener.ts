@@ -26,6 +26,7 @@ import { MSG_INFO_OMISE } from "../constants/messages";
 import { getStorage } from "../utils/storage";
 import { Session } from "../models/user";
 import { NAME_CART_ADD, NAME_CART_ADDED } from "../constants/names";
+import { updatePaymentItems } from "./PaymentListener";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -130,6 +131,7 @@ const updateCartList = (data: CartItem[]) => {
             removeCartItem(cartId, cartName).then(async () => {
               await getCartItems().then(async (updatedData: CartItem[]) => {
                 updateCartItems(updatedData);
+                updatePaymentItems(updatedData);
               }).catch((error) => {
                 alert(error);
               });
@@ -225,6 +227,7 @@ export const CartListener = async (): Promise<void> => {
 
   const initializeElements = (data: CartItem[]) => {
     updateCartItems(data);
+    updatePaymentItems(data);
   }
 
   const load = () => {
@@ -249,7 +252,7 @@ export const CartListener = async (): Promise<void> => {
     ecomCheckoutElement.removeAttribute('data-node-type');
     const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
     checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
-    checkoutButtonElement.setAttribute('href', './pay');
+    checkoutButtonElement.setAttribute('href', './user#cart');
     ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
   }
 
