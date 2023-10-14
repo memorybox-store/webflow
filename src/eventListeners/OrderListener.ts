@@ -65,6 +65,18 @@ const updateSummaryList = async (data: CartItem[]) => {
 
     const listElement = document.getElementById(EL_ID_PAYMENT_LIST) as HTMLElement;
     if (listElement) {
+      
+      if (listElement.hasChildNodes()) {
+        const childNodes: Array<any> = Object.entries(listElement.childNodes).map(
+          ([_, childNode]) => childNode
+        );
+        for (const childNode of childNodes) {
+          if (childNode.id !== EL_ID_PAYMENT_ITEM_SAMPLE) {
+            listElement.removeChild(childNode);
+          }
+        }
+      }
+
       for (const item of data) {
 
         const itemElement = itemTemplateElement.cloneNode(true) as HTMLElement;

@@ -10,6 +10,14 @@
   display: flex !important;
 }
 
+.visible-force {
+  visibility: initial !important;
+}
+
+.invisible-force {
+  visibility: hidden !important;
+}
+
 .grid-force {
   display: grid !important;
 }

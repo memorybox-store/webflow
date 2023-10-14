@@ -39,7 +39,13 @@ const checkAuthen = () => {
           const avatarElements = document.querySelectorAll(`.${EL_CLASS_USER_AVATAR}`) as NodeListOf<HTMLImageElement>;
           if (avatarElements.length) {
             for (const [_, avatarElement] of Object.entries(avatarElements)) {
-              avatarElement.src = profile.image || '';
+              if (profile.image) {
+                avatarElement.src = profile.image;
+                avatarElement.classList.remove('invisible-force');
+              } else {
+                avatarElement.src = '';
+                avatarElement.classList.add('invisible-force');
+              }
             }
           }
         }).catch((message) => {

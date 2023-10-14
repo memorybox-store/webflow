@@ -1,11 +1,7 @@
 
 import {
-  EL_CLASS_CART_EMPTY,
-  EL_CLASS_CART_FORM,
-  EL_CLASS_CART_LIST,
   EL_ID_CHECKOUT_OMISE_FORM,
   EL_ID_PAYMENT_ITEM_SAMPLE,
-  EL_CLASS_PAYMENT_ITEM,
   EL_CLASS_PAYMENT_ITEM_NAME,
   EL_CLASS_PAYMENT_ITEM_COMPANY,
   EL_CLASS_PAYMENT_ITEM_SIZE,
@@ -22,12 +18,9 @@ import {
   EL_ID_PAYMENT_CHECKBOX_ALL,
   EL_NAME_PAYMENT_CHECKBOX
 } from "../constants/elements";
-import { cartItemTemplate } from "../templates/cart";
 
-import { getCartItems, removeItemFromCart } from "../api/cart";
+import { getCartItems } from "../api/cart";
 import { CartItem } from "../models/cart";
-import omise from "../config/omise";
-import { PAYMENT_PROCESS_PAGE } from "../constants/configs";
 import { removeCartItem, updateCartItems } from "./CartListener";
 import { loadImageAsBase64 } from "../utils/image";
 import { MSG_ERR_EMPTY_ORDER, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
@@ -59,15 +52,21 @@ const updateSummaryList = async (data: CartItem[]) => {
     const itemTemplateElement = sampleItemElement.cloneNode(true) as HTMLElement;
     sampleItemElement.classList.add('hidden-force');
 
-    const currentItemElements = document.querySelectorAll(`.${EL_CLASS_PAYMENT_ITEM}`) as NodeListOf<HTMLElement>;
-    if (currentItemElements.length) {
-      for (const [_, currentItemElement] of Object.entries(currentItemElements)) {
-        currentItemElement.parentElement.removeChild(currentItemElement);
-      }
-    }
-
     const listElement = document.getElementById(EL_ID_PAYMENT_LIST) as HTMLElement;
     if (listElement) {
+
+      // Clear list
+      if (listElement.hasChildNodes()) {
+        const childNodes: Array<any> = Object.entries(listElement.childNodes).map(
+          ([_, childNode]) => childNode
+        );
+        for (const childNode of childNodes) {
+          if (childNode.id !== EL_ID_PAYMENT_ITEM_SAMPLE) {
+            listElement.removeChild(childNode);
+          }
+        }
+      }
+
       for (const item of data) {
 
         const itemElement = itemTemplateElement.cloneNode(true) as HTMLElement;
@@ -138,80 +137,6 @@ const updateSummaryList = async (data: CartItem[]) => {
       }
     }
 
-  }
-
-  // Init form
-  const ecomFormElement = document.querySelector(`.${EL_CLASS_CART_FORM}`) as HTMLFormElement;
-  if (ecomFormElement) {
-
-    const formElement = ecomFormElement.cloneNode(true) as HTMLElement;
-    formElement.removeAttribute('data-node-type');
-    formElement.classList.remove("hidden-force");
-    formElement.classList.remove("flex-force");
-    if (data.length) {
-      formElement.classList.add("flex-force");
-    } else {
-      formElement.classList.add("hidden-force");
-    }
-
-    // Handle items list
-    const ecomListElement = formElement.querySelector(`.${EL_CLASS_CART_LIST}`) as HTMLElement;
-    if (ecomListElement) {
-
-      const itemsContainer = document.createElement('div');
-      const itemsHTML = data.reduce(async (result: any, item: any) => {
-        await loadImageAsBase64(item.product?.image.marked).then((base64Data) => {
-          return `
-              ${result} 
-              ${cartItemTemplate
-              .replace('{{cartImage}}', item.product?.image.marked || '')
-              .replace('{{cartId}}', item.id.toString())
-              .replace('{{cartName}}', base64Data)
-              .replace('{{cartNamePrompt}}', item.product?.name || '')
-              .replace('{{cartCompany}}', item.product?.company?.name || '')
-              .replace('{{cartPrice}}', item.product?.price || '')
-            }`;
-        }).catch((error) => {
-          console.error(error.message);
-        });
-      }, '');
-      itemsContainer.innerHTML = itemsHTML;
-
-      // Clear template list
-      const listElement = ecomListElement.cloneNode(true) as HTMLElement;
-      listElement.removeAttribute('data-wf-collection');
-      listElement.removeAttribute('data-wf-template-id');
-      if (listElement.hasChildNodes()) {
-        const childNodes: Array<any> = Object.entries(listElement.childNodes).map(
-          ([_, childNode]) => childNode
-        );
-        for (const childNode of childNodes) {
-          listElement.removeChild(childNode);
-        }
-      }
-      listElement.appendChild(itemsContainer);
-      ecomListElement.parentNode.replaceChild(listElement, ecomListElement);
-
-    }
-
-    ecomFormElement.parentNode.replaceChild(formElement, ecomFormElement);
-
-  }
-
-  // Init empty cart
-  const ecomEmptyElement = document.querySelector(`.${EL_CLASS_CART_EMPTY}`) as HTMLElement;
-  if (ecomEmptyElement) {
-    const emptyElement = ecomEmptyElement.cloneNode(true) as HTMLElement;
-    emptyElement.removeAttribute('data-wf-collection');
-    emptyElement.removeAttribute('data-wf-template-id');
-    emptyElement.classList.remove("hidden-force");
-    emptyElement.classList.remove("flex-force");
-    if (data.length) {
-      emptyElement.classList.add("hidden-force");
-    } else {
-      emptyElement.classList.add("flex-force");
-    }
-    ecomEmptyElement.parentNode.replaceChild(emptyElement, ecomEmptyElement);
   }
 
 }
@@ -318,12 +243,6 @@ export const PaymentListener = async (): Promise<void> => {
               omiseDescriptionElement?.setAttribute('value', `${MSG_INFO_OMISE} (${data.orderIds.join(', ')})`);
               const orderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
               orderIdsElement?.setAttribute('value', data.orderIds.join(','));
-              getCartItems().then(async (updatedData: CartItem[]) => {
-                updateCartItems(updatedData);
-                updateSummaryItems(updatedData);
-              }).catch((error) => {
-                alert(error);
-              });
               const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
               if (omiseScriptElement) {
                 omiseScriptElement.setAttribute('data-amount', (data.total * 100).toString());
@@ -338,6 +257,12 @@ export const PaymentListener = async (): Promise<void> => {
                 omiseButtonElement.click();
               }
             }
+            getCartItems().then((updatedData: CartItem[]) => {
+              updateCartItems(updatedData);
+              updateSummaryItems(updatedData);
+            }).catch((error) => {
+              alert(error);
+            });
           }).catch((error) => {
             alert(error);
           });
