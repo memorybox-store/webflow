@@ -30,7 +30,7 @@ export const ScanListener = (): void => {
 
     const msgNoFace: string = element.getAttribute('data-noface') || MSG_ERR_NO_FACE;
     const msgInvalidImage: string = element.getAttribute('data-invalid') || MSG_ERR_INVALID_IMAGE;
-    const msgInitializing: string = element.getAttribute('data-scanning') || MSG_FACESCAN_INITIALIZING;
+    const msgInitializing: string = element.getAttribute('data-initializing') || MSG_FACESCAN_INITIALIZING;
     const msgScanning: string = element.getAttribute('data-scanning') || NAME_SCANNING;
     const msgScanningStatus: string = element.getAttribute('data-scanning-status') || MSG_INFO_SCANNING_STATUS;
 
@@ -39,10 +39,14 @@ export const ScanListener = (): void => {
 
     const name = element.innerHTML;
     element.innerHTML = msgInitializing;
+    element.style.pointerEvents = 'none';
+    element.style.opacity = '0.5';
 
     loadFaceModels(options).then(() => {
 
       element.innerHTML = name;
+      element.style.pointerEvents = 'all';
+      element.style.opacity = '1';
 
       const inputFileElement = document.createElement('input') as HTMLInputElement;
       inputFileElement.type = 'file';

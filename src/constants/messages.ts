@@ -2,7 +2,7 @@ export const MSG_INFO_OMISE = `Picture(s) from Memory Box`;
 export const MSG_INFO_NOT_AVAIL = `N/A`;
 export const MSG_INFO_SCANNING_STATUS = `Scanning {{scanned}} from {{total}}... (Found {{found}})`;
 export const MSG_LOADING = `Please wait...`;
-export const MSG_FACESCAN_INITIALIZING = 'Face Scan is initializing...';
+export const MSG_FACESCAN_INITIALIZING = 'Initializing...';
 
 export const MSG_ERR_EMPTY_RES = `Empty Response`;
 export const MSG_ERR_EMPTY_DATA = `Empty Data`;
