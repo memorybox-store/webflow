@@ -192,6 +192,7 @@ export const updateOrders = async () => {
 
           const formElement = templateElement.cloneNode(true) as HTMLFormElement;
           formElement.classList.remove('hidden-force');
+          formElement.removeAttribute('id');
 
           updateOrderItems(formElement, order.items);
 
