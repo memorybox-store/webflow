@@ -49,7 +49,7 @@ export const getProducts = async (boatId: string) => {
               image: null,
             };
             const productDetail: ProductDetail = {
-              id: item.item_id,
+              id: null,
               file: {
                 id: item.fitem_id
               },

@@ -34,6 +34,7 @@ import { PAYMENT_PROCESS_PAGE } from "../constants/configs";
 import { removeCartItem, updateCartItems } from "./CartListener";
 import { loadImageAsBase64 } from "../utils/image";
 import { MSG_ERROR_EMPTY_ORDER } from "../constants/messages";
+import { createOrder } from "../api/order";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -74,6 +75,7 @@ const updateSummaryList = async (data: CartItem[]) => {
         itemElement.classList.remove('hidden-force');
         itemElement.classList.add('grid-force');
         itemElement.style.display = '';
+        itemElement.removeAttribute('id');
 
         const itemCheckboxElement = itemElement.querySelector(`input[name="${EL_NAME_PAYMENT_CHECKBOX}"]`) as HTMLInputElement;
         if (itemCheckboxElement) {
@@ -284,20 +286,13 @@ export const PaymentListener = async (): Promise<void> => {
         console.log(data);
         const items = data.filter(
           (item: CartItem) => checks.includes(item.product.details.id.toString())
-        ).map(
-          (item: CartItem) => (
-            {
-              ItemId: item.product.details.id,
-              Qty: item.quantity,
-              Unitprice: item.product.price,
-              ItemDiscount: 0,
-              Total: item.product.price * item.quantity,
-              Remark: ""
-            }
-          )
         );
         if (items.length) {
+          await createOrder(items).then(async (orderIds: Array<any>) => {
 
+          }).catch((error) => {
+            alert(error);
+          });
           const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
           if (omiseButtonElement) {
             omiseButtonElement.click();

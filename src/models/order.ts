@@ -9,7 +9,7 @@ export interface OrderItem {
   id: number | null;
   product: Product;
   quantity: number;
-  price: number;
+  amount: number;
   discount: number;
   total: number;
   remark: string | null;
@@ -22,7 +22,7 @@ export interface Order {
   date: string;
   partner: Partner;
   company: Company;
-  price: {
+  amount: {
     parcel: number | null;
     total: number | null;
   }

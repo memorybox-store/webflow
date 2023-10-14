@@ -118,7 +118,7 @@ export const ProductListener = (): void => {
             add(
               item.id,
               item.company?.id.toString() || '',
-              item.details.id.toString() || ''
+              item.details.file.id.toString() || ''
             ).then(async () => {
               element.innerText = NAME_CART_ADDED;
               // Get updated items from cart for checking via API

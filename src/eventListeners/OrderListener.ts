@@ -242,7 +242,7 @@ export const OrderListener = async (): Promise<void> => {
 
   const loadSuccuess = () => {
     return new Promise(async (resolve) => {
-      await getOrder(true).then(async (data: Order[]) => {
+      await getOrder(false).then(async (data: Order[]) => {
         // initializeElements(data);
         resolve(data);
       }).catch((error) => {

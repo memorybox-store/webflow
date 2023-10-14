@@ -11,10 +11,10 @@ import { Product, ProductDetail } from '../models/product';
 import { AxiosResponse } from 'axios';
 import { Order, OrderItem } from '../models/order';
 
-export const getOrder = async (success: boolean) => {
+export const getOrder = async (success: boolean, orderId: number | '' = '') => {
   return new Promise(async (resolve, reject) => {
     const payload = {
-      "OrderId": ""
+      OrderId: orderId
     }
     await axios.post(
       `${SERVER}/api/${success ? 'MemoryBox/SelectOrderInv' : 'MainSale/SelectOrderNotInv'}`,
@@ -29,10 +29,9 @@ export const getOrder = async (success: boolean) => {
       if (response.data) {
         if (response.data.Status === 'Success') {
           const data: Array<any> = response.data.Data.sort((a: any, b: any) => b.order_id - a.order_id);
-          const orders = [
-            ...new Set(data.map((item: any) => item.order_no))
-          ].map((uniqe: any) => {
-            const orderItems = data.filter((item: any) => item.order_no === uniqe).map((item: any) => {
+          const orderNos = [...new Set(data.map((item: any) => item.order_no))];
+          const orders = orderNos.map((orderNo: any) => {
+            const orderItems = data.filter((item: any) => item.order_no === orderNo).map((item: any) => {
               const boat: Boat = {
                 id: null,
                 name: item.mst_name || null,
@@ -83,14 +82,14 @@ export const getOrder = async (success: boolean) => {
                 id: item.ms_id,
                 product: product,
                 quantity: item.qty,
-                price: item.unit_price,
+                amount: item.unit_price,
                 discount: item.item_discount,
                 total: item.total,
                 remark: item.remark,
               }
               return orderItem;
             });
-            const orderSelected = data.find((item: any) => item.order_no === uniqe);
+            const orderSelected = data.find((item: any) => item.order_no === orderNo);
             const order: Order = {
               id: orderSelected.order_id,
               orderNo: orderSelected.order_no,
@@ -98,7 +97,7 @@ export const getOrder = async (success: boolean) => {
               date: orderSelected.order_date,
               partner: orderSelected.partner_id,
               company: orderSelected.comp_id,
-              price: {
+              amount: {
                 parcel: orderSelected.delivery_price || null,
                 total: orderSelected.grand_total,
               },
@@ -107,59 +106,8 @@ export const getOrder = async (success: boolean) => {
             return order;
           });
           console.log(orders);
-          // const cartItems: CartItem[] = data.map((item: any) => {
-          //   const company: Company = {
-          //     id: item.comp_id,
-          //     title: item.comp_name_th,
-          //     name: item.comp_name_th,
-          //     branch: null,
-          //     contactPerson: null,
-          //     tel: null,
-          //     email: null,
-          //     address: null,
-          //     website: null,
-          //     image: null,
-          //   };
-          //   const productDetail: ProductDetail = {
-          //     id: item.item_id,
-          //     sku: item.sku,
-          //     optionId: item.slist_option_id,
-          //     option: item.itemoption,
-          //     status: null,
-          //     unit: {
-          //       id: null,
-          //       name: item.unitname,
-          //       price: item.unitprice,
-          //     },
-          //     package: {
-          //       depth: item.package_depth,
-          //       height: item.package_height,
-          //       width: item.package_width,
-          //       weight: item.package_weight,
-          //     }
-          //   }
-          //   const product: Product = {
-          //     id: item.slist_id,
-          //     itemId: item.fitem_id,
-          //     name: item.slist_name,
-          //     description: null,
-          //     tag: null,
-          //     minPrice: item.minprice,
-          //     maxPrice: item.maxprice,
-          //     price: item.price_total,
-          //     image: item.img_path,
-          //     details: productDetail,
-          //     boat: null,
-          //     company: company,
-          //   }
-          //   const cartItem: CartItem = {
-          //     id: item.cart_id,
-          //     quantity: item.qty,
-          //     product: product
-          //   }
-          //   return cartItem;
-          // });
-          resolve(true);
+          console.log(moment().format());
+          resolve(orders);
         } else {
           reject(response.data.Message);
         }
@@ -172,133 +120,86 @@ export const getOrder = async (success: boolean) => {
   });
 }
 
-export const cancelOrder = async (cartId: number | string) => {
+export const createOrder = async (cartItems: CartItem[]) => {
   return new Promise(async (resolve, reject) => {
-    const payload = {
-      cart_id: parseInt(cartId.toString())
-    }
-    await axios.post(
-      `${SERVER}/api/MemoryBox/DeleteItemCart`,
-      payload,
-      {
-        ...{
-          headers: await createRequestHeader(true, true)
+    let results: Array<any> = [];
+    let errors: Array<any> = [];
+    const companyIds = [
+      ...new Set(cartItems.map((item: CartItem) => item.product.company.id))
+    ];
+    for (let companyId of companyIds) {
+      const items = cartItems.filter((item: any) => item.product.company.id === companyId).map((item: CartItem) => (
+        {
+          ItemId: item.product.details.id,
+          Qty: item.quantity,
+          Unitprice: item.product.price,
+          ItemDiscount: 0,
+          Total: item.product.price,
+          Remark: ""
         }
+      ));
+      const price: number = items.reduce((result: number, item: any) => {
+        return result + (item.Unitprice || 0);
+      }, 0);
+      const discount: number = items.reduce((result: number, item: any) => {
+        return result + (item.ItemDiscount || 0);
+      }, 0);
+      const total: number = items.reduce((result: number, item: any) => {
+        return result + (item.Total || 0);
+      }, 0);
+      const payload = {
+        CompId: companyId,
+        Doctype: "E-SO",
+        OrderDate: moment().format(),
+        Rate: "1",
+        Total: price,
+        Discount: discount,
+        Deposit: 0,
+        SumTotal: total,
+        Vat: 0,
+        GrandTotal: total,
+        Remark: '',
+        ItemOrder: items
       }
-    ).then(async (response: AxiosResponse<any, any>) => {
-      if (response.data) {
-        if (response.data.Status === 'Success') {
-          resolve(true);
+      const itemIds = payload.ItemOrder.map((item: any) => item.ItemId);
+      await axios.post(
+        `${SERVER}/api/MainSale/InsertOrder`,
+        payload,
+        {
+          ...{
+            headers: await createRequestHeader(true, true)
+          }
+        }
+      ).then(async (response: AxiosResponse<any, any>) => {
+        if (response.data) {
+          if (response.data.Status === 'Success') {
+            const data: Array<any> = response.data.Data;
+            results = [...results, ...data.map((item: any) => item.order_id)];
+          } else {
+            errors = [...errors, ...itemIds];
+          }
         } else {
-          reject(response.data.Message);
+          errors = [...errors, ...itemIds];
         }
-      } else {
-        reject(MSG_ERR_EMP_RES);
-      }
-    }).catch((error) => {
-      reject(handleResponseError(error));
-    });
+      }).catch(() => {
+        errors = [...errors, ...itemIds];
+      });
+    }
+    if (!errors.length) {
+      resolve(results);
+    } else {
+      reject(`Unable to creae order for items ${errors.join(', ')}`)
+    }
   });
 }
 
-export const addItemToOrder = async (
-  productId: number | string,
-  companyId: number | string,
-  itemId: number | string,
-  quantity: number
-) => {
-  // return new Promise(async (resolve, reject) => {
-  //   const payload = {
-  //     CompId: parseInt(companyId.toString()),
-  //     slist_id: parseInt(productId.toString()), 
-  //     ItemId: parseInt(itemId.toString()), 
-  //     Qty: quantity.toString()
-  //   }
-  //   await axios.post(
-  //     `${SERVER}/api/MemoryBox/AddItemToCart`,
-  //     payload,
-  //     {
-  //       ...{
-  //         headers: await createRequestHeader(true, true)
-  //       }
-  //     }
-  //   ).then(async (response: AxiosResponse<any, any>) => {
-  //     if (response.data) {
-  //       if (response.data.Status === 'Success') {
-  //         const data: Array<any> = response.data.Data;
-  //         const cartItems: CartItem[] = data.map((item: any) => {
-  //           const company: Company = {
-  //             id: item.comp_id,
-  //             title: item.comp_name_th,
-  //             name: item.comp_name_th,
-  //             branch: null,
-  //             contactPerson: null,
-  //             tel: null,
-  //             email: null,
-  //             address: null,
-  //             website: null,
-  //             image: null,
-  //           };
-  //           const productDetail: ProductDetail = {
-  //             id: item.item_id,
-  //             sku: item.sku,
-  //             optionId: item.slist_option_id,
-  //             option: item.itemoption,
-  //             status: null,
-  //             unit: {
-  //               id: null,
-  //               name: item.unitname,
-  //               price: item.unitprice,
-  //             },
-  //             package: {
-  //               depth: item.package_depth,
-  //               height: item.package_height,
-  //               width: item.package_width,
-  //               weight: item.package_weight,
-  //             }
-  //           }
-  //           const product: Product = {
-  //             id: item.slist_id,
-  //             name: item.slist_name,
-  //             description: null,
-  //             tag: null,
-  //             minPrice: item.minprice,
-  //             maxPrice: item.maxprice,
-  //             price: item.price_total,
-  //             image: {
-  //               marked: item.img_path
-  //             },
-  //             details: productDetail,
-  //             boat: null,
-  //             company: company,
-  //           }
-  //           const cartItem: CartItem = {
-  //             id: item.cart_id,
-  //             quantity: item.qty,
-  //             product: product
-  //           }
-  //           return cartItem;
-  //         });
-  //         resolve(cartItems);
-  //       } else {
-  //         reject(response.data.Message);
-  //       }
-  //     } else {
-  //       reject(MSG_ERR_EMP_RES);
-  //     }
-  //   }).catch((error) => {
-  //     reject(handleResponseError(error));
-  //   });
-  // });
-}
-
-export const removeItemFromOrder = async (cartId: number | string) => {
+export const cancelOrder = async (OrderId: number | string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
-      cart_id: parseInt(cartId.toString())
+      OrderId: parseInt(OrderId.toString())
     }
     await axios.post(
-      `${SERVER}/api/MemoryBox/DeleteItemCart`,
+      `${SERVER}/api/MainSale/CancelOrder`,
       payload,
       {
         ...{
