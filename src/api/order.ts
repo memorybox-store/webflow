@@ -31,13 +31,14 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
         if (response.data.Status === 'Success') {
           const data: Array<any> = response.data.Data.sort((a: any, b: any) => b.order_id - a.order_id);
           const orderNos = [...new Set(data.map((item: any) => item.order_no))];
-          const orders = orderNos.map(async (orderNo: any) => {
+          let orders: Order[] = [];
+          for (let orderNo of orderNos) {
             let orderItems: OrderItem[] = [];
             for (let item of data.filter((item: any) => item.order_no === orderNo)) {
               let itemProduct: ProductDetail | null = null;
               await getProductDetails(item.ms_id).then(async (dataProduct: ProductDetail) => {
                 itemProduct = dataProduct;
-              }).catch(() => {});
+              }).catch(() => { });
               const boat: Boat = {
                 id: null,
                 name: item.mst_name || null,
@@ -56,20 +57,20 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 website: null,
                 image: null,
               };
-              const productDetail: ProductDetail = itemProduct 
-              ? itemProduct 
-              : {
-                id: item.item_id,
-                unit: {
-                  id: item.unitid || null,
-                  name: item.unitname || null,
-                  price: item.unit_price || null,
-                },
-                file: {
-                  name: item.fitem_name
-                },
-                referenceId: item.ms_id
-              }
+              const productDetail: ProductDetail = itemProduct
+                ? itemProduct
+                : {
+                  id: item.item_id,
+                  unit: {
+                    id: item.unitid || null,
+                    name: item.unitname || null,
+                    price: item.unit_price || null,
+                  },
+                  file: {
+                    name: item.fitem_name
+                  },
+                  referenceId: item.ms_id
+                }
               const product: Product = {
                 id: item.ms_id,
                 name: item.slist_name,
@@ -97,70 +98,6 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
               }
               orderItems = [...orderItems, orderItem];
             }
-            // const orderItems = await data.filter((item: any) => item.order_no === orderNo).map(async (item: any) => {
-            //   let itemProduct: ProductDetail | null = null;
-            //   await getProductDetails(item.ms_id).then(async (dataProduct: ProductDetail) => {
-            //     itemProduct = dataProduct;
-            //   }).catch(() => {});
-            //   const boat: Boat = {
-            //     id: null,
-            //     name: item.mst_name || null,
-            //     prefix: null,
-            //     createdAt: null
-            //   };
-            //   const company: Company = {
-            //     id: item.comp_id,
-            //     title: null,
-            //     name: null,
-            //     branch: null,
-            //     contactPerson: null,
-            //     tel: null,
-            //     email: null,
-            //     address: null,
-            //     website: null,
-            //     image: null,
-            //   };
-            //   const productDetail: ProductDetail = itemProduct 
-            //   ? itemProduct 
-            //   : {
-            //     id: item.item_id,
-            //     unit: {
-            //       id: item.unitid || null,
-            //       name: item.unitname || null,
-            //       price: item.unit_price || null,
-            //     },
-            //     file: {
-            //       name: item.fitem_name
-            //     },
-            //     referenceId: item.ms_id
-            //   }
-            //   const product: Product = {
-            //     id: item.ms_id,
-            //     name: item.slist_name,
-            //     description: item.slist_details,
-            //     tag: item.Tag,
-            //     minPrice: item.minprice,
-            //     maxPrice: item.maxprice,
-            //     price: item.maxprice,
-            //     image: {
-            //       marked: item.img_path || null,
-            //       unmarked: item.img_path || null,
-            //     },
-            //     details: productDetail,
-            //     boat: boat,
-            //     company: company,
-            //   }
-            //   const orderItem: OrderItem = {
-            //     id: item.ms_id,
-            //     product: product,
-            //     quantity: item.qty,
-            //     amount: item.unit_price,
-            //     discount: item.item_discount,
-            //     total: item.total,
-            //     remark: item.remark,
-            //   }
-            //   return orderItem;
-            // });
             const orderSelected = data.find((item: any) => item.order_no === orderNo);
             const order: Order = {
               id: orderSelected.order_id,
@@ -175,8 +112,154 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
               },
               items: orderItems
             }
-            return order;
-          });
+            orders = [...orders, order];
+          }
+          // const orders = orderNos.map(async (orderNo: any) => {
+          //   let orderItems: OrderItem[] = [];
+          //   for (let item of data.filter((item: any) => item.order_no === orderNo)) {
+          //     let itemProduct: ProductDetail | null = null;
+          //     await getProductDetails(item.ms_id).then(async (dataProduct: ProductDetail) => {
+          //       itemProduct = dataProduct;
+          //     }).catch(() => {});
+          //     const boat: Boat = {
+          //       id: null,
+          //       name: item.mst_name || null,
+          //       prefix: null,
+          //       createdAt: null
+          //     };
+          //     const company: Company = {
+          //       id: item.comp_id,
+          //       title: null,
+          //       name: null,
+          //       branch: null,
+          //       contactPerson: null,
+          //       tel: null,
+          //       email: null,
+          //       address: null,
+          //       website: null,
+          //       image: null,
+          //     };
+          //     const productDetail: ProductDetail = itemProduct 
+          //     ? itemProduct 
+          //     : {
+          //       id: item.item_id,
+          //       unit: {
+          //         id: item.unitid || null,
+          //         name: item.unitname || null,
+          //         price: item.unit_price || null,
+          //       },
+          //       file: {
+          //         name: item.fitem_name
+          //       },
+          //       referenceId: item.ms_id
+          //     }
+          //     const product: Product = {
+          //       id: item.ms_id,
+          //       name: item.slist_name,
+          //       description: item.slist_details,
+          //       tag: item.Tag,
+          //       minPrice: item.minprice,
+          //       maxPrice: item.maxprice,
+          //       price: item.maxprice,
+          //       image: {
+          //         marked: item.img_path || null,
+          //         unmarked: item.img_path || null,
+          //       },
+          //       details: productDetail,
+          //       boat: boat,
+          //       company: company,
+          //     }
+          //     const orderItem: OrderItem = {
+          //       id: item.ms_id,
+          //       product: product,
+          //       quantity: item.qty,
+          //       amount: item.unit_price,
+          //       discount: item.item_discount,
+          //       total: item.total,
+          //       remark: item.remark,
+          //     }
+          //     orderItems = [...orderItems, orderItem];
+          //   }
+          //   // const orderItems = await data.filter((item: any) => item.order_no === orderNo).map(async (item: any) => {
+          //   //   let itemProduct: ProductDetail | null = null;
+          //   //   await getProductDetails(item.ms_id).then(async (dataProduct: ProductDetail) => {
+          //   //     itemProduct = dataProduct;
+          //   //   }).catch(() => {});
+          //   //   const boat: Boat = {
+          //   //     id: null,
+          //   //     name: item.mst_name || null,
+          //   //     prefix: null,
+          //   //     createdAt: null
+          //   //   };
+          //   //   const company: Company = {
+          //   //     id: item.comp_id,
+          //   //     title: null,
+          //   //     name: null,
+          //   //     branch: null,
+          //   //     contactPerson: null,
+          //   //     tel: null,
+          //   //     email: null,
+          //   //     address: null,
+          //   //     website: null,
+          //   //     image: null,
+          //   //   };
+          //   //   const productDetail: ProductDetail = itemProduct 
+          //   //   ? itemProduct 
+          //   //   : {
+          //   //     id: item.item_id,
+          //   //     unit: {
+          //   //       id: item.unitid || null,
+          //   //       name: item.unitname || null,
+          //   //       price: item.unit_price || null,
+          //   //     },
+          //   //     file: {
+          //   //       name: item.fitem_name
+          //   //     },
+          //   //     referenceId: item.ms_id
+          //   //   }
+          //   //   const product: Product = {
+          //   //     id: item.ms_id,
+          //   //     name: item.slist_name,
+          //   //     description: item.slist_details,
+          //   //     tag: item.Tag,
+          //   //     minPrice: item.minprice,
+          //   //     maxPrice: item.maxprice,
+          //   //     price: item.maxprice,
+          //   //     image: {
+          //   //       marked: item.img_path || null,
+          //   //       unmarked: item.img_path || null,
+          //   //     },
+          //   //     details: productDetail,
+          //   //     boat: boat,
+          //   //     company: company,
+          //   //   }
+          //   //   const orderItem: OrderItem = {
+          //   //     id: item.ms_id,
+          //   //     product: product,
+          //   //     quantity: item.qty,
+          //   //     amount: item.unit_price,
+          //   //     discount: item.item_discount,
+          //   //     total: item.total,
+          //   //     remark: item.remark,
+          //   //   }
+          //   //   return orderItem;
+          //   // });
+          //   const orderSelected = data.find((item: any) => item.order_no === orderNo);
+          //   const order: Order = {
+          //     id: orderSelected.order_id,
+          //     orderNo: orderSelected.order_no,
+          //     invoiceId: orderSelected.inv_id || null,
+          //     date: orderSelected.order_date,
+          //     partner: orderSelected.partner_id,
+          //     company: orderSelected.comp_id,
+          //     amount: {
+          //       parcel: orderSelected.delivery_price || null,
+          //       total: orderSelected.grand_total,
+          //     },
+          //     items: orderItems
+          //   }
+          //   return order;
+          // });
           console.log(orders);
           resolve(orders);
         } else {
