@@ -14,7 +14,8 @@ import {
   EL_ID_CHECKOUT_OMISE_SCRIPT,
   EL_CLASS_REMOVE_BTN,
   EL_ID_CART_CHECKOUT_BTN,
-  EL_ID_CHECKOUT_OMISE_FORM
+  EL_ID_CHECKOUT_OMISE_FORM,
+  EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
@@ -189,24 +190,33 @@ export const updateCartItems = (data: CartItem[]) => {
   updateCartAmount(data);
 
   // Update add buttons
-  const addButtonElements = document.querySelectorAll(`.${EL_CLASS_ADD_TO_CART_BTN}`) as NodeListOf<HTMLElement>;
-  if (addButtonElements.length) {
-    const addedItems = data.map((item: CartItem) => item.product.id.toString());
-    for (const [_, addElement] of Object.entries(addButtonElements)) {
-      const productId = addElement.getAttribute('data-target');
-      if (productId) {
-        if (addedItems.includes(productId.toString())) {
-          addElement.classList.add('disabled');
-          addElement.innerText = NAME_CART_ADDED;
+  const addedItems = data.map((item: CartItem) => item.product.id.toString());
+  const update = (elements: NodeListOf<HTMLElement>) => {
+    if (elements.length) {
+      for (const [_, addElement] of Object.entries(elements)) {
+        const productId = addElement.getAttribute('data-target');
+        if (productId) {
+          if (addedItems.includes(productId.toString())) {
+            addElement.classList.add('disabled');
+            addElement.innerText = NAME_CART_ADDED;
+          } else {
+            addElement.classList.remove('disabled');
+            addElement.innerText = NAME_CART_ADD;
+          }
         } else {
           addElement.classList.remove('disabled');
           addElement.innerText = NAME_CART_ADD;
         }
-      } else {
-        addElement.classList.remove('disabled');
-        addElement.innerText = NAME_CART_ADD;
       }
     }
+  }
+  const addButtonElements = document.querySelectorAll(`.${EL_CLASS_ADD_TO_CART_BTN}`) as NodeListOf<HTMLElement>;
+  if (addButtonElements.length) {
+    update(addButtonElements);
+  }
+  const addPopupButtonElements = document.querySelectorAll(`.${EL_CLASS_ADD_TO_CART_POPUP_BTN}`) as NodeListOf<HTMLElement>;
+  if (addPopupButtonElements.length) {
+    update(addPopupButtonElements);
   }
 
 }
