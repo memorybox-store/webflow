@@ -192,7 +192,7 @@ export const updateOrders = async () => {
 
           const formElement = templateElement.cloneNode(true) as HTMLFormElement;
           formElement.classList.remove('hidden-force');
-          formElement.removeAttribute('id');
+          formElement.setAttribute('id', `order-${order.id}`);
 
           updateOrderItems(formElement, order.items);
 
@@ -207,7 +207,8 @@ export const updateOrders = async () => {
             cancelButtonElement.addEventListener('click', async () => {
               if (confirm(`Do you want to cancel "${order.orderNo}"?`)) {
                 await cancelOrder(order.id).then(async () => {
-                  updateOrders();
+                  const orderRemoveElement = document.getElementById(`order-${order.id}`) as HTMLElement;
+                  orderRemoveElement?.parentElement.removeChild(orderRemoveElement);
                 }).catch((message) => {
                   alert(message);
                 });

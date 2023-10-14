@@ -252,8 +252,8 @@ export const getProductDetails = async (productId: number | string) => {
     ).then(async (response: AxiosResponse<any, any>) => {
       if (response.data) {
         if (response.data.Status === 'Success') {
-          if (response.data.Data && response.data.Data.length) {
-            const data: any = response.data.Data[0];
+          if (response.data.Data.item && response.data.Data.item.length) {
+            const data: any = response.data.Data.item[0];
             const productDetail: ProductDetail = {
               id: data.item_id,
               sku: data.sku,
