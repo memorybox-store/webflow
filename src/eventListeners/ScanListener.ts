@@ -1,8 +1,6 @@
 import { getProductsScan } from "../api/product";
 import {
-  compareFaces,
   detectFace,
-  drawFaceDetections,
   loadFaceModels,
   matchFaces
 } from "../common/faceScan";

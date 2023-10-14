@@ -157,22 +157,19 @@
         <input type="checkbox" id="checkbox-payment-all" />
         <div id="payment-item-sample">
           <input type="checkbox" name="checkbox_payment">
-          <img src="">
+          <img class="payment-item-image" src="" width="40">
           <div class="payment-item-name">MEM66718</div>
           <div class="payment-item-company">Tip Top Destination®</div>
           <div class="payment-item-size">3840x2560</div>
-          <div class="flex"><div class="text-checkbox">Size: </div></div></div><span class="hidden-on-desktop w-form-label" for="checkbox_payment">MEM62834</span></label><div id="w-node-_6a33b586-8195-b926-7d02-b45f149e919d-5d812989" class="position-relative"><div class="payment-item-price">฿ 100.00</div>
+          <div class="payment-item-price">฿ 100.00</div>
           <img src="https://assets-global.website-files.com/64bf3a6357b2eb45b38e5e39/64d277a9a5668c1df3e15adb_Bin.svg" 
-          width="24" 
-          class="payment-item-remove">
+          width="24" class="payment-item-remove">
       </div>
       <button id="payment-checkout-button">Pay</button>
     </form>
   </div>
 
   <div id="order-summary"></div>
-
-  <a data-node-type="cart-checkout-button">Pay</a>
 
   <form id="checkout-omise-form" method="POST"
     action="http://localhost:5001/memorybox-store/us-central1/app/opn/charge">
@@ -183,7 +180,7 @@
       </script>
     <input type="hidden" name="omiseDescription" value="0" />
     <input type="hidden" name="Authorization" value="" />
-    <input type="hidden" name="orderId" value="" />
+    <input type="hidden" name="orderIds" value="" />
   </form>
 
   <div id="payment-process" style="text-align: center;">

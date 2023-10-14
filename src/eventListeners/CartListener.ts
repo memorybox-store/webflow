@@ -179,27 +179,6 @@ const updateCartAmount = async (data: CartItem[]) => {
     ecomSummaryElement.parentNode.replaceChild(summaryElement, ecomSummaryElement);
   }
 
-  // Update Omise form
-  const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
-  if (omiseFormElement) {
-    const omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
-    if (omiseDescriptionElement) {
-      omiseDescriptionElement.value = MSG_INFO_OMISE;
-    }
-    const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
-    if (omiseScriptElement) {
-      omiseScriptElement.setAttribute('data-amount', amount.toString());
-      omiseScriptElement.setAttribute(
-        'data-button-label',
-        `Checkout ${THBcompact.format(amount / 100 || 0)} THB`
-      );
-    }
-    const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-    if (omiseButtonElement) {
-      omiseButtonElement.innerHTML = `Checkout ${THBcompact.format(amount / 100 || 0)} THB`;
-    }
-  }
-
 }
 
 export const updateCartItems = (data: CartItem[]) => {
@@ -252,24 +231,6 @@ export const CartListener = async (): Promise<void> => {
   const element = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
     load();
-  }
-
-  const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
-  if (omiseFormElement) {
-    omiseFormElement.style.display = '';
-    const omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
-    if (omiseAuthorizationElement) {
-      const getAccessToken = async () => {
-        const session = await getStorage('session', true) as Session | null;
-        if (session) {
-          return session?.accessToken || '';
-        } else {
-          return '';
-        }
-      }
-      const loginToken = await getAccessToken();
-      omiseAuthorizationElement.value = loginToken;
-    }
   }
 
   // Init checkout button

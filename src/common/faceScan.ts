@@ -20,33 +20,54 @@ export const loadFaceModels = (options?: Array<any>) => {
 
     const MODEL_URL = FACE_MODEL_PATH;
 
-    const models: Array<any> = [nets.ssdMobilenetv1.loadFromUri(MODEL_URL)];
-    if (options && options.length) {
-      if (options.includes('recognition')) {
-        await models.push(nets.faceRecognitionNet.loadFromUri(MODEL_URL));
+    const models = [
+      nets.ssdMobilenetv1,
+      ...options.filter(
+        (option) => option === 'recognition'
+          || option === 'landmark'
+          || option === 'ageGender'
+          || option === 'expression'
+      ).map((option) => {
+        if (option === 'recognition') {
+          return nets.faceRecognitionNet;
+        } else if (option === 'landmark') {
+          return nets.faceLandmark68Net;
+        } else if (option === 'ageGender') {
+          return nets.ageGenderNet;
+        } else if (option === 'expression') {
+          return nets.faceExpressionNet;
+        }
+      })
+    ];
+
+    const defer = async (startIndex: number, items: Array<any>, chunkSize: number, callback: any) => {
+
+      const endIndex = Math.min(startIndex + chunkSize, items.length);
+
+      for (let i = startIndex; i < endIndex; i++) {
+        await items[i].loadFromUri(MODEL_URL);
       }
-      if (options.includes('landmark')) {
-        await models.push(nets.faceLandmark68Net.loadFromUri(MODEL_URL));
+
+      if (endIndex < items.length) {
+        setTimeout(() => {
+          defer(endIndex, items, chunkSize, callback);
+        }, 0);
+      } else {
+        callback();
       }
-      if (options.includes('ageGender')) {
-        await models.push(nets.ageGenderNet.loadFromUri(MODEL_URL));
-      }
-      if (options.includes('expression')) {
-        await models.push(nets.faceExpressionNet.loadFromUri(MODEL_URL));
-      }
+
     }
 
-    Promise.all(models).then(() => {
+    const chunkSize = 1;
+    defer(0, models, chunkSize, () => {
       resolve(true);
-    }).catch((error) => {
-      reject(error);
     });
 
   });
 }
 
 export const detectFace = async (image: string | HTMLImageElement, options?: Array<any>) => {
-  return await new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const faceDetectionOptions = new SsdMobilenetv1Options({ minConfidence });
       const inputElement: HTMLImageElement | undefined | null = (typeof image === 'string')

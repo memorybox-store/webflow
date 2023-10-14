@@ -33,8 +33,10 @@ import omise from "../config/omise";
 import { PAYMENT_PROCESS_PAGE } from "../constants/configs";
 import { removeCartItem, updateCartItems } from "./CartListener";
 import { loadImageAsBase64 } from "../utils/image";
-import { MSG_ERROR_EMPTY_ORDER } from "../constants/messages";
+import { MSG_ERROR_EMPTY_ORDER, MSG_INFO_OMISE } from "../constants/messages";
 import { createOrder } from "../api/order";
+import { getStorage } from "../utils/storage";
+import { Session } from "../models/user";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -118,19 +120,21 @@ const updateSummaryList = async (data: CartItem[]) => {
         }
 
         const itemRemoveButtonElement = itemElement.querySelector(`.${EL_CLASS_PAYMENT_ITEM_REMOVE_BTN}`) as HTMLElement;
-        itemRemoveButtonElement.style.cursor = 'pointer';
-        itemRemoveButtonElement?.addEventListener('click', async () => {
-          removeCartItem(item.id, item.product.name).then(async () => {
-            await getCartItems().then(async (updatedData: CartItem[]) => {
-              updateCartItems(updatedData);
-              updateSummaryItems(updatedData);
+        if (itemRemoveButtonElement) {
+          itemRemoveButtonElement.style.cursor = 'pointer';
+          itemRemoveButtonElement.addEventListener('click', async () => {
+            removeCartItem(item.id, item.product.name).then(async () => {
+              await getCartItems().then(async (updatedData: CartItem[]) => {
+                updateCartItems(updatedData);
+                updateSummaryItems(updatedData);
+              }).catch((error) => {
+                alert(error);
+              });
             }).catch((error) => {
               alert(error);
             });
-          }).catch((error) => {
-            alert(error);
           });
-        });
+        }
 
         listElement.appendChild(itemElement);
 
@@ -269,6 +273,24 @@ export const PaymentListener = async (): Promise<void> => {
     });
   }
 
+  const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
+  if (omiseFormElement) {
+    omiseFormElement.style.display = '';
+    const omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
+    if (omiseAuthorizationElement) {
+      const getAccessToken = async () => {
+        const session = await getStorage('session', true) as Session | null;
+        if (session) {
+          return session?.accessToken || '';
+        } else {
+          return '';
+        }
+      }
+      const loginToken = await getAccessToken();
+      omiseAuthorizationElement.value = loginToken;
+    }
+  }
+
   const element = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLFormElement;
   if (element) {
     element.addEventListener('submit', async (event) => {
@@ -288,15 +310,30 @@ export const PaymentListener = async (): Promise<void> => {
           (item: CartItem) => checks.includes(item.product.details.id.toString())
         );
         if (items.length) {
-          await createOrder(items).then(async (orderIds: Array<any>) => {
-
+          await createOrder(items).then(async (data: any) => {
+            const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
+            if (omiseFormElement) {
+              const omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
+              omiseDescriptionElement?.setAttribute('value', `${MSG_INFO_OMISE} (${data.orderIds.join(', ')})`);
+              const orderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
+              orderIdsElement?.setAttribute('value', data.orderIds.join(','));
+              const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
+              if (omiseScriptElement) {
+                omiseScriptElement.setAttribute('data-amount', (data.total * 100).toString());
+                omiseScriptElement.setAttribute(
+                  'data-button-label',
+                  `Checkout ${THBcompact.format(data.total || 0)} THB`
+                );
+              }
+              const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
+              if (omiseButtonElement) {
+                omiseButtonElement.innerHTML = `Checkout ${THBcompact.format(data.total || 0)} THB`;
+                omiseButtonElement.click();
+              }
+            }
           }).catch((error) => {
             alert(error);
           });
-          const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
-          if (omiseButtonElement) {
-            omiseButtonElement.click();
-          }
         } else {
           alert(MSG_ERROR_EMPTY_ORDER)
         }
@@ -307,15 +344,6 @@ export const PaymentListener = async (): Promise<void> => {
     });
     load();
   }
-
-  // const paymentButtonElement = document.getElementById(EL_ID_PAYMENT_CHECKOUT_BTN) as HTMLElement;
-  // if (paymentButtonElement) {
-  //   const paymentElement = paymentButtonElement.cloneNode(true) as HTMLElement;
-  //   paymentElement.addEventListener('click', async () => {
-  //     const formElement = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLFormElement;
-  //   });
-  //   paymentButtonElement.parentElement.replaceChild(paymentElement, paymentButtonElement);
-  // }
 
   const checkboxAllElement = document.getElementById(EL_ID_PAYMENT_CHECKBOX_ALL) as HTMLInputElement;
   if (checkboxAllElement) {

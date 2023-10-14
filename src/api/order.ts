@@ -10,17 +10,17 @@ import { Boat, Company } from '../models/sale';
 import { Product, ProductDetail } from '../models/product';
 import { AxiosResponse } from 'axios';
 import { Order, OrderItem } from '../models/order';
+import { checkPartnership, savePartnership } from './partner';
 
-export const getOrder = async (success: boolean, orderId: number | '' = '') => {
+export const getOrder = async (success: boolean, orderId: number | string | '' = '') => {
   return new Promise(async (resolve, reject) => {
     const payload = {
-      OrderId: orderId
+      OrderId: parseInt(orderId.toString())
     }
     await axios.post(
       `${SERVER}/api/${success ? 'MemoryBox/SelectOrderInv' : 'MainSale/SelectOrderNotInv'}`,
       payload,
       {
-        withCredentials: false,
         ...{
           headers: await createRequestHeader(true, true)
         }
@@ -105,8 +105,6 @@ export const getOrder = async (success: boolean, orderId: number | '' = '') => {
             }
             return order;
           });
-          console.log(orders);
-          console.log(moment().format());
           resolve(orders);
         } else {
           reject(response.data.Message);
@@ -124,44 +122,11 @@ export const createOrder = async (cartItems: CartItem[]) => {
   return new Promise(async (resolve, reject) => {
     let results: Array<any> = [];
     let errors: Array<any> = [];
+    let totalCalculation: number = 0;
     const companyIds = [
       ...new Set(cartItems.map((item: CartItem) => item.product.company.id))
     ];
-    for (let companyId of companyIds) {
-      const items = cartItems.filter((item: any) => item.product.company.id === companyId).map((item: CartItem) => (
-        {
-          ItemId: item.product.details.id,
-          Qty: item.quantity,
-          Unitprice: item.product.price,
-          ItemDiscount: 0,
-          Total: item.product.price,
-          Remark: ""
-        }
-      ));
-      const price: number = items.reduce((result: number, item: any) => {
-        return result + (item.Unitprice || 0);
-      }, 0);
-      const discount: number = items.reduce((result: number, item: any) => {
-        return result + (item.ItemDiscount || 0);
-      }, 0);
-      const total: number = items.reduce((result: number, item: any) => {
-        return result + (item.Total || 0);
-      }, 0);
-      const payload = {
-        CompId: companyId,
-        Doctype: "E-SO",
-        OrderDate: moment().format(),
-        Rate: "1",
-        Total: price,
-        Discount: discount,
-        Deposit: 0,
-        SumTotal: total,
-        Vat: 0,
-        GrandTotal: total,
-        Remark: '',
-        ItemOrder: items
-      }
-      const itemIds = payload.ItemOrder.map((item: any) => item.ItemId);
+    const create = async (payload: any, itemIds: any) => {
       await axios.post(
         `${SERVER}/api/MainSale/InsertOrder`,
         payload,
@@ -185,18 +150,72 @@ export const createOrder = async (cartItems: CartItem[]) => {
         errors = [...errors, ...itemIds];
       });
     }
+    for (let companyId of companyIds) {
+      const items = cartItems.filter((item: any) => item.product.company.id === companyId).map((item: CartItem) => (
+        {
+          ItemId: item.product.details.id,
+          Qty: item.quantity,
+          Unitprice: item.product.price,
+          ItemDiscount: 0,
+          Total: item.product.price,
+          Remark: ""
+        }
+      ));
+      const price: number = items.reduce((result: number, item: any) => {
+        return result + (item.Unitprice || 0);
+      }, 0);
+      const discount: number = items.reduce((result: number, item: any) => {
+        return result + (item.ItemDiscount || 0);
+      }, 0);
+      const total: number = items.reduce((result: number, item: any) => {
+        return result + (item.Total || 0);
+      }, 0);
+      totalCalculation += total;
+      const payload = {
+        CompId: companyId,
+        Doctype: "E-SO",
+        OrderDate: moment().format(),
+        Rate: "1",
+        Total: price,
+        Discount: discount,
+        Deposit: 0,
+        SumTotal: total,
+        Vat: 0,
+        GrandTotal: total,
+        Remark: '',
+        ItemOrder: items
+      }
+      const itemIds = payload.ItemOrder.map((item: any) => item.ItemId);
+      await checkPartnership(companyId).then(async (partnership: any) => {
+        if (!partnership) {
+          await savePartnership(companyId).then(async () => {
+            await create(payload, itemIds);
+          }).catch(() => {
+            errors = [...errors, ...itemIds];
+          });
+        } else {
+          await create(payload, itemIds);
+        }
+      }).catch(() => {
+        errors = [...errors, ...itemIds];
+      });
+    }
     if (!errors.length) {
-      resolve(results);
+      console.log(results);
+      resolve({
+        orderIds: results,
+        total: totalCalculation
+      });
     } else {
       reject(`Unable to creae order for items ${errors.join(', ')}`)
     }
   });
 }
 
-export const cancelOrder = async (OrderId: number | string) => {
+export const cancelOrder = async (orderId: number | string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
-      OrderId: parseInt(OrderId.toString())
+      OrderId: parseInt(orderId.toString())
     }
     await axios.post(
       `${SERVER}/api/MainSale/CancelOrder`,
