@@ -42,10 +42,6 @@ const checkAuthen = () => {
             for (const [_, avatarElement] of Object.entries(avatarElements)) {
               if (profile.image) {
                 avatarElement.src = profile.image;
-                avatarElement.classList.remove('invisible-force');
-              } else {
-                avatarElement.src = '';
-                avatarElement.classList.add('invisible-force');
               }
             }
           }
