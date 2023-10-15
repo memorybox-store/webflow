@@ -16,9 +16,9 @@ export const RgisterListener = (): void => {
 		
 		const formData = new FormData(formElement);
 
-		const acceptElement = document.getElementById(EL_ID_REGISTER_ACCEPT) as HTMLInputElement;
+		const acceptElement = document.querySelector(`.w-checkbox-input`) as HTMLInputElement;
 
-		if (!acceptElement || acceptElement.checked) {
+		if (!acceptElement || acceptElement.classList.contains('w--redirected-checked')) {
 
 			const name = formData.get('name') as string || '';
 			const email = formData.get('email') as string || '';
