@@ -1,4 +1,5 @@
 import { EL_ID_LOGOUT_BTN } from "../constants/elements";
+import { URL_LOGIN } from "../constants/urls";
 
 import { signout } from "../api/user";
 
@@ -8,6 +9,6 @@ export const LogoutListener = (): void => {
 		await signout().catch((message?) => {
 			alert(message || '');
 		});
-		location.href = './log-in';
+		location.href = `./${URL_LOGIN}`;
 	});
 };

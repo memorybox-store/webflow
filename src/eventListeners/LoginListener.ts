@@ -3,6 +3,7 @@ import { EL_ID_LOGIN_FORM } from "../constants/elements";
 import { signin } from "../api/user";
 
 import { Session } from "../models/user";
+import { URL_FINDER } from "../constants/urls";
 
 export const LoginListener = (): void => {
 	const formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
@@ -17,7 +18,7 @@ export const LoginListener = (): void => {
 		const password = formData.get('password') as string || '';
 
 		signin(username, password).then((data: Session) => {
-			location.href = './finder';
+			location.href = `./${URL_FINDER}`;
 		}).catch((message) => {
 			alert(message);
 		});

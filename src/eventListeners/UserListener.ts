@@ -30,6 +30,14 @@ export const UserListener = (): void => {
 				tabElement?.click();
 			}
 		}
+
+    const url = new URL(window.location.href);
+    const status = url.searchParams.get("status");
+    const message = url.searchParams.get("message");
+		if (status === 'error' && message) {
+			alert(decodeURIComponent(message));
+		}
+
   }
 
 };

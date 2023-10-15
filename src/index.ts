@@ -1,5 +1,6 @@
 import { EL_CLASS_USER_NAME, EL_CLASS_USER_AVATAR, EL_ID_CHECKOUT_OMISE_FORM } from './constants/elements';
 import { MSG_INFO_OMISE } from './constants/messages';
+import { URL_FINDER, URL_LOGIN } from './constants/urls';
 
 import { authen, retrieveProfile, signout } from './api/user';
 import { getStorage } from './utils/storage';
@@ -17,12 +18,13 @@ import { PaymentListener } from './eventListeners/PaymentListener';
 import { ProcessPaymentListener } from './eventListeners/ProcessPaymentListener';
 import { OrderListener } from './eventListeners/OrderListener';
 import { UserListener } from './eventListeners/UserListener';
+import { RgisterListener } from './eventListeners/RegisterListener';
 
 const publicUrls = [
-  '/',
-  '/log-in',
-  '/sign-in',
-  '/sign-up',
+  `/`,
+  `/${URL_LOGIN}`,
+  `/sign-in`,
+  `/sign-up`,
 ];
 
 const checkAuthen = () => {
@@ -31,8 +33,8 @@ const checkAuthen = () => {
     const path: string = window.location.pathname;
     await authen().then(async () => {
       result = true;
-      if (path === '/log-in') {
-        location.href = './finder';
+      if (path === `/${URL_LOGIN}`) {
+        location.href = `./${URL_FINDER}`;
       } else {
         await retrieveProfile().then((profile: Profile) => {
           const nameElements = document.querySelectorAll(`.${EL_CLASS_USER_NAME}`) as NodeListOf<HTMLElement>;
@@ -58,7 +60,7 @@ const checkAuthen = () => {
         alert(message || '');
       });
       if (!publicUrls.includes(path)) {
-        location.href = './log-in';
+        location.href = `./${URL_LOGIN}`;
       }
     });
     resolve(result);
@@ -66,6 +68,7 @@ const checkAuthen = () => {
 }
 
 const initialize = () => {
+  RgisterListener();
   LoginListener();
   LogoutListener();
   SocialLoginListener();

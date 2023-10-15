@@ -11,6 +11,7 @@ import moment from '../config/moment';
 import { getCompanies, getBoats } from "../api/sale";
 
 import { Company } from "../models/sale";
+import { URL_RESULT } from "../constants/urls";
 
 export const SearchListener = (): void => {
 
@@ -209,7 +210,7 @@ export const SearchListener = (): void => {
 
 			if (company && date && boat) {
 				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
-				location.href = `./result?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
+				location.href = `./${URL_RESULT}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
 			} else {
 				if (!company) {
 					alert(msgEmptyCompany);

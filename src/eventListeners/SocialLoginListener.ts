@@ -20,6 +20,7 @@ import {
 	signin, 
 	lineVerify 
 } from "../api/user";
+import { URL_FINDER } from "../constants/urls";
 
 export const SocialLoginListener = (): void => {
 
@@ -52,7 +53,7 @@ export const SocialLoginListener = (): void => {
 			if (result) {
 				signin(socialId, password).then(() => {
 					retrieveProfile().then(() => {
-						location.href = './finder';
+						location.href = `./${URL_FINDER}`;
 					}).catch((message) => {
 						alert(message);
 					});
@@ -63,7 +64,7 @@ export const SocialLoginListener = (): void => {
 				register(socialId, password, socialName).then(() => {
 					signin(socialId, password).then(() => {
 						saveSocialAuthen(platform, socialId).then(() => {
-							location.href = './finder';
+							location.href = `./${URL_FINDER}`;
 						}).catch((message) => {
 							alert(message);
 						});
@@ -131,8 +132,6 @@ export const SocialLoginListener = (): void => {
 			});
 		}
 	}
-
-
 
 	// var online = (session: HelloJSAuthResponse) => {
 	// 	const currentTime = (new Date()).getTime() / 1000;

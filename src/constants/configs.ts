@@ -18,8 +18,5 @@ export const SOCIAL_LOGIN_REDIRECT = 'https://memorybox.webflow.io/log-in';
 
 /* Payment */
 export const PAYMENT_CURRENCY = 'THB';
-export const PAYMENT_REDIRECT = 'https://memorybox.webflow.io/user';
 export const PAYMENT_SERVER = 'https://memorybox-store.web.app';
-export const PAYMENT_PROCESS_PAGE = 'https://memorybox.webflow.io/process-payment';
 // export const PAYMENT_SERVER = 'http://localhost:5001/memorybox-store/us-central1/app';
-// export const PAYMENT_PROCESS_PAGE = '/';

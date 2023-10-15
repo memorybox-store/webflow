@@ -1,10 +1,10 @@
-import { 
-  LINE_CHANNEL_ID, 
-  LINE_CHANNEL_SECRET, 
-  SERVER, 
-  SOCIAL_LOGIN_REDIRECT 
+import {
+  LINE_CHANNEL_ID,
+  LINE_CHANNEL_SECRET,
+  SERVER,
+  SOCIAL_LOGIN_REDIRECT
 } from '../constants/configs';
-import { MSG_ERR_EMPTY_DATA, MSG_ERR_EMPTY_RES } from '../constants/messages';
+import { MSG_ERR_EMAIL_EXIST, MSG_ERR_EMPTY_DATA, MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
 import moment from '../config/moment';
@@ -30,16 +30,53 @@ export const authen = async () => {
   });
 };
 
-export const register = async (username: string, password: string, name: string = '', tel: string = '') => {
+export const register = async (name: string = '', email: string, password: string) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
-      PhoneNumber: tel,
-      UserName: username,
-      Password: password,
-      User_Name: name
+      "User_Name": name,
+      "UserName": email,
+      "Password": password,
+      "Email": email
+    }
+    await checkEmail(email).then(async (result) => {
+      if (!result) {
+        await axios.post(
+          `${SERVER}/api/Main/Register`,
+          payload,
+          {
+            ...{
+              headers: await createRequestHeader(false, true)
+            }
+          }
+        ).then(async (response: AxiosResponse<any, any>) => {
+          if (response.data) {
+            if (response.data.Status === 'Success') {
+              resolve(true);
+            } else {
+              reject(response.data.Message);
+            }
+          } else {
+            reject(MSG_ERR_EMPTY_RES);
+          }
+        }).catch((error) => {
+          reject(handleResponseError(error));
+        });
+      } else {
+        reject(MSG_ERR_EMAIL_EXIST);
+      }
+    }).catch((error) => {
+      reject(handleResponseError(error));
+    });
+  });
+}
+
+export const checkEmail = async (email: string = '') => {
+  return new Promise(async (resolve, reject) => {
+    const payload = {
+      Email: email
     }
     await axios.post(
-      `${SERVER}/api/Main/Register`,
+      `${SERVER}/api/Main/CheckEmail`,
       payload,
       {
         ...{
@@ -49,7 +86,11 @@ export const register = async (username: string, password: string, name: string 
     ).then(async (response: AxiosResponse<any, any>) => {
       if (response.data) {
         if (response.data.Status === 'Success') {
-          resolve(true);
+          if (response.data.Data === 'True') {
+            resolve(true);
+          } else {
+            resolve(false);
+          }
         } else {
           reject(response.data.Message);
         }

@@ -1,5 +1,3 @@
-
-import { PAYMENT_REDIRECT } from "../constants/configs";
 import {
   EL_ID_PAYMENT_PROCESS,
   EL_ID_PAYMENT_PROCESS_AUTHORIZE,
@@ -7,6 +5,7 @@ import {
   EL_ID_PAYMENT_PROCESS_SCANNABLE,
   EL_ID_PAYMENT_PROCESS_SCANNABLE_HELPER
 } from "../constants/elements";
+import { URL_USER } from "../constants/urls";
 
 export const ProcessPaymentListener = async (): Promise<void> => {
 
@@ -15,7 +14,7 @@ export const ProcessPaymentListener = async (): Promise<void> => {
     const url = new URL(window.location.href);
     const cancelElement = document.getElementById(EL_ID_PAYMENT_PROCESS_CANCEL) as HTMLElement;
     cancelElement?.addEventListener('click', async () => {
-      location.href = `${PAYMENT_REDIRECT}?status=cancel`;
+      location.href = `./${URL_USER}?status=cancel`;
     });
     const authorizeUri = url.searchParams.get("authorize_uri");
     const authorizeElement = document.getElementById(EL_ID_PAYMENT_PROCESS_AUTHORIZE) as HTMLElement;
