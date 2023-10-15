@@ -4,6 +4,7 @@ export const EL_ID_LOGOUT_BTN = 'logout-button';
 
 /* Register */
 export const EL_ID_REGISTER_FORM = 'register-form';
+export const EL_ID_REGISTER_ACCEPT = 'register-accept';
 
 /* User */
 export const EL_CLASS_USER_NAME = 'user-name';

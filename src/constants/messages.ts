@@ -20,3 +20,4 @@ export const MSG_ERR_EMPTY_COMPANY = `Please select company`;
 export const MSG_ERR_EMPTY_DATE = `Please select date`;
 export const MSG_ERR_EMPTY_BOAT = `Please select boat`;
 export const MSG_ERR_EMAIL_EXIST = `This email is already registered`;
+export const MSG_ERR_ACCEPT_TERMS = 'Please accept terms and conditions';
