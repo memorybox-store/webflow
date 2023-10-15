@@ -234,7 +234,7 @@ export const updateOrders = async () => {
             }
             const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
             if (omiseFormElement) {
-              const omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
+              let omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
               omiseDescriptionElement?.setAttribute('value', `${MSG_INFO_OMISE} (${order.id})`);
               const orderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
               orderIdsElement?.setAttribute('value', order.id.toString());
@@ -255,7 +255,7 @@ export const updateOrders = async () => {
             paymentButtonElement.setAttribute('value', paymentButtonLabel);
           });
 
-          element.append(formElement);
+          element.appendChild(formElement);
 
         }
       }).catch((error) => {
@@ -268,25 +268,5 @@ export const updateOrders = async () => {
 }
 
 export const OrderListener = async (): Promise<void> => {
-
-  const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
-  if (omiseFormElement) {
-    omiseFormElement.style.display = '';
-    const omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
-    if (omiseAuthorizationElement) {
-      const getAccessToken = async () => {
-        const session = await getStorage('session', true) as Session | null;
-        if (session) {
-          return session?.accessToken || '';
-        } else {
-          return '';
-        }
-      }
-      const loginToken = await getAccessToken();
-      omiseAuthorizationElement.value = loginToken;
-    }
-  }
-
   updateOrders();
-
 }

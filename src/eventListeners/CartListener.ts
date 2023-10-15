@@ -10,21 +10,14 @@ import {
   EL_DNT_MODAL_CART_OPEN_LINK,
   EL_CLASS_ADD_TO_CART_BTN,
   EL_ID_CART_BADGE,
-  EL_ID_CHECKOUT_OMISE_BTN,
-  EL_ID_CHECKOUT_OMISE_SCRIPT,
   EL_CLASS_REMOVE_BTN,
   EL_ID_CART_CHECKOUT_BTN,
-  EL_ID_CHECKOUT_OMISE_FORM,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
 import { cartItemTemplate } from "../templates/cart";
 
 import { getCartItems, removeItemFromCart } from "../api/cart";
 import { CartItem } from "../models/cart";
-import { PAYMENT_REDIRECT } from "../constants/configs";
-import { MSG_INFO_OMISE } from "../constants/messages";
-import { getStorage } from "../utils/storage";
-import { Session } from "../models/user";
 import { NAME_CART_ADD, NAME_CART_ADDED } from "../constants/names";
 import { updatePaymentItems } from "./PaymentListener";
 

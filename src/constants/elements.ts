@@ -1,5 +1,6 @@
 export const EL_ID_LOGIN_FORM = 'email-form';
 export const EL_ID_LOGOUT_BTN = 'logout-button';
+export const EL_ID_REGISTER_FORM = 'register-form';
 export const EL_ID_SELECT_COMPANY = 'company-select';
 export const EL_ID_SELECT_TRIP_DATE = 'date-input';
 export const EL_ID_SELECT_BOAT = 'boat-select';

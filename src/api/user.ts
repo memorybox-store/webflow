@@ -90,6 +90,7 @@ export const signin = async (username: string, password: string) => {
           issued: data['.issued'] ? moment(data['.issued']).format() : null,
         };
         await setStorage('session', session, true);
+        await setStorage('auhv', data.auhv);
         await axios.post(
           `${SERVER}/api/Main/GetAuhv`,
           {
@@ -121,7 +122,11 @@ export const signout = async () => {
     removeStorage('session').then(() => {
       removeStorage('profile').then(() => {
         removeStorage('cookie').then(() => {
-          resolve(true);
+          removeStorage('auhv').then(() => {
+            resolve(true);
+          }).catch(() => {
+            reject();
+          });
         }).catch(() => {
           reject();
         });

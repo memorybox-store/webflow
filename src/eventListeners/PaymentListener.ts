@@ -225,24 +225,6 @@ export const PaymentListener = async (): Promise<void> => {
     });
   }
 
-  const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
-  if (omiseFormElement) {
-    omiseFormElement.style.display = '';
-    const omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
-    if (omiseAuthorizationElement) {
-      const getAccessToken = async () => {
-        const session = await getStorage('session', true) as Session | null;
-        if (session) {
-          return session?.accessToken || '';
-        } else {
-          return '';
-        }
-      }
-      const loginToken = await getAccessToken();
-      omiseAuthorizationElement.value = loginToken;
-    }
-  }
-
   const element = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLFormElement;
   if (element) {
 

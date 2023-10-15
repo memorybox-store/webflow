@@ -1,11 +1,11 @@
-import { EL_ID_LOGIN_FORM } from "../constants/elements";
+import { EL_ID_REGISTER_FORM } from "../constants/elements";
 
 import { signin } from "../api/user";
 
 import { Session } from "../models/user";
 
 export const LoginListener = (): void => {
-	const formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
+	const formElement = document.getElementById(EL_ID_REGISTER_FORM) as HTMLFormElement;
 	formElement?.addEventListener('submit', (event) => {
 
 		event.preventDefault();
@@ -13,6 +13,7 @@ export const LoginListener = (): void => {
 		
 		const formData = new FormData(formElement);
 
+		const name = formData.get('name') as string || '';
 		const username = formData.get('username') as string || '';
 		const password = formData.get('password_input') as string || '';
 
