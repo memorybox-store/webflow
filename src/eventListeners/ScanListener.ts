@@ -156,7 +156,7 @@ export const ScanListener = (): void => {
                           resultRealtimeElement.innerText = msgScanningStatus
                             .replace('{{scanned}}', countScanned.toString())
                             .replace('{{total}}', items.length.toString())
-                            .replace('{{total}}', countAvailable.toString());
+                            .replace('{{found}}', countAvailable.toString());
                         }
                       }
                     }
