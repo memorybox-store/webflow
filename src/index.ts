@@ -86,6 +86,7 @@ const initalizeOmise = async () => {
   const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
   if (omiseFormElement) {
     omiseFormElement.style.display = '';
+    omiseFormElement.classList.add('hidden-force');
     let omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
     if (!omiseAuthorizationElement) {
       omiseAuthorizationElement = document.createElement('input') as HTMLInputElement;
@@ -111,7 +112,7 @@ const initalizeOmise = async () => {
       omiseFormElement.appendChild(omiseAuhvElement);
     }
     const getAuhv = async () => {
-      const session = await getStorage('session', true) as Session | null;
+      const session = await getStorage('auhv', true) as Session | null;
       if (session) {
         return session?.accessToken || '';
       } else {
@@ -120,7 +121,7 @@ const initalizeOmise = async () => {
     }
     const auhv = await getAuhv();
     omiseAuhvElement.value = auhv;
-    let omiseOrderIdsElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
+    let omiseOrderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
     if (!omiseOrderIdsElement) {
       omiseOrderIdsElement = document.createElement('input') as HTMLInputElement;
       omiseOrderIdsElement.setAttribute('type', 'hidden');
