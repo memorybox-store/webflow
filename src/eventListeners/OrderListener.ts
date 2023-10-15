@@ -209,6 +209,13 @@ export const updateOrders = async () => {
                 await cancelOrder(order.id).then(async () => {
                   const orderRemoveElement = document.getElementById(`order-${order.id}`) as HTMLElement;
                   orderRemoveElement?.parentElement.removeChild(orderRemoveElement);
+                  const orderCountElement = document.getElementById(EL_ID_ORDER_COUNT) as HTMLElement;
+                  if (orderCountElement) {
+                    if (orderCountElement.innerText && orderCountElement.innerText !== '0') {
+                      const count = parseInt(orderCountElement.innerText) - 1;
+                      orderCountElement.innerHTML = count.toString();
+                    }
+                  }
                 }).catch((message) => {
                   alert(message);
                 });
