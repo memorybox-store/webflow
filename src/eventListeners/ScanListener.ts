@@ -1,9 +1,3 @@
-import { getProductsScan } from "../api/product";
-import {
-  detectFace,
-  loadFaceModels,
-  matchFaces
-} from "../common/faceScan";
 import {
   EL_CLASS_CARD_PHOTO,
   EL_ID_FACESCAN_BTN,
@@ -12,8 +6,23 @@ import {
   EL_ID_RESULT_SAMPLE,
   EL_ID_RESULT_SUM_MY_PIC
 } from "../constants/elements";
-import { MSG_ERR_INVALID_IMAGE, MSG_ERR_NO_FACE, MSG_FACESCAN_INITIALIZING, MSG_INFO_NOT_AVAIL, MSG_INFO_SCANNING_STATUS } from "../constants/messages";
+import { 
+  MSG_ERR_INVALID_IMAGE, 
+  MSG_ERR_NO_FACE, 
+  MSG_FACESCAN_INITIALIZING, 
+  MSG_INFO_NOT_AVAIL, 
+  MSG_INFO_SCANNING_STATUS 
+} from "../constants/messages";
 import { NAME_SCANNING } from "../constants/names";
+
+import {
+  detectFace,
+  loadFaceModels,
+  matchFaces
+} from "../common/faceScan";
+
+import { getProductsScan } from "../api/product";
+
 import { Product } from "../models/product";
 
 export const ScanListener = (): void => {

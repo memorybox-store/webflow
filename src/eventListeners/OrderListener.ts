@@ -18,12 +18,12 @@ import {
   EL_CLASS_ORDER_CANCEL_BTN,
   EL_CLASS_ORDER_NO
 } from "../constants/elements";
+import { MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
 
 import { loadImageAsBase64 } from "../utils/image";
-import { MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+
 import { cancelOrder, getOrder } from "../api/order";
-import { getStorage } from "../utils/storage";
-import { Session } from "../models/user";
+
 import { Order, OrderItem } from "../models/order";
 
 // Init price format
@@ -245,6 +245,7 @@ export const updateOrders = async () => {
                   'data-button-label',
                   `Checkout ${THBcompact.format(order.amount.total || 0)} THB`
                 );
+                omiseScriptElement.setAttribute('data-currency', 'THB');
               }
               const omiseButtonElement = document.querySelector(`.${EL_ID_CHECKOUT_OMISE_BTN}`) as HTMLElement;
               if (omiseButtonElement) {

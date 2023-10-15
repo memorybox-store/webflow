@@ -2,16 +2,18 @@ import { SERVER } from '../constants/configs';
 import { MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
+import { AxiosResponse } from 'axios';
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
+
+import { checkPartnership, savePartnership } from './partner';
+import { getProduct, getProductDetails } from './product';
+
 import { CartItem } from '../models/cart';
 import { Boat, Company } from '../models/sale';
 import { Product, ProductDetail } from '../models/product';
-import { AxiosResponse } from 'axios';
 import { Order, OrderItem } from '../models/order';
-import { checkPartnership, savePartnership } from './partner';
-import { getProduct, getProductDetails } from './product';
 
 export const getOrder = async (success: boolean, orderId: number | string | '' = '') => {
   return new Promise(async (resolve, reject) => {

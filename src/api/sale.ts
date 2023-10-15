@@ -2,12 +2,12 @@ import { SERVER } from '../constants/configs';
 import { MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
+import { AxiosResponse } from 'axios';
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 
 import { Company, Boat } from '../models/sale';
-import { AxiosResponse } from 'axios';
 
 export const getCompanies = async () => {
   return new Promise(async (resolve, reject) => {

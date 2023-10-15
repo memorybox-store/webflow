@@ -1,9 +1,14 @@
+import { EL_CLASS_USER_NAME, EL_CLASS_USER_AVATAR, EL_ID_CHECKOUT_OMISE_FORM } from './constants/elements';
+import { MSG_INFO_OMISE } from './constants/messages';
+
 import { authen, retrieveProfile, signout } from './api/user';
+import { getStorage } from './utils/storage';
+
+import { Profile, Session } from './models/user';
 
 import { LoginListener } from './eventListeners/LoginListener';
 import { LogoutListener } from './eventListeners/LogoutListener';
 import { ScanListener } from './eventListeners/ScanListener';
-
 import { SearchListener } from './eventListeners/SearchListener';
 import { CartListener } from './eventListeners/CartListener';
 import { ProductListener } from './eventListeners/ProductListener';
@@ -11,11 +16,7 @@ import { SocialLoginListener } from './eventListeners/SocialLoginListener';
 import { PaymentListener } from './eventListeners/PaymentListener';
 import { ProcessPaymentListener } from './eventListeners/ProcessPaymentListener';
 import { OrderListener } from './eventListeners/OrderListener';
-import { Profile, Session } from './models/user';
-import { EL_CLASS_USER_NAME, EL_CLASS_USER_AVATAR, EL_ID_CHECKOUT_OMISE_FORM } from './constants/elements';
 import { UserListener } from './eventListeners/UserListener';
-import { getStorage } from './utils/storage';
-import { MSG_INFO_OMISE } from './constants/messages';
 
 const publicUrls = [
   '/',
@@ -87,6 +88,15 @@ const initalizeOmise = async () => {
   if (omiseFormElement) {
     omiseFormElement.style.display = '';
     omiseFormElement.classList.add('hidden-force');
+    const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
+    if (omiseScriptElement) {
+      omiseScriptElement.setAttribute('data-amount', '0');
+      omiseScriptElement.setAttribute(
+        'data-button-label',
+        `Checkout 0 THB`
+      );
+      omiseScriptElement.setAttribute('data-currency', 'THB');
+    }
     let omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
     if (!omiseAuthorizationElement) {
       omiseAuthorizationElement = document.createElement('input') as HTMLInputElement;
@@ -111,15 +121,7 @@ const initalizeOmise = async () => {
       omiseAuhvElement.setAttribute('name', 'Auhv');
       omiseFormElement.appendChild(omiseAuhvElement);
     }
-    const getAuhv = async () => {
-      const session = await getStorage('auhv', true) as Session | null;
-      if (session) {
-        return session?.accessToken || '';
-      } else {
-        return '';
-      }
-    }
-    const auhv = await getAuhv();
+    const auhv = await getStorage('auhv') as string | '';
     omiseAuhvElement.value = auhv;
     let omiseOrderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
     if (!omiseOrderIdsElement) {
@@ -144,5 +146,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initalizeOmise();
 
   initialize();
-  
+
 });

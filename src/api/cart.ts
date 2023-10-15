@@ -2,13 +2,13 @@ import { SERVER } from '../constants/configs';
 import { MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
-import moment from '../config/moment';
+import { AxiosResponse } from 'axios';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
+
 import { CartItem } from '../models/cart';
 import { Company } from '../models/sale';
 import { Product, ProductDetail } from '../models/product';
-import { AxiosResponse } from 'axios';
 
 export const getCartItems = async () => {
   return new Promise(async (resolve, reject) => {

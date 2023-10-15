@@ -1,8 +1,10 @@
-import axios from '../config/axios';
-import { createRequestHeader, handleResponseError } from '../utils/rest';
-import { MSG_ERR_EMPTY_RES, MSG_ERR_UNKNOWN } from '../constants/messages';
-import { AxiosResponse } from 'axios';
 import { PAYMENT_SERVER } from '../constants/configs';
+import { MSG_ERR_EMPTY_RES, MSG_ERR_UNKNOWN } from '../constants/messages';
+
+import axios from '../config/axios';
+import { AxiosResponse } from 'axios';
+
+import { createRequestHeader, handleResponseError } from '../utils/rest';
 
 export const charge = async (
   token: string = '', 

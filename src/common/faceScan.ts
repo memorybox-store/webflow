@@ -1,7 +1,6 @@
 import {
   nets,
   SsdMobilenetv1Options,
-  detectSingleFace,
   detectAllFaces,
   resizeResults,
   draw,

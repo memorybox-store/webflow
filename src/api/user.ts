@@ -8,12 +8,12 @@ import { MSG_ERR_EMPTY_DATA, MSG_ERR_EMPTY_RES } from '../constants/messages';
 
 import axios from '../config/axios';
 import moment from '../config/moment';
+import { AxiosResponse } from 'axios';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 import { getStorage, removeStorage, setStorage } from '../utils/storage';
 
 import { Profile, Session } from '../models/user';
-import { AxiosResponse } from 'axios';
 
 export const authen = async () => {
   return new Promise(async (resolve, reject) => {

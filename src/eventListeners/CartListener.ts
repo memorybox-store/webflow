@@ -14,12 +14,14 @@ import {
   EL_ID_CART_CHECKOUT_BTN,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
+import { NAME_CART_ADD, NAME_CART_ADDED } from "../constants/names";
+
 import { cartItemTemplate } from "../templates/cart";
 
-import { getCartItems, removeItemFromCart } from "../api/cart";
-import { CartItem } from "../models/cart";
-import { NAME_CART_ADD, NAME_CART_ADDED } from "../constants/names";
 import { updatePaymentItems } from "./PaymentListener";
+import { getCartItems, removeItemFromCart } from "../api/cart";
+
+import { CartItem } from "../models/cart";
 
 // Init price format
 const THB = new Intl.NumberFormat(

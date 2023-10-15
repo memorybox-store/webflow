@@ -4,13 +4,13 @@ import {
 	EL_ID_SELECT_COMPANY,
 	EL_ID_SELECT_TRIP_DATE
 } from "../constants/elements";
+import { MSG_ERR_EMPTY_BOAT, MSG_ERR_EMPTY_COMPANY, MSG_ERR_EMPTY_DATE } from "../constants/messages";
 
 import moment from '../config/moment';
 
 import { getCompanies, getBoats } from "../api/sale";
 
 import { Company } from "../models/sale";
-import { MSG_ERR_EMPTY_BOAT, MSG_ERR_EMPTY_COMPANY, MSG_ERR_EMPTY_DATE } from "../constants/messages";
 
 export const SearchListener = (): void => {
 

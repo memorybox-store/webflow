@@ -1,10 +1,25 @@
-import { EL_ID_FB_BTN, EL_ID_GOOGLE_BTN, EL_ID_LINE_BTN, EL_ID_LOGIN_FORM } from "../constants/elements";
+import { 
+	EL_ID_FB_BTN, 
+	EL_ID_GOOGLE_BTN, 
+	EL_ID_LINE_BTN 
+} from "../constants/elements";
+import { 
+	LINE_CHANNEL_ID, 
+	SOCIAL_LOGIN_REDIRECT 
+} from "../constants/configs";
 
 import hello from '../config/hellojs';
-import { checkSocialAuthen, lineTokenFromCode, lineProfile, register, retrieveProfile, saveSocialAuthen, signin, lineVerify } from "../api/user";
-
 import { HelloJSLoginEventArguement } from "hellojs";
-import { LINE_CHANNEL_ID, SOCIAL_LOGIN_REDIRECT } from "../constants/configs";
+
+import { 
+	checkSocialAuthen, 
+	lineTokenFromCode, 
+	register, 
+	retrieveProfile, 
+	saveSocialAuthen, 
+	signin, 
+	lineVerify 
+} from "../api/user";
 
 export const SocialLoginListener = (): void => {
 

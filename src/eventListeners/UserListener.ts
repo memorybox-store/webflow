@@ -1,4 +1,8 @@
-import { EL_ID_USER_TAB_CART, EL_ID_USER_TAB_DOWNLOAD, EL_ID_USER_TAB_PAYMENT } from "../constants/elements";
+import { 
+	EL_ID_USER_TAB_CART, 
+	EL_ID_USER_TAB_DOWNLOAD, 
+	EL_ID_USER_TAB_PAYMENT 
+} from "../constants/elements";
 
 export const UserListener = (): void => {
 

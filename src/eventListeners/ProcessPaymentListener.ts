@@ -7,6 +7,7 @@ import {
   EL_ID_PAYMENT_PROCESS_SCANNABLE,
   EL_ID_PAYMENT_PROCESS_SCANNABLE_HELPER
 } from "../constants/elements";
+
 export const ProcessPaymentListener = async (): Promise<void> => {
 
   const element = document.getElementById(EL_ID_PAYMENT_PROCESS) as HTMLElement;

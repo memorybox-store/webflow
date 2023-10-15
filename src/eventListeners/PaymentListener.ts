@@ -19,16 +19,17 @@ import {
   EL_NAME_PAYMENT_CHECKBOX,
   EL_ID_USER_TAB_PAYMENT
 } from "../constants/elements";
+import { MSG_ERR_EMPTY_ORDER, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+
+import { updateOrders } from "./OrderListener";
+import { removeCartItem, updateCartItems } from "./CartListener";
+
+import { loadImageAsBase64 } from "../utils/image";
 
 import { getCartItems } from "../api/cart";
-import { CartItem } from "../models/cart";
-import { removeCartItem, updateCartItems } from "./CartListener";
-import { loadImageAsBase64 } from "../utils/image";
-import { MSG_ERR_EMPTY_ORDER, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
 import { createOrder } from "../api/order";
-import { getStorage } from "../utils/storage";
-import { Session } from "../models/user";
-import { updateOrders } from "./OrderListener";
+
+import { CartItem } from "../models/cart";
 
 // Init price format
 const THB = new Intl.NumberFormat(

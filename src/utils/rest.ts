@@ -1,9 +1,12 @@
 import { API_KEY } from '../constants/configs';
+import { 
+  MSG_ERR_API_NOT_PERMIT, 
+  MSG_ERR_UNKNOWN 
+} from '../constants/messages';
 
 import { getStorage } from './storage';
 
 import { Session } from '../models/user';
-import { MSG_ERR_API_NOT_PERMIT, MSG_ERR_UNKNOWN } from '../constants/messages';
 
 export const createRequestHeader = async (
   withSession: boolean | string = false,

@@ -19,19 +19,20 @@ import {
   EL_ID_RESULT_HEADER_COMPANY,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
+import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING } from "../constants/names";
+import { MSG_INFO_NOT_AVAIL } from "../constants/messages";
 
 import moment from '../config/moment';
+
+import { updateCartItems } from "./CartListener";
+
+import { loadImageAsBase64 } from "../utils/image";
 
 import { addItemToCart, getCartItems } from "../api/cart";
 import { getProducts } from "../api/product";
 
-import { updateCartItems } from "./CartListener";
-
 import { Product } from "../models/product";
 import { CartItem } from "../models/cart";
-import { loadImageAsBase64 } from "../utils/image";
-import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING } from "../constants/names";
-import { MSG_INFO_NOT_AVAIL } from "../constants/messages";
 
 export const ProductListener = (): void => {
 
