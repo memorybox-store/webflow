@@ -11,8 +11,8 @@ export const FACE_MODEL_PATH = 'https://cdn.jsdelivr.net/gh/memorybox-store/webf
 /* Social Connect */
 export const FB_CLIENT_ID = '6561287033956755';
 export const GOOGLE_CLIENT_ID = '532569826179-hidekptp59e1clfqacb8tvakdsfh62j4.apps.googleusercontent.com';
-export const LINE_CHANNEL_ID = '2000967285';
-export const LINE_CHANNEL_SECRET = 'd9b64e13f5c925d99fce9d2530fa3670';
+export const LINE_CHANNEL_ID = '1657564187';
+export const LINE_CHANNEL_SECRET = 'af37d35c267e3fc14e8fc751d5f3479b';
 export const SOCIAL_LOGIN_REDIRECT = 'https://memorybox.webflow.io/log-in';
 // export const SOCIAL_LOGIN_REDIRECT = 'http://localhost:8080/';
 
