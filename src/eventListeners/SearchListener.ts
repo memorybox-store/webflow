@@ -77,6 +77,12 @@ export const SearchListener = (): void => {
 		}
 		const dropdownElement = document.getElementById(EL_ID_DROPDOWN_COMPANY) as HTMLSelectElement;
 		if (dropdownElement) {
+			const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
+			if (dropdownLabel) {
+				dropdownLabel.innerHTML = 'Select company...';
+			}
+			const dropdownSelect = dropdownElement.parentElement.querySelector('select');
+			dropdownSelect.value = '';
 			if (dropdownElement.hasChildNodes()) {
 				const dropdownSelect = dropdownElement.parentElement.querySelector('select');
 				if (dropdownSelect) {
@@ -177,6 +183,12 @@ export const SearchListener = (): void => {
 		}
 		const dropdownElement = document.getElementById(EL_ID_DROPDOWN_BOAT) as HTMLSelectElement;
 		if (dropdownElement) {
+			const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
+			if (dropdownLabel) {
+				dropdownLabel.innerHTML = 'Select boat...';
+			}
+			const dropdownSelect = dropdownElement.parentElement.querySelector('select');
+			dropdownSelect.value = '';
 			if (dropdownElement.hasChildNodes()) {
 				const dropdownSelect = dropdownElement.parentElement.querySelector('select');
 				if (dropdownSelect) {
