@@ -20,14 +20,14 @@ export const SearchListener = (): void => {
 	let companyOptions: Array<any> = [
 		{
 			value: '',
-			text: 'Select company...'
+			text: 'Select Company...'
 		}
 	];
 
 	let boatOptions: Array<any> = [
 		{
 			value: '',
-			text: 'Boat...'
+			text: 'Select Boat...'
 		}
 	];
 
@@ -43,7 +43,7 @@ export const SearchListener = (): void => {
 		companyOptions = [
 			{
 				value: '',
-				text: 'Select company...'
+				text: 'Select Company...'
 			},
 			...data.map((item: Company) => (
 				{
@@ -79,7 +79,7 @@ export const SearchListener = (): void => {
 		if (dropdownElement) {
 			const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
 			if (dropdownLabel) {
-				dropdownLabel.innerHTML = 'Select company...';
+				dropdownLabel.innerHTML = 'Select Company...';
 			}
 			const dropdownSelect = dropdownElement.parentElement.querySelector('select');
 			dropdownSelect.value = '';
@@ -185,7 +185,7 @@ export const SearchListener = (): void => {
 		if (dropdownElement) {
 			const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
 			if (dropdownLabel) {
-				dropdownLabel.innerHTML = 'Select boat...';
+				dropdownLabel.innerHTML = 'Select Boat...';
 			}
 			const dropdownSelect = dropdownElement.parentElement.querySelector('select');
 			dropdownSelect.value = '';
