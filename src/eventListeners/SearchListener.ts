@@ -1,4 +1,6 @@
 import {
+	EL_ID_DROPDOWN_BOAT,
+	EL_ID_DROPDOWN_COMPANY,
 	EL_ID_FIND_FORM,
 	EL_ID_SELECT_BOAT,
 	EL_ID_SELECT_COMPANY,
@@ -73,6 +75,64 @@ export const SearchListener = (): void => {
 				}
 			}
 		}
+		const dropdownElement = document.getElementById(EL_ID_DROPDOWN_COMPANY) as HTMLSelectElement;
+		if (dropdownElement) {
+			if (dropdownElement.hasChildNodes()) {
+				const dropdownSelect = dropdownElement.parentElement.querySelector('select');
+				if (dropdownSelect) {
+					if (dropdownSelect.hasChildNodes()) {
+						const nodes: Array<any> = Object.entries(dropdownSelect.childNodes).map(
+							([_, node]) => node
+						);
+						const commonNodes = nodes.filter(
+							(node) => node.nodeType !== 3
+						);
+						for (const node of nodes) {
+							dropdownSelect.removeChild(node);
+						}
+						const optionElementTemplate = commonNodes[0];
+						for (const option of companyOptions) {
+							const selectOptionElement: any = optionElementTemplate.cloneNode(true);
+							selectOptionElement.setAttribute('value', option.value);
+							selectOptionElement.innerText = option.text;
+							dropdownSelect.appendChild(selectOptionElement);
+						};
+					}
+				}
+				const dropdownLink = dropdownElement.parentElement.querySelector('nav');
+				if (dropdownLink) {
+					if (dropdownLink.hasChildNodes()) {
+						const nodes: Array<any> = Object.entries(dropdownLink.childNodes).map(
+							([_, node]) => node
+						);
+						const commonNodes = nodes.filter(
+							(node) => node.tagName === 'A'
+						);
+						for (const node of commonNodes) {
+							dropdownLink.removeChild(node);
+						}
+						const optionElementTemplate = commonNodes[0];
+						for (const option of companyOptions) {
+							const selectOptionElement: any = optionElementTemplate.cloneNode(true);
+							selectOptionElement.innerText = option.text;
+							selectOptionElement.addEventListener("click", () => {
+								dropdownElement.classList.remove('w--open');
+								dropdownLink.classList.remove('w--open');
+								const dropdownArrow = dropdownElement.querySelector('.w-icon-dropdown-toggle');
+								dropdownArrow?.setAttribute(
+									'style', 
+									'transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;'
+								);
+								const dropdownSelect = dropdownElement.parentElement.querySelector('select');
+								dropdownSelect.value = option.value;
+								loadBoats(option.value, date);
+							});
+							dropdownLink.appendChild(selectOptionElement);
+						};
+					}
+				}
+			}
+		}
 	}
 
 	const setBoats = (data: Company[]) => {
@@ -111,6 +171,63 @@ export const SearchListener = (): void => {
 				}
 			}
 		}
+		const dropdownElement = document.getElementById(EL_ID_DROPDOWN_BOAT) as HTMLSelectElement;
+		if (dropdownElement) {
+			if (dropdownElement.hasChildNodes()) {
+				const dropdownSelect = dropdownElement.parentElement.querySelector('select');
+				if (dropdownSelect) {
+					if (dropdownSelect.hasChildNodes()) {
+						const nodes: Array<any> = Object.entries(dropdownSelect.childNodes).map(
+							([_, node]) => node
+						);
+						const commonNodes = nodes.filter(
+							(node) => node.nodeType !== 3
+						);
+						for (const node of nodes) {
+							dropdownSelect.removeChild(node);
+						}
+						const optionElementTemplate = commonNodes[0];
+						for (const option of boatOptions) {
+							const selectOptionElement: any = optionElementTemplate.cloneNode(true);
+							selectOptionElement.setAttribute('value', option.value);
+							selectOptionElement.innerText = option.text;
+							dropdownSelect.appendChild(selectOptionElement);
+						};
+					}
+				}
+				const dropdownLink = dropdownElement.parentElement.querySelector('nav');
+				if (dropdownLink) {
+					if (dropdownLink.hasChildNodes()) {
+						const nodes: Array<any> = Object.entries(dropdownLink.childNodes).map(
+							([_, node]) => node
+						);
+						const commonNodes = nodes.filter(
+							(node) => node.tagName === 'A'
+						);
+						for (const node of commonNodes) {
+							dropdownLink.removeChild(node);
+						}
+						const optionElementTemplate = commonNodes[0];
+						for (const option of boatOptions) {
+							const selectOptionElement: any = optionElementTemplate.cloneNode(true);
+							selectOptionElement.innerText = option.text;
+							selectOptionElement.addEventListener("click", () => {
+								dropdownElement.classList.remove('w--open');
+								dropdownLink.classList.remove('w--open');
+								const dropdownArrow = dropdownElement.querySelector('.w-icon-dropdown-toggle');
+								dropdownArrow?.setAttribute(
+									'style', 
+									'transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;'
+								);
+								const dropdownSelect = dropdownElement.parentElement.querySelector('select');
+								dropdownSelect.value = option.value;
+							});
+							dropdownLink.appendChild(selectOptionElement);
+						};
+					}
+				}
+			}
+		}
 	}
 
 	const loadCompanies = () => {
@@ -137,12 +254,24 @@ export const SearchListener = (): void => {
 
 	const companyElement = document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 	if (companyElement) {
-		loadCompanies();
 		companyElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
 			company = value;
 			loadBoats(value, date);
 		});
+	}
+
+	const companyDropdownElement = document.getElementById(EL_ID_DROPDOWN_COMPANY) as HTMLElement;
+	if (companyDropdownElement) {
+		companyDropdownElement.addEventListener("change", (event: any) => {
+			const value = event.target.value;
+			company = value;
+			loadBoats(value, date);
+		});
+	}
+
+	if (companyElement || companyDropdownElement) {
+		loadCompanies();
 	}
 
 	const dateElement = document.getElementById(EL_ID_SELECT_TRIP_DATE) as HTMLInputElement;
@@ -204,8 +333,8 @@ export const SearchListener = (): void => {
 
 			const formData = new FormData(formElement);
 
-			const boat = formData.get('boat') as string || '';
-			const company = formData.get('company') as string || '';
+			const boat = formData.get('boat_dropdown') as string || '';
+			const company = formData.get('company_dropdown') as string || '';
 			const date = formData.get('date') as string || '';
 
 			if (company && date && boat) {

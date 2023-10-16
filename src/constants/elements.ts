@@ -18,6 +18,8 @@ export const EL_ID_FIND_FORM = 'finder-form';
 export const EL_ID_SELECT_COMPANY = 'company-select';
 export const EL_ID_SELECT_TRIP_DATE = 'date-input';
 export const EL_ID_SELECT_BOAT = 'boat-select';
+export const EL_ID_DROPDOWN_COMPANY = 'company-selector';
+export const EL_ID_DROPDOWN_BOAT = 'boat-selector';
 export const EL_CLASS_SELECT = 'w-dropdown-link';
 export const EL_CLASS_SELECT_OPEN = 'w--open';
 
