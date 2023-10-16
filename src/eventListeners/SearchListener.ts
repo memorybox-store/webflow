@@ -149,7 +149,7 @@ export const SearchListener = (): void => {
 		boatOptions = [
 			{
 				value: '',
-				text: 'Boat...'
+				text: 'Select Boat...'
 			},
 			...data.map((item: Company) => (
 				{
