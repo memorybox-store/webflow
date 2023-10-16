@@ -123,6 +123,10 @@ export const SearchListener = (): void => {
 									'style', 
 									'transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;'
 								);
+								const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
+								if (dropdownLabel) {
+									dropdownLabel.innerHTML = option.text;
+								}
 								const dropdownSelect = dropdownElement.parentElement.querySelector('select');
 								dropdownSelect.value = option.value;
 								loadBoats(option.value, date);
@@ -219,6 +223,10 @@ export const SearchListener = (): void => {
 									'style', 
 									'transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;'
 								);
+								const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
+								if (dropdownLabel) {
+									dropdownLabel.innerHTML = option.text;
+								}
 								const dropdownSelect = dropdownElement.parentElement.querySelector('select');
 								dropdownSelect.value = option.value;
 							});
