@@ -61,7 +61,7 @@ export const SocialLoginListener = (): void => {
 					alert(message);
 				});
 			} else {
-				register(socialId, password, socialName).then(() => {
+				register(socialName, socialId, password, 'line').then(() => {
 					signin(socialId, password).then(() => {
 						saveSocialAuthen(platform, socialId).then(() => {
 							location.href = `./${URL_FINDER}`;

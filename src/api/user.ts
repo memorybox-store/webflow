@@ -30,7 +30,7 @@ export const authen = async () => {
   });
 };
 
-export const register = async (name: string = '', email: string, password: string) => {
+export const register = async (name: string = '', email: string, password: string, social: string | false = false) => {
   return new Promise(async (resolve, reject) => {
     const payload = {
       "User_Name": name,
@@ -38,35 +38,43 @@ export const register = async (name: string = '', email: string, password: strin
       "Password": password,
       "Email": email
     }
-    await checkEmail(email).then(async (result) => {
-      if (!result) {
-        await axios.post(
-          `${SERVER}/api/Main/Register`,
-          payload,
-          {
-            ...{
-              headers: await createRequestHeader(false, true)
-            }
-          }
-        ).then(async (response: AxiosResponse<any, any>) => {
-          if (response.data) {
-            if (response.data.Status === 'Success') {
-              resolve(true);
-            } else {
-              reject(response.data.Message);
-            }
-          } else {
-            reject(MSG_ERR_EMPTY_RES);
-          }
-        }).catch((error) => {
-          reject(handleResponseError(error));
-        });
-      } else {
-        reject(MSG_ERR_EMAIL_EXIST);
+    if (!social) {
+      await checkEmail(email).then(async (result) => {
+        if (!result) {
+        } else {
+          reject(MSG_ERR_EMAIL_EXIST);
+        }
+      }).catch((error) => {
+        reject(handleResponseError(error));
+      });
+    } else {
+      const payload = {
+        "User_Name": name,
+        "UserName": email,
+        "Password": password
       }
-    }).catch((error) => {
-      reject(handleResponseError(error));
-    });
+      await axios.post(
+        `${SERVER}/api/Main/Register`,
+        payload,
+        {
+          ...{
+            headers: await createRequestHeader(false, true)
+          }
+        }
+      ).then(async (response: AxiosResponse<any, any>) => {
+        if (response.data) {
+          if (response.data.Status === 'Success') {
+            resolve(true);
+          } else {
+            reject(response.data.Message);
+          }
+        } else {
+          reject(MSG_ERR_EMPTY_RES);
+        }
+      }).catch((error) => {
+        reject(handleResponseError(error));
+      });
+    }
   });
 }
 
