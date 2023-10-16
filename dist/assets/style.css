@@ -22,11 +22,6 @@
   display: grid !important;
 }
 
-.finder-wrapper-text {
-  position: sticky;
-  z-index: 100000;
-}
-
 .open-popup-button {
   cursor: pointer;
 }
