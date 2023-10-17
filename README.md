@@ -13,7 +13,12 @@ To get started, make sure you have Node.js installed on your machine.
 
 ### Installation
 
-Clone the repository to your local device and run the following command.
+Clone this repository.
+
+```bash
+git clone https://github.com/your-username/memorybox-server.git
+cd memorybox-server
+```
 
 ```bash
 npm install
