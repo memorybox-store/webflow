@@ -45,6 +45,7 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
               await getProductDetails(item.item_id).then(async (dataProductDetail: ProductDetail) => {
                 itemProductDetails = dataProductDetail;
               }).catch(() => { });
+              console.log(itemProduct);
               const boat: Boat = {
                 id: null,
                 name: item.mst_name || null,
@@ -93,7 +94,7 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 price: item.maxprice || item.unit_price || itemProductDetails?.unit?.price || null,
                 image: {
                   marked: itemProduct?.image.marked || null,
-                  unmarked: itemProduct?.image.marked || null,
+                  unmarked: success ? item.img_path : null,
                 },
                 details: productDetail,
                 boat: boat,

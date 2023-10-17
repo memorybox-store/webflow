@@ -19,6 +19,7 @@ import { ProcessPaymentListener } from './eventListeners/ProcessPaymentListener'
 import { OrderListener } from './eventListeners/OrderListener';
 import { UserListener } from './eventListeners/UserListener';
 import { RgisterListener } from './eventListeners/RegisterListener';
+import { DownloadListener } from './eventListeners/DownloadListener';
 
 const publicUrls = [
   `/`,
@@ -82,6 +83,7 @@ const initialize = () => {
       ProcessPaymentListener();
       OrderListener();
       UserListener();
+      DownloadListener();
     }
   })
 }

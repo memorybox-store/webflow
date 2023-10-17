@@ -265,3 +265,10 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Order Item Size Class:** `order-item-size`
 - **Order Item Price Class:** `order-item-price`
 - **Order Item Image Class:** `order-item-image`
+
+## Download
+
+- **Download List Class:** `download-list`
+- **Download Item Class:** `download-item`
+- **Download Button Class:** `download-button`
+- **Download Item Sample ID:** `download-item-sample`

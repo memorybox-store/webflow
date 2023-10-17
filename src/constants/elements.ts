@@ -42,8 +42,8 @@ export const EL_CLASS_CART_LIST = 'w-commerce-commercecartlist';
 export const EL_CLASS_CART_AMOUNT = 'w-commerce-commercecartordervalue';
 export const EL_CLASS_CART_EMPTY = 'w-commerce-commercecartemptystate';
 export const EL_CLASS_CART_ERROR = 'w-commerce-commercecarterrorstate';
-export const EL_DNT_CHECKOUT_BTN = 'cart-checkout-button';
 export const EL_CLASS_REMOVE_BTN = 'cart-remove-button';
+export const EL_DNT_CHECKOUT_BTN = 'cart-checkout-button';
 export const EL_DNT_MODAL_CART = 'commerce-cart-container-wrapper';
 export const EL_DNT_MODAL_CART_OPEN_LINK = 'commerce-cart-open-link';
 export const EL_DNT_MODAL_CART_CLOSE_LINK = 'commerce-cart-close-link';
@@ -129,3 +129,10 @@ export const EL_CLASS_ORDER_ITEM_COMPANY = 'order-item-company';
 export const EL_CLASS_ORDER_ITEM_SIZE = 'order-item-size';
 export const EL_CLASS_ORDER_ITEM_PRICE = 'order-item-price';
 export const EL_CLASS_ORDER_ITEM_IMG = 'order-item-image';
+
+/* Download */
+export const EL_CLASS_DOWNLOAD_ITEM = 'download-item';
+export const EL_CLASS_DOWNLOAD_BUTTON = 'download-button';
+export const EL_ID_DOWNLOAD_COUNT = 'download-count';
+export const EL_ID_DOWNLOAD_LIST = 'download-list';
+export const EL_ID_DOWNLOAD_ITEM_SAMPLE = 'download-item-sample';
