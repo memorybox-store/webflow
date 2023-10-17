@@ -119,50 +119,50 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Login
 
-- **Login Form:** `email-form`
-- **Logout Button:** `logout-button`
+- **Login Form ID:** `email-form`
+- **Logout Button ID:** `logout-button`
 
 ## Register
 
-- **Register Form:** `register-form`
-- **Register Accept:** `register-accept`
+- **Register Form ID:** `register-form`
+- **Register Accep IDt:** `register-accept`
 
 ## User
 
-- **User Name:** `user-name`
-- **User Avatar:** `user-avatar`
-- **User Tab Cart:** `user-tab-cart`
-- **User Tab Payment:** `user-tab-payment`
-- **User Tab Download:** `user-tab-download`
+- **User Name Class:** `user-name`
+- **User Avatar Class:** `user-avatar`
+- **User Tab Cart ID:** `user-tab-cart`
+- **User Tab Payment ID:** `user-tab-payment`
+- **User Tab Download ID:** `user-tab-download`
 
 ## Finder
 
-- **Finder Form:** `finder-form`
-- **Select Company:** `company-select`
-- **Select Trip Date:** `date-input`
-- **Select Boat:** `boat-select`
-- **Dropdown Company:** `company-selector`
-- **Dropdown Boat:** `boat-selector`
-- **Select Class:** `w-dropdown-link`
-- **Select Open Class:** `w--open`
+- **Finder Form ID:** `finder-form`
+- **Select Company ID:** `company-select`
+- **Select Trip Date ID:** `date-input`
+- **Select Boat ID:** `boat-select`
+- **Dropdown Company ID (Deprecated):** `company-selector`
+- **Dropdown Boat (Deprecated):** `boat-selector`
+- **Select Class (Deprecated):** `w-dropdown-link`
+- **Select Open Class (Deprecated):** `w--open`
 
 ## Social Connect
 
-- **Facebook Button:** `fb-login-button`
-- **Google Button:** `google-login-button`
-- **Line Button:** `line-login-button`
+- **Facebook Button ID:** `fb-login-button`
+- **Google Button ID:** `google-login-button`
+- **Line Button ID:** `line-login-button`
 
 ## Omise
 
-- **Checkout Omise Form:** `checkout-omise-form`
-- **Checkout Omise Script:** `checkout-omise-script`
-- **Omise Checkout Button:** `omise-checkout-button`
+- **Checkout Omise Form ID:** `checkout-omise-form`
+- **Checkout Omise Script ID:** `checkout-omise-script`
+- **Omise Checkout Button ID:** `omise-checkout-button`
 
 ## Cart
 
-- **Cart Items Badge:** `cart-items-badge`
-- **Cart Button:** `charge-button`
-- **Cart Checkout Button:** `cart-checkout-button`
+- **Cart Items Badge ID:** `cart-items-badge`
+- **Cart Button ID:** `charge-button`
+- **Cart Checkout Button ID:** `cart-checkout-button`
 - **Cart Form Class:** `w-commerce-commercecartform`
 - **Cart List Class:** `w-commerce-commercecartlist`
 - **Cart Amount Class:** `w-commerce-commercecartordervalue`
@@ -176,24 +176,24 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Face Scan
 
-- **Facescan Uploader:** `facescan-uploader`
-- **Facescan Form:** `facescan-form`
-- **Facescan Input:** `facescan-input`
-- **Facescan Preview:** `facescan-preview`
-- **Facescan Button:** `facescan-submit-button`
-- **Photo Scanning Status:** `photo-scanning-status`
-- **Photo Scanning:** `photo-scanning`
+- **Facescan Uploader ID:** `facescan-uploader`
+- **Facescan Form ID:** `facescan-form`
+- **Facescan Input ID:** `facescan-input`
+- **Facescan Preview ID:** `facescan-preview`
+- **Facescan Button ID:** `facescan-submit-button`
+- **Photo Scanning Status ID:** `photo-scanning-status`
+- **Photo Scanning ID:** `photo-scanning`
 
 ## Result (Product)
 
-- **Result My Pic:** `result-my-pic`
-- **Result Total:** `result-total-pic`
-- **Result Boat:** `result-boat`
-- **Result Company:** `result-company`
-- **Result Header Company:** `result-header-company`
-- **Result Header Date:** `result-header-date`
-- **Result Container:** `result-container`
-- **Result Sample:** `result-sample`
+- **Result My Pic ID:** `result-my-pic`
+- **Result Total ID:** `result-total-pic`
+- **Result Boat ID:** `result-boat`
+- **Result Company ID:** `result-company`
+- **Result Header Company ID:** `result-header-company`
+- **Result Header Date ID:** `result-header-date`
+- **Result Container ID:** `result-container`
+- **Result Sample ID:** `result-sample`
 - **Card Photo Class:** `card-photo`
 - **Popup Image Class:** `popup-image`
 - **Popup Close Button Class:** `popup-close-button`
@@ -216,13 +216,13 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Payment
 
-- **Payment Form:** `payment-form`
-- **Payment Summary:** `payment-summary`
-- **Payment Discount Badge:** `payment-discount-badge`
-- **Payment Total:** `payment-total`
-- **Payment List:** `payment-list`
-- **Payment Item Sample:** `payment-item-sample`
-- **Payment Checkout Button:** `payment-checkout-button`
+- **Payment Form ID:** `payment-form`
+- **Payment Summary ID:** `payment-summary`
+- **Payment Discount Badge ID:** `payment-discount-badge`
+- **Payment Total ID:** `payment-total`
+- **Payment List ID:** `payment-list`
+- **Payment Item Sample ID:** `payment-item-sample`
+- **Payment Checkout Button ID:** `payment-checkout-button`
 - **Checkbox All ID:** `checkbox-payment-all`
 - **Checkbox Payment Name:** `checkbox_payment`
 - **Payment Item Class:** `payment-item`
