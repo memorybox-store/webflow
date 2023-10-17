@@ -43,11 +43,13 @@ export const SearchListener = (): void => {
 		companyOptions = [
 			{
 				value: '',
+				subvalue: '',
 				text: 'Select Company...'
 			},
 			...data.map((item: Company) => (
 				{
 					value: item.id,
+					subvalue: item.shortname,
 					text: item.name
 				}
 			))
@@ -69,9 +71,18 @@ export const SearchListener = (): void => {
 					for (const option of companyOptions) {
 						const selectOptionElement: any = optionElementTemplate.cloneNode(true);
 						selectOptionElement.setAttribute('value', option.value);
+						selectOptionElement.setAttribute('date-shortname', option.subvalue);
 						selectOptionElement.innerText = option.text;
 						element.appendChild(selectOptionElement);
 					};
+				}
+			}
+			const url = new URL(window.location.href);
+			const companyShortname = url.searchParams.get("company");
+			if (companyShortname) {
+				const select: any = companyOptions.find((item: any) => item.subvalue === companyShortname);
+				if (select) {
+					element.value = select.value.toString();
 				}
 			}
 		}

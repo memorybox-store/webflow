@@ -96,7 +96,6 @@ export const DownloadListener = async (): Promise<void> => {
   
               const downloadButtonElement = cardElement.querySelector(`.${EL_CLASS_DOWNLOAD_BUTTON}`) as HTMLElement;
               if (downloadButtonElement) {
-                console.log(downloadButtonElement);
   
                 // Split the URL by dot
                 const parts = item.product.image.unmarked.split('.');

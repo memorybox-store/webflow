@@ -45,7 +45,6 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
               await getProductDetails(item.item_id).then(async (dataProductDetail: ProductDetail) => {
                 itemProductDetails = dataProductDetail;
               }).catch(() => { });
-              console.log(itemProduct);
               const boat: Boat = {
                 id: null,
                 name: item.mst_name || null,
@@ -223,7 +222,6 @@ export const createOrder = async (cartItems: CartItem[]) => {
       });
     }
     if (!errors.length) {
-      console.log(results);
       resolve({
         orderIds: results,
         total: totalCalculation

@@ -2,6 +2,7 @@ export interface Company {
   id: number | null;
   title: string | null;
   name: string | null;
+  shortname?: string | null;
   branch: string | null;
   contactPerson: string | null;
   tel: string | null;

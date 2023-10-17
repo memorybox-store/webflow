@@ -231,8 +231,20 @@ export const ProductListener = (): void => {
               // Init image in popup
               const imgPopupElement = popupElement.querySelector('img') as HTMLImageElement;
               if (imgPopupElement) {
-                imgPopupElement.src = item.image.marked;
-                imgPopupElement.srcset = item.image.marked;
+
+                imgPopupElement.crossOrigin = 'anonymous';
+                imgPopupElement.setAttribute('crossorigin', 'anonymous');
+  
+                imgPopupElement.src = '';
+                imgPopupElement.srcset = '';
+                loadImageAsBase64(item.image.marked).then((base64Data) => {
+                  // Use the base64Data in the src attribute of the img element
+                  imgPopupElement.src = base64Data;
+                  imgPopupElement.srcset = base64Data;
+                }).catch((error) => {
+                  console.error(error.message);
+                });
+
               }
 
               // Register click event to dismiss popup

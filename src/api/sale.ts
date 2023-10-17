@@ -29,6 +29,7 @@ export const getCompanies = async () => {
               id: item.a1,
               title: item.a13,
               name: item.a4,
+              shortname: item.a2,
               branch: item.a14,
               contactPerson: item.a7,
               tel: item.a8,
