@@ -16,7 +16,7 @@ To get started, make sure you have Node.js installed on your machine.
 Clone this repository.
 
 ```bash
-git clone https://github.com/your-username/memorybox-server.git
+git clone https://github.com/memorybox-store/webflow.git
 cd memorybox-server
 ```
 
