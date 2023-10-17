@@ -268,7 +268,8 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Download
 
-- **Download List Class:** `download-list`
+- **Download List ID:** `download-list`
+- **Download Count ID:** `download-count`
 - **Download Item Class:** `download-item`
 - **Download Button Class:** `download-button`
 - **Download Item Sample ID:** `download-item-sample`
