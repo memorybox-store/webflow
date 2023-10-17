@@ -274,6 +274,7 @@ export const SearchListener = (): void => {
 
 	const companyElement = document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 	if (companyElement) {
+		loadCompanies();
 		companyElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
 			company = value;
@@ -281,18 +282,18 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	const companyDropdownElement = document.getElementById(EL_ID_DROPDOWN_COMPANY) as HTMLElement;
-	if (companyDropdownElement) {
-		companyDropdownElement.addEventListener("change", (event: any) => {
-			const value = event.target.value;
-			company = value;
-			loadBoats(value, date);
-		});
-	}
+	// const companyDropdownElement = document.getElementById(EL_ID_DROPDOWN_COMPANY) as HTMLElement;
+	// if (companyDropdownElement) {
+	// 	companyDropdownElement.addEventListener("change", (event: any) => {
+	// 		const value = event.target.value;
+	// 		company = value;
+	// 		loadBoats(value, date);
+	// 	});
+	// }
 
-	if (companyElement || companyDropdownElement) {
-		loadCompanies();
-	}
+	// if (companyElement || companyDropdownElement) {
+	// 	loadCompanies();
+	// }
 
 	const dateElement = document.getElementById(EL_ID_SELECT_TRIP_DATE) as HTMLInputElement;
 	if (dateElement) {
@@ -353,8 +354,8 @@ export const SearchListener = (): void => {
 
 			const formData = new FormData(formElement);
 
-			const boat = formData.get('boat_dropdown') as string || '';
-			const company = formData.get('company_dropdown') as string || '';
+			const boat = formData.get('boat') as string || '';
+			const company = formData.get('company') as string || '';
 			const date = formData.get('date') as string || '';
 
 			if (company && date && boat) {
