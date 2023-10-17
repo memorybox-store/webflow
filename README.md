@@ -168,11 +168,11 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Cart Amount Class:** `w-commerce-commercecartordervalue`
 - **Cart Empty Class:** `w-commerce-commercecartemptystate`
 - **Cart Error Class:** `w-commerce-commercecarterrorstate`
-- **Don't Checkout Button:** `cart-checkout-button`
 - **Remove Button Class:** `cart-remove-button`
-- **Modal Cart Class:** `commerce-cart-container-wrapper`
-- **Modal Cart Open Link Class:** `commerce-cart-open-link`
-- **Modal Cart Close Link Class:** `commerce-cart-close-link`
+- **Cart Checkout Button dnt- attribute:** `cart-checkout-button`
+- **Modal Cart dnt- attribute:** `commerce-cart-container-wrapper`
+- **Modal Cart Open Link dnt- attribute:** `commerce-cart-open-link`
+- **Modal Cart Close Link dnt- attribute:** `commerce-cart-close-link`
 
 ## Face Scan
 
