@@ -41,7 +41,8 @@ export const UserListener = (): void => {
 			const message = url.searchParams.get("message") || '';
 			const type = url.searchParams.get("type") || '';
 			const orders = url.searchParams.get("orders") || '';
-			window.history.pushState(null, "", path);
+			// console.log(window.location.href);
+			// window.history.pushState(null, "", path);
 			paymentAuthorize(
 				status === 'successful' ? true : false,
 				ref,
