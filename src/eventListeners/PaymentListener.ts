@@ -30,6 +30,7 @@ import { getCartItems } from "../api/cart";
 import { createOrder } from "../api/order";
 
 import { CartItem } from "../models/cart";
+import { PAYMENT_REDIRECT } from "../constants/configs";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -267,6 +268,15 @@ export const PaymentListener = async (): Promise<void> => {
               if (omiseButtonElement) {
                 omiseButtonElement.innerHTML = `Checkout ${THBcompact.format(data.total || 0)} THB`;
                 omiseButtonElement.click();
+              }
+              const omiseReturnURIElement = omiseFormElement.querySelector('input[name="omiseReturnURI"]') as HTMLInputElement;
+              if (!omiseReturnURIElement) {
+                const returnURI = element.getAttribute('data-payment-return-uri') || '';
+                if (returnURI) {
+                  omiseReturnURIElement.setAttribute('value', returnURI);
+                } else {
+                  omiseReturnURIElement.setAttribute('value', PAYMENT_REDIRECT);
+                }
               }
             }
             getCartItems().then((updatedData: CartItem[]) => {

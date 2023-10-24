@@ -1,6 +1,6 @@
 import { EL_CLASS_USER_NAME, EL_CLASS_USER_AVATAR, EL_ID_CHECKOUT_OMISE_FORM } from './constants/elements';
 import { MSG_INFO_OMISE } from './constants/messages';
-import { URL_FINDER, URL_LOGIN } from './constants/urls';
+import { URL_FINDER, URL_LOGIN, URL_SIGNIN, URL_SIGNUP } from './constants/urls';
 
 import { authen, retrieveProfile, signout } from './api/user';
 import { getStorage } from './utils/storage';
@@ -20,12 +20,21 @@ import { OrderListener } from './eventListeners/OrderListener';
 import { UserListener } from './eventListeners/UserListener';
 import { RgisterListener } from './eventListeners/RegisterListener';
 import { DownloadListener } from './eventListeners/DownloadListener';
+import { getOrder } from './api/order';
+import { Order } from './models/order';
+import { PAYMENT_REDIRECT } from './constants/configs';
 
 const publicUrls = [
   `/`,
   `/${URL_LOGIN}`,
-  `/sign-in`,
-  `/sign-up`,
+  `/th-${URL_LOGIN}`,
+  `/cn-${URL_LOGIN}`,
+  `/${URL_SIGNUP}`,
+  `/th-${URL_SIGNUP}`,
+  `/cn-${URL_SIGNUP}`,
+  `/${URL_SIGNIN}`,
+  `/th-${URL_SIGNIN}`,
+  `/cn-${URL_SIGNIN}`,
 ];
 
 const checkAuthen = () => {
@@ -34,8 +43,14 @@ const checkAuthen = () => {
     const path: string = window.location.pathname;
     await authen().then(async () => {
       result = true;
-      if (path === `/${URL_LOGIN}`) {
-        location.href = `./${URL_FINDER}`;
+      if (path === `/${URL_LOGIN}` || path === `/th-${URL_LOGIN}`) {
+        const url = new URL(window.location.href);
+        const redirect: string = decodeURIComponent(url.searchParams.get("redirect"));
+        if (redirect) {
+          location.href = redirect;
+        } else {
+          location.href = `./${URL_FINDER}`;
+        }
       } else {
         await retrieveProfile().then((profile: Profile) => {
           const nameElements = document.querySelectorAll(`.${EL_CLASS_USER_NAME}`) as NodeListOf<HTMLElement>;
@@ -61,7 +76,8 @@ const checkAuthen = () => {
         alert(message || '');
       });
       if (!publicUrls.includes(path)) {
-        location.href = `./${URL_LOGIN}`;
+        const redirect: string = encodeURIComponent(window.location.href);
+        location.href = `./${URL_LOGIN}?redirect=${redirect}`;
       }
     });
     resolve(result);
@@ -84,6 +100,8 @@ const initialize = () => {
       OrderListener();
       UserListener();
       DownloadListener();
+      getOrder(false).then(async (orders: Order[]) => {
+      });
     }
   })
 }
@@ -143,6 +161,14 @@ const initalizeOmise = async () => {
       omiseFormElement.appendChild(omiseDescriptionElement);
     }
     omiseDescriptionElement.setAttribute('value', `${MSG_INFO_OMISE}`);
+    let omiseReturnURIElement = omiseFormElement.querySelector('input[name="omiseReturnURI"]') as HTMLInputElement;
+    if (!omiseReturnURIElement) {
+      omiseReturnURIElement = document.createElement('input') as HTMLInputElement;
+      omiseReturnURIElement.setAttribute('type', 'hidden');
+      omiseReturnURIElement.setAttribute('name', 'omiseReturnURI');
+      omiseFormElement.appendChild(omiseReturnURIElement);
+    }
+    omiseReturnURIElement.setAttribute('value', PAYMENT_REDIRECT);
   }
 }
 

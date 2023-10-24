@@ -1,24 +1,26 @@
-import { 
-	EL_ID_FB_BTN, 
-	EL_ID_GOOGLE_BTN, 
-	EL_ID_LINE_BTN 
+import {
+	EL_ID_FB_BTN,
+	EL_ID_GOOGLE_BTN,
+	EL_ID_LINE_BTN,
+	EL_ID_LOGIN_FORM,
+	EL_ID_REGISTER_FORM
 } from "../constants/elements";
-import { 
-	LINE_CHANNEL_ID, 
-	SOCIAL_LOGIN_REDIRECT 
+import {
+	LINE_CHANNEL_ID,
+	SOCIAL_LOGIN_REDIRECT
 } from "../constants/configs";
 
 import hello from '../config/hellojs';
 import { HelloJSLoginEventArguement } from "hellojs";
 
-import { 
-	checkSocialAuthen, 
-	lineTokenFromCode, 
-	register, 
-	retrieveProfile, 
-	saveSocialAuthen, 
-	signin, 
-	lineVerify 
+import {
+	checkSocialAuthen,
+	lineTokenFromCode,
+	register,
+	retrieveProfile,
+	saveSocialAuthen,
+	signin,
+	lineVerify
 } from "../api/user";
 import { URL_FINDER } from "../constants/urls";
 
@@ -53,7 +55,16 @@ export const SocialLoginListener = (): void => {
 			if (result) {
 				signin(socialId, password).then(() => {
 					retrieveProfile().then(() => {
-						location.href = `./${URL_FINDER}`;
+						let formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
+						if (!formElement) {
+							formElement = document.getElementById(EL_ID_REGISTER_FORM) as HTMLFormElement;
+						}
+						const redirect = formElement?.getAttribute('data-redirect-uri') || '';
+						if (redirect) {
+							location.href = redirect;
+						} else {
+							location.href = `./${URL_FINDER}`;
+						}
 					}).catch((message) => {
 						alert(message);
 					});
@@ -64,7 +75,16 @@ export const SocialLoginListener = (): void => {
 				register(socialName, socialId, password, 'line').then(() => {
 					signin(socialId, password).then(() => {
 						saveSocialAuthen(platform, socialId).then(() => {
-							location.href = `./${URL_FINDER}`;
+							let formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
+							if (!formElement) {
+								formElement = document.getElementById(EL_ID_REGISTER_FORM) as HTMLFormElement;
+							}
+							const redirect = formElement?.getAttribute('data-redirect-uri') || '';
+							if (redirect) {
+								location.href = redirect;
+							} else {
+								location.href = `./${URL_FINDER}`;
+							}
 						}).catch((message) => {
 							alert(message);
 						});

@@ -25,6 +25,7 @@ import { loadImageAsBase64 } from "../utils/image";
 import { cancelOrder, getOrder } from "../api/order";
 
 import { Order, OrderItem } from "../models/order";
+import { PAYMENT_REDIRECT } from "../constants/configs";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -251,6 +252,15 @@ export const updateOrders = async () => {
               if (omiseButtonElement) {
                 omiseButtonElement.innerHTML = `Checkout ${THBcompact.format(order.amount.total || 0)} THB`;
                 omiseButtonElement.click();
+              }
+              const omiseReturnURIElement = omiseFormElement.querySelector('input[name="omiseReturnURI"]') as HTMLInputElement;
+              if (!omiseReturnURIElement) {
+                const returnURI = formElement.getAttribute('data-payment-return-uri') || '';
+                if (returnURI) {
+                  omiseReturnURIElement.setAttribute('value', returnURI);
+                } else {
+                  omiseReturnURIElement.setAttribute('value', PAYMENT_REDIRECT);
+                }
               }
             }
             paymentButtonElement.setAttribute('value', paymentButtonLabel);

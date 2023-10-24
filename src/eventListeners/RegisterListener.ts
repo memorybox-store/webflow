@@ -26,7 +26,12 @@ export const RgisterListener = (): void => {
 	
 			register(name, email, password).then(() => {
 				alert(msgSuccess);
-				location.href = `./${URL_LOGIN}`;
+				const redirect = formElement.getAttribute('data-redirect-uri') || '';
+				if (redirect) {
+					location.href = redirect;
+				} else {
+					location.href = `./${URL_LOGIN}`;
+				}
 			}).catch((message) => {
 				alert(message);
 			});

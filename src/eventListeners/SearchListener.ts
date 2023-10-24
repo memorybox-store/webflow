@@ -371,7 +371,12 @@ export const SearchListener = (): void => {
 
 			if (company && date && boat) {
 				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
-				location.href = `./${URL_RESULT}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
+				const result = formElement.getAttribute('data-result-uri') || '';
+				if (result) {
+					location.href = `${result}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
+				} else {
+					location.href = `./${URL_RESULT}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
+				}
 			} else {
 				if (!company) {
 					alert(msgEmptyCompany);

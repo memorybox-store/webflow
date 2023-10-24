@@ -18,7 +18,12 @@ export const LoginListener = (): void => {
 		const password = formData.get('password') as string || '';
 
 		signin(username, password).then((data: Session) => {
-			location.href = `./${URL_FINDER}`;
+			const redirect = formElement.getAttribute('data-redirect-uri') || '';
+			if (redirect) {
+				location.href = redirect;
+			} else {
+				location.href = `./${URL_FINDER}`;
+			}
 		}).catch((message) => {
 			alert(message);
 		});

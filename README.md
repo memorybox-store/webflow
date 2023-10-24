@@ -124,11 +124,13 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Login
 
+- **Login Form Redirect Attribute - URI:** `data-redirect-uri`
 - **Login Form ID:** `email-form`
 - **Logout Button ID:** `logout-button`
 
 ## Register
 
+- **Register Form Attribute - Redirect URI:** `data-redirect-uri`
 - **Register Form ID:** `register-form`
 - **Register Accep IDt:** `register-accept`
 
@@ -142,6 +144,10 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Finder
 
+- **Finder Form Attribute - Result URI:** `data-result-uri`
+- **Finder Form Attribute - Empty Company Message:** `data-empty-company`
+- **Finder Form Attribute - Empty Date Message:** `data-empty-date`
+- **Finder Form Attribute - Empty Boat Message:** `data-empty-boat`
 - **Finder Form ID:** `finder-form`
 - **Select Company ID:** `company-select`
 - **Select Trip Date ID:** `date-input`
@@ -181,6 +187,11 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Face Scan
 
+- **Facescan Button Attribute - No Face Message:** `data-noface`
+- **Facescan Button Attribute - Scanning Message:** `data-scanning`
+- **Facescan Button Attribute - Scanning Status Message:** `data-scanning-status`
+- **Facescan Button Attribute - Invalid Photo Message:** `data-invalid`
+- **Facescan Button Attribute - Initializing Message:** `data-initializing`
 - **Facescan Uploader ID:** `facescan-uploader`
 - **Facescan Form ID:** `facescan-form`
 - **Facescan Input ID:** `facescan-input`
@@ -221,6 +232,8 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Payment
 
+- **Payment Form Attribute - Payment Return URI:** `data-payment-return-uri`
+- **Payment Form Attribute - Empty Item:** `data-empty`
 - **Payment Form ID:** `payment-form`
 - **Payment Summary ID:** `payment-summary`
 - **Payment Discount Badge ID:** `payment-discount-badge`
@@ -238,6 +251,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Payment Item Image Class:** `payment-item-image`
 - **Payment Item Remove Button Class:** `payment-item-remove`
 
+
 ## Payment Process
 
 - **Payment Process ID:** `payment-process`
@@ -248,6 +262,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Order
 
+- **Order Form Attribute - Payment Return URI:** `data-payment-return-uri`
 - **Order Count ID:** `order-count`
 - **Order Form List ID:** `order-form-list`
 - **Order Form Sample ID:** `order-form-sample`

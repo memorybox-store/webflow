@@ -322,8 +322,8 @@ export const ProductListener = (): void => {
   }
 
   // Load on specific page
-  const path: string = window.location.pathname;
-  if (path === '/result') {
+  const element = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
+  if (element) {
     const url = new URL(window.location.href);
     const boatId = url.searchParams.get("fid");
     const date = url.searchParams.get("date");
