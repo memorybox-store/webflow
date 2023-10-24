@@ -120,11 +120,11 @@ const initalizeOmise = async () => {
       );
       omiseScriptElement.setAttribute('data-currency', 'THB');
     }
-    let omiseAuthorizationElement = omiseFormElement.querySelector('input[name="Authorization"]') as HTMLInputElement;
+    let omiseAuthorizationElement = omiseFormElement.querySelector('input[name="authorization"]') as HTMLInputElement;
     if (!omiseAuthorizationElement) {
       omiseAuthorizationElement = document.createElement('input') as HTMLInputElement;
       omiseAuthorizationElement.setAttribute('type', 'hidden');
-      omiseAuthorizationElement.setAttribute('name', 'Authorization');
+      omiseAuthorizationElement.setAttribute('name', 'authorization');
       omiseFormElement.appendChild(omiseAuthorizationElement);
     }
     const getAccessToken = async () => {
@@ -137,11 +137,11 @@ const initalizeOmise = async () => {
     }
     const loginToken = await getAccessToken();
     omiseAuthorizationElement.value = loginToken;
-    let omiseAuhvElement = omiseFormElement.querySelector('input[name="Auhv"]') as HTMLInputElement;
+    let omiseAuhvElement = omiseFormElement.querySelector('input[name="auhv"]') as HTMLInputElement;
     if (!omiseAuhvElement) {
       omiseAuhvElement = document.createElement('input') as HTMLInputElement;
       omiseAuhvElement.setAttribute('type', 'hidden');
-      omiseAuhvElement.setAttribute('name', 'Auhv');
+      omiseAuhvElement.setAttribute('name', 'auhv');
       omiseFormElement.appendChild(omiseAuhvElement);
     }
     const auhv = await getStorage('auhv') as string | '';
