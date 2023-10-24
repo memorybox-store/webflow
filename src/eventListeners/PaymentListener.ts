@@ -253,9 +253,9 @@ export const PaymentListener = async (): Promise<void> => {
             const omiseFormElement = document.getElementById(EL_ID_CHECKOUT_OMISE_FORM) as HTMLFormElement;
             if (omiseFormElement) {
               const omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
-              omiseDescriptionElement?.setAttribute('value', `${MSG_INFO_OMISE} (${data.orderIds.join(', ')})`);
-              const orderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
-              orderIdsElement?.setAttribute('value', data.orderIds.join(','));
+              omiseDescriptionElement?.setAttribute('value', `${MSG_INFO_OMISE} (${data.orders.join(', ')})`);
+              const ordersElement = omiseFormElement.querySelector('input[name="orders"]') as HTMLInputElement;
+              ordersElement?.setAttribute('value', data.orders.join(','));
               const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
               if (omiseScriptElement) {
                 omiseScriptElement.setAttribute('data-amount', (data.total * 100).toString());

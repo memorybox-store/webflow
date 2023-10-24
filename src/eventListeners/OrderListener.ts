@@ -237,8 +237,8 @@ export const updateOrders = async () => {
             if (omiseFormElement) {
               let omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;
               omiseDescriptionElement?.setAttribute('value', `${MSG_INFO_OMISE} (${order.id})`);
-              const orderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
-              orderIdsElement?.setAttribute('value', order.id.toString());
+              const ordersElement = omiseFormElement.querySelector('input[name="orders"]') as HTMLInputElement;
+              ordersElement?.setAttribute('value', order.id.toString());
               const omiseScriptElement = omiseFormElement.querySelector('script') as HTMLElement;
               if (omiseScriptElement) {
                 omiseScriptElement.setAttribute('data-amount', (order.amount.total * 100).toString());

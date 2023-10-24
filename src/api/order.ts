@@ -283,7 +283,7 @@ export const createOrder = async (cartItems: CartItem[]) => {
     }
     if (!errors.length) {
       resolve({
-        orderIds: results,
+        orders: results,
         total: totalCalculation
       });
     } else {

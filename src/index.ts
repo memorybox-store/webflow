@@ -146,11 +146,11 @@ const initalizeOmise = async () => {
     }
     const auhv = await getStorage('auhv') as string | '';
     omiseAuhvElement.value = auhv;
-    let omiseOrderIdsElement = omiseFormElement.querySelector('input[name="orderIds"]') as HTMLInputElement;
+    let omiseOrderIdsElement = omiseFormElement.querySelector('input[name="orders"]') as HTMLInputElement;
     if (!omiseOrderIdsElement) {
       omiseOrderIdsElement = document.createElement('input') as HTMLInputElement;
       omiseOrderIdsElement.setAttribute('type', 'hidden');
-      omiseOrderIdsElement.setAttribute('name', 'orderIds');
+      omiseOrderIdsElement.setAttribute('name', 'orders');
       omiseFormElement.appendChild(omiseOrderIdsElement);
     }
     let omiseDescriptionElement = omiseFormElement.querySelector('input[name="omiseDescription"]') as HTMLInputElement;

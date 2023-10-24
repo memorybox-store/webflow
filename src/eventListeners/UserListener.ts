@@ -36,7 +36,7 @@ export const UserListener = (): void => {
 		const status = url.searchParams.get("status") || '';
 		const code = url.searchParams.get("code") || '';
 		const message = url.searchParams.get("message") || '';
-		const refno = url.searchParams.get("refno") || '';
+		const ref = url.searchParams.get("ref") || '';
 		const type = url.searchParams.get("type") || '';
 		const orders = url.searchParams.get("orders") || '';
 
