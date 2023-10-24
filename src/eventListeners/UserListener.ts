@@ -1,3 +1,4 @@
+import { paymentAuthorize } from "../api/payment";
 import {
 	EL_ID_USER_TAB_CART,
 	EL_ID_USER_TAB_DOWNLOAD,
@@ -34,17 +35,27 @@ export const UserListener = (): void => {
 
 		const url = new URL(window.location.href);
 		const status = url.searchParams.get("status") || '';
-		const code = url.searchParams.get("code") || '';
-		const message = url.searchParams.get("message") || '';
-		const ref = url.searchParams.get("ref") || '';
-		const type = url.searchParams.get("type") || '';
-		const orders = url.searchParams.get("orders") || '';
-
-		window.history.pushState(null, "", path);
-		if (status === 'error' && message) {
-			alert(decodeURIComponent(message));
-		} else {
-
+		if (status) {
+			const ref = url.searchParams.get("ref") || '';
+			const code = url.searchParams.get("code") || '';
+			const message = url.searchParams.get("message") || '';
+			const type = url.searchParams.get("type") || '';
+			const orders = url.searchParams.get("orders") || '';
+			window.history.pushState(null, "", path);
+			paymentAuthorize(
+				status === 'successful' ? true : false,
+				ref,
+				type,
+				code,
+				message,
+				orders
+			).then(() => {
+				if (status === 'error' && message) {
+					alert(decodeURIComponent(message));
+				}
+			}).catch((message) => {
+				alert(message);
+			});
 		}
 
 	}

@@ -32,66 +32,6 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
       if (response.data) {
         if (response.data.Status === 'Success') {
           const data: Array<any> = response.data.Data.sort((a: any, b: any) => b.order_id - a.order_id);
-          const docPayload: any = {
-            fn: "addrowdoc",
-            data: [
-              {
-                inv_name: "",
-                partner_id: data[0].partner_id,
-                comp_id: data[0].comp_id,
-                btype: "1",
-                vat_using_id: "2",
-                inv_date: "2022-11-20T14:17:50.925Z",
-                inv_duedate: "2022-11-20T14:17:50.925Z",
-                credit_term: "0",
-                credit_term_num: "",
-                doctype_id: "R-TV",
-                doc_gp_id: "R-TV",
-                deposit: 0,
-                discount: 0,
-                reference_no: "SO6511-0004",
-                dtDetail: [
-                  {
-                    order_item_id: 35,
-                    item_ms_id: 2432,
-                    item_unitid: 1,
-                    item_qty: 1,
-                    item_unitprice: 99,
-                    item_discount: 0,
-                    item_cost_id: 1,
-                    item_remark: null
-                  },
-                  {
-                    order_item_id: 36,
-                    item_ms_id: 2478,
-                    item_unitid: 1,
-                    item_qty: 1,
-                    item_unitprice: 99,
-                    item_discount: 0,
-                    item_cost_id: 1,
-                    item_remark: null
-                  },
-                  {
-                    order_item_id: 37,
-                    item_ms_id: 2482,
-                    item_unitid: 1,
-                    item_qty: 1,
-                    item_unitprice: 99,
-                    item_discount: 0,
-                    item_cost_id: 1,
-                    item_remark: null
-                  }
-                ],
-                pay_payment_id: "",
-                pay_pf_number: "",
-                pay_pf_bank_id: "",
-                pay_pf_duedate: "",
-                pay_pf_bankaccount_no: "",
-                pay_pf_bankaccount_branch: ""
-              }
-            ]
-          }
-          console.log(JSON.stringify(docPayload).replace(/"/g, '\\"'));
           const orderNos = [...new Set(data.map((item: any) => item.order_no))];
           let orders: Order[] = [];
           for (let orderNo of orderNos) {
