@@ -34,9 +34,9 @@ export const UserListener = (): void => {
 		}
 
 		const url = new URL(window.location.href);
-		const status = url.searchParams.get("status") || '';
-		if (status) {
-			const ref = url.searchParams.get("ref") || '';
+		const ref = url.searchParams.get("ref") || '';
+		if (ref) {
+			const status = url.searchParams.get("status") || 'successful';
 			const code = url.searchParams.get("code") || '';
 			const message = url.searchParams.get("message") || '';
 			const type = url.searchParams.get("type") || '';
