@@ -1,6 +1,19 @@
-import { EL_CLASS_USER_NAME, EL_CLASS_USER_AVATAR, EL_ID_CHECKOUT_OMISE_FORM } from './constants/elements';
+import { 
+  EL_CLASS_USER_NAME, 
+  EL_CLASS_USER_AVATAR, 
+  EL_ID_CHECKOUT_OMISE_FORM 
+} from './constants/elements';
 import { MSG_INFO_OMISE } from './constants/messages';
-import { URL_FINDER, URL_LOGIN, URL_SIGNIN, URL_SIGNUP } from './constants/urls';
+import { 
+  URL_FINDER, 
+  URL_HELP_CENTER, 
+  URL_LOGIN, 
+  URL_PRIVACY_POLICY, 
+  URL_SIGNIN, 
+  URL_SIGNUP, 
+  URL_TERMS 
+} from './constants/urls';
+import { PAYMENT_REDIRECT } from './constants/configs';
 
 import { authen, retrieveProfile, signout } from './api/user';
 import { getStorage } from './utils/storage';
@@ -22,7 +35,6 @@ import { RgisterListener } from './eventListeners/RegisterListener';
 import { DownloadListener } from './eventListeners/DownloadListener';
 import { getOrder } from './api/order';
 import { Order } from './models/order';
-import { PAYMENT_REDIRECT } from './constants/configs';
 
 const publicUrls = [
   `/`,
@@ -35,6 +47,15 @@ const publicUrls = [
   `/${URL_SIGNIN}`,
   `/th-${URL_SIGNIN}`,
   `/cn-${URL_SIGNIN}`,
+  `/${URL_PRIVACY_POLICY}`,
+  `/th-${URL_PRIVACY_POLICY}`,
+  `/cn-${URL_PRIVACY_POLICY}`,
+  `/${URL_TERMS}`,
+  `/th-${URL_TERMS}`,
+  `/cn-${URL_TERMS}`,
+  `/${URL_HELP_CENTER}`,
+  `/th-${URL_HELP_CENTER}`,
+  `/cn-${URL_HELP_CENTER}`,
 ];
 
 const checkAuthen = () => {
