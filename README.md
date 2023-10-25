@@ -124,32 +124,35 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Login
 
-- **Login Form Attribute - Redirect URI:** `data-redirect-uri`
-- **Login Form ID:** `email-form`
-- **Logout Button ID:** `logout-button`
+- **Form Attribute - Redirect URI:** `data-redirect-uri`
+- **Form ID:** `email-form`
+
+## Logout
+
+- **Button ID:** `logout-button`
 
 ## Register
 
-- **Register Form Attribute - Redirect URI:** `data-redirect-uri`
-- **Register Form ID:** `register-form`
-- **Register Accep ID:** `register-accept`
-- **Register Button ID:** `register-button`
+- **Form Attribute - Redirect URI:** `data-redirect-uri`
+- **Form ID:** `register-form`
+- **Accep ID:** `register-accept`
+- **Button ID:** `register-button`
 
 ## User
 
-- **User Name Class:** `user-name`
-- **User Avatar Class:** `user-avatar`
-- **User Tab Cart ID:** `user-tab-cart`
-- **User Tab Payment ID:** `user-tab-payment`
-- **User Tab Download ID:** `user-tab-download`
+- **Name Class:** `user-name`
+- **Avatar Class:** `user-avatar`
+- **Tab Cart ID:** `user-tab-cart`
+- **Tab Payment ID:** `user-tab-payment`
+- **Tab Download ID:** `user-tab-download`
 
 ## Finder
 
-- **Finder Form Attribute - Result URI:** `data-result-uri`
-- **Finder Form Attribute - Empty Company Message:** `data-empty-company`
-- **Finder Form Attribute - Empty Date Message:** `data-empty-date`
-- **Finder Form Attribute - Empty Boat Message:** `data-empty-boat`
-- **Finder Form ID:** `finder-form`
+- **Form Attribute - Result URI:** `data-result-uri`
+- **Form Attribute - Empty Company Message:** `data-empty-company`
+- **Form Attribute - Empty Date Message:** `data-empty-date`
+- **Form Attribute - Empty Boat Message:** `data-empty-boat`
+- **Form ID:** `finder-form`
 - **Select Company ID:** `company-select`
 - **Select Trip Date ID:** `date-input`
 - **Select Boat ID:** `boat-select`
@@ -164,57 +167,57 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Google Button ID:** `google-login-button`
 - **Line Button ID:** `line-login-button`
 
-## Omise
+## Opn Payments (Omise)
 
-- **Checkout Omise Form ID:** `checkout-omise-form`
-- **Checkout Omise Script ID:** `checkout-omise-script`
-- **Omise Checkout Button ID:** `omise-checkout-button`
+- **Checkout Form ID:** `checkout-omise-form`
+- **Checkout Script ID:** `checkout-omise-script`
+- **Checkout Button ID:** `omise-checkout-button`
 
 ## Cart
 
-- **Cart Checkout Badge Attribute - Result URI:** `data-checkout-uri`
-- **Cart Checkout Badge Attribute - Remove Prompt Message:** `data-remove-prompt` ({{name}} = Item name)
-- **Cart Checkout Badge Attribute - Cancel Button Confirm Text:** `data-remove-button-confirm`
-- **Cart Checkout Badge Attribute - Cancel Button Cancel Text:** `data-remove-button-cancel`
-- **Cart Items Badge ID:** `cart-items-badge`
-- **Cart Button ID:** `charge-button`
-- **Cart Checkout Button ID:** `cart-checkout-button`
-- **Cart Form Class:** `w-commerce-commercecartform`
-- **Cart List Class:** `w-commerce-commercecartlist`
-- **Cart Amount Class:** `w-commerce-commercecartordervalue`
-- **Cart Empty Class:** `w-commerce-commercecartemptystate`
-- **Cart Error Class:** `w-commerce-commercecarterrorstate`
+- **Checkout Badge Attribute - Result URI:** `data-checkout-uri`
+- **Checkout Badge Attribute - Remove Prompt Message:** `data-remove-prompt` ({{name}} = Item name)
+- **Checkout Badge Attribute - Cancel Button Confirm Text:** `data-remove-button-confirm`
+- **Checkout Badge Attribute - Cancel Button Cancel Text:** `data-remove-button-cancel`
+- **Items Badge ID:** `cart-items-badge`
+- **Button ID:** `charge-button`
+- **Checkout Button ID:** `cart-checkout-button`
+- **Form Class:** `w-commerce-commercecartform`
+- **List Class:** `w-commerce-commercecartlist`
+- **Amount Class:** `w-commerce-commercecartordervalue`
+- **Empty Class:** `w-commerce-commercecartemptystate`
+- **Error Class:** `w-commerce-commercecarterrorstate`
 - **Remove Button Class:** `cart-remove-button`
-- **Cart Checkout Button dnt- attribute:** `cart-checkout-button`
+- **Checkout Button dnt- attribute:** `cart-checkout-button`
 - **Modal Cart dnt- attribute:** `commerce-cart-container-wrapper`
 - **Modal Cart Open Link dnt- attribute:** `commerce-cart-open-link`
 - **Modal Cart Close Link dnt- attribute:** `commerce-cart-close-link`
 
 ## Face Scan
 
-- **Facescan Button Attribute - No Face Message:** `data-noface`
-- **Facescan Button Attribute - Scanning Message:** `data-scanning` ({{scanned}} = Scanned number, {{total}} = Total number, {{found}} = Found number)
-- **Facescan Button Attribute - Scanning Status Message:** `data-scanning-status`
-- **Facescan Button Attribute - Invalid Photo Message:** `data-invalid`
-- **Facescan Button Attribute - Initializing Message:** `data-initializing`
-- **Facescan Uploader ID:** `facescan-uploader`
-- **Facescan Form ID:** `facescan-form`
-- **Facescan Input ID:** `facescan-input`
-- **Facescan Preview ID:** `facescan-preview`
-- **Facescan Button ID:** `facescan-submit-button`
+- **Button Attribute - No Face Message:** `data-noface`
+- **Button Attribute - Scanning Message:** `data-scanning` ({{scanned}} = Scanned number, {{total}} = Total number, {{found}} = Found number)
+- **Button Attribute - Scanning Status Message:** `data-scanning-status`
+- **Button Attribute - Invalid Photo Message:** `data-invalid`
+- **Button Attribute - Initializing Message:** `data-initializing`
+- **Uploader ID:** `facescan-uploader`
+- **Form ID:** `facescan-form`
+- **Input ID:** `facescan-input`
+- **Preview ID:** `facescan-preview`
+- **Button ID:** `facescan-submit-button`
 - **Photo Scanning Status ID:** `photo-scanning-status`
 - **Photo Scanning ID:** `photo-scanning`
 
 ## Result (Product)
 
-- **Result My Pic ID:** `result-my-pic`
-- **Result Total ID:** `result-total-pic`
-- **Result Boat ID:** `result-boat`
-- **Result Company ID:** `result-company`
-- **Result Header Company ID:** `result-header-company`
-- **Result Header Date ID:** `result-header-date`
-- **Result Container ID:** `result-container`
-- **Result Sample ID:** `result-sample`
+- **My Pic ID:** `result-my-pic`
+- **Total ID:** `result-total-pic`
+- **Boat ID:** `result-boat`
+- **Company ID:** `result-company`
+- **Header Company ID:** `result-header-company`
+- **Header Date ID:** `result-header-date`
+- **Container ID:** `result-container`
+- **Sample ID:** `result-sample`
 - **Card Photo Class:** `card-photo`
 - **Popup Image Class:** `popup-image`
 - **Popup Close Button Class:** `popup-close-button`
@@ -237,64 +240,64 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Payment
 
-- **Payment Form Attribute - Payment Return URI:** `data-payment-return-uri`
-- **Payment Form Attribute - Empty Item:** `data-empty`
-- **Payment Form Attribute - Loading:** `data-wait`
-- **Payment Count ID:** `payment-count`
-- **Payment Form ID:** `payment-form`
-- **Payment Summary ID:** `payment-summary`
-- **Payment Discount Badge ID:** `payment-discount-badge`
-- **Payment Total ID:** `payment-total`
-- **Payment List ID:** `payment-list`
-- **Payment Item Sample ID:** `payment-item-sample`
-- **Payment Checkout Button ID:** `payment-checkout-button`
+- **Form Attribute - Payment Return URI:** `data-payment-return-uri`
+- **Form Attribute - Empty Item:** `data-empty`
+- **Form Attribute - Loading:** `data-wait`
+- **Count ID:** `payment-count`
+- **Form ID:** `payment-form`
+- **Summary ID:** `payment-summary`
+- **Discount Badge ID:** `payment-discount-badge`
+- **Total ID:** `payment-total`
+- **List ID:** `payment-list`
+- **Item Sample ID:** `payment-item-sample`
+- **Checkout Button ID:** `payment-checkout-button`
 - **Checkbox All ID:** `checkbox-payment-all`
 - **Checkbox Payment Name:** `checkbox_payment`
-- **Payment Item Class:** `payment-item`
-- **Payment Item Name Class:** `payment-item-name`
-- **Payment Item Company Class:** `payment-item-company`
-- **Payment Item Size Class:** `payment-item-size`
-- **Payment Item Price Class:** `payment-item-price`
-- **Payment Item Image Class:** `payment-item-image`
-- **Payment Item Remove Button Class:** `payment-item-remove`
+- **Item Class:** `payment-item`
+- **Item Name Class:** `payment-item-name`
+- **Item Company Class:** `payment-item-company`
+- **Item Size Class:** `payment-item-size`
+- **Item Price Class:** `payment-item-price`
+- **Item Image Class:** `payment-item-image`
+- **Item Remove Button Class:** `payment-item-remove`
 
 
 ## Payment Process
 
-- **Payment Process ID:** `payment-process`
-- **Payment Process Scannable ID:** `payment-process-scannable`
-- **Payment Process Authorize ID:** `payment-process-authorize`
-- **Payment Process Scannable Helper ID:** `payment-process-scannable-helper`
-- **Payment Process Cancel ID:** `payment-process-cancel`
+- **ID:** `payment-process`
+- **Scannable ID:** `payment-process-scannable`
+- **Authorize ID:** `payment-process-authorize`
+- **Scannable Helper ID:** `payment-process-scannable-helper`
+- **Cancel ID:** `payment-process-cancel`
 
 ## Order
 
-- **Order Form Attribute - Payment Return URI:** `data-payment-return-uri`
-- **Order Form Attribute - Cancel Prompt Message:** `data-cancel-prompt` ({{name}} = Item name)
-- **Order Form Attribute - Cancel Button Confirm Text:** `data-cancel-button-confirm`
-- **Order Form Attribute - Cancel Button Cancel Text:** `data-cancel-button-cancel`
-- **Order Count ID:** `order-count`
-- **Order Form List ID:** `order-form-list`
-- **Order Form Sample ID:** `order-form-sample`
-- **Order Form Class:** `order-form`
-- **Order No Class:** `order-no`
-- **Order Summary Class:** `order-summary`
-- **Order Total Class:** `order-total`
-- **Order List Class:** `order-list`
-- **Order Item Sample Class:** `order-item-sample`
-- **Order Checkout Button Class:** `order-checkout-button`
-- **Order Cancel Button Class:** `order-cancel-button`
-- **Order Item Class:** `order-item`
-- **Order Item Name Class:** `order-item-name`
-- **Order Item Company Class:** `order-item-company`
-- **Order Item Size Class:** `order-item-size`
-- **Order Item Price Class:** `order-item-price`
-- **Order Item Image Class:** `order-item-image`
+- **Form Attribute - Payment Return URI:** `data-payment-return-uri`
+- **Form Attribute - Cancel Prompt Message:** `data-cancel-prompt` ({{name}} = Item name)
+- **Form Attribute - Cancel Button Confirm Text:** `data-cancel-button-confirm`
+- **Form Attribute - Cancel Button Cancel Text:** `data-cancel-button-cancel`
+- **Count ID:** `order-count`
+- **Form List ID:** `order-form-list`
+- **Form Sample ID:** `order-form-sample`
+- **Form Class:** `order-form`
+- **No Class:** `order-no`
+- **Summary Class:** `order-summary`
+- **Total Class:** `order-total`
+- **List Class:** `order-list`
+- **Item Sample Class:** `order-item-sample`
+- **Checkout Button Class:** `order-checkout-button`
+- **Cancel Button Class:** `order-cancel-button`
+- **Item Class:** `order-item`
+- **Item Name Class:** `order-item-name`
+- **Item Company Class:** `order-item-company`
+- **Item Size Class:** `order-item-size`
+- **Item Price Class:** `order-item-price`
+- **Item Image Class:** `order-item-image`
 
 ## Download
 
-- **Download List ID:** `download-list`
-- **Download Count ID:** `download-count`
-- **Download Item Class:** `download-item`
-- **Download Button Class:** `download-button`
-- **Download Item Sample ID:** `download-item-sample`
+- **List ID:** `download-list`
+- **Count ID:** `download-count`
+- **Item Class:** `download-item`
+- **Button Class:** `download-button`
+- **Item Sample ID:** `download-item-sample`
