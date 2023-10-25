@@ -16,7 +16,7 @@ import {
   URL_SIGNUP,
   URL_TERMS
 } from './constants/urls';
-import { PAYMENT_REDIRECT } from './constants/configs';
+import { PAYMENT_REDIRECT, PAYMENT_SERVER } from './constants/configs';
 import { LANG_PREF_CN, LANG_PREF_TH } from './constants/languages';
 import { NAME_OK } from './constants/names';
 
@@ -25,7 +25,7 @@ import './style.css';
 import * as tingle from 'tingle.js';
 
 import { authen, retrieveProfile, signout } from './api/user';
-import { getStorage } from './utils/storage';
+import { getStorage, setStorage } from './utils/storage';
 
 import { Profile, Session } from './models/user';
 
@@ -54,6 +54,18 @@ const modal = new tingle.modal({
 });
 modal.setContent('');
 modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
+
+const modalLoading = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: [],
+  closeLabel: '',
+  cssClass: ['modal-loading'],
+  beforeClose: () => {
+    return true;
+  }
+});
+modalLoading.setContent('<div class="lds-ripple"><div></div><div></div></div>');
 
 const publicUrls = [
   `/`,
@@ -241,6 +253,19 @@ const initalizeOmise = async () => {
       omiseFormElement.appendChild(omiseReturnURIElement);
     }
     omiseReturnURIElement.setAttribute('value', PAYMENT_REDIRECT);
+
+    window.addEventListener("beforeunload", async () => {
+      const omiseFormIFrameElement = document.getElementById('omise-checkout-iframe-app') as HTMLElement;
+      if (omiseFormIFrameElement) {
+        if (
+          omiseFormIFrameElement.style.display === 'block'
+          && omiseFormIFrameElement.style.visibility === 'visible'
+        ) {
+          modalLoading.open();
+        }
+      }
+    });
+
   }
 }
 

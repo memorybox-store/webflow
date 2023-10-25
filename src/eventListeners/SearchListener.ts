@@ -336,6 +336,7 @@ export const SearchListener = (): void => {
 
 	const dateElement = document.getElementById(EL_ID_SELECT_TRIP_DATE) as HTMLInputElement;
 	if (dateElement) {
+		
 		// Create a MutationObserver
 		const observer = new MutationObserver(function (mutationsList) {
 			for (const mutation of mutationsList) {
@@ -349,7 +350,6 @@ export const SearchListener = (): void => {
 				}
 			}
 		});
-
 		observer.observe(dateElement, { attributes: true, attributeFilter: ['value'] });
 
 		dateElement.addEventListener("change", (event: any) => {

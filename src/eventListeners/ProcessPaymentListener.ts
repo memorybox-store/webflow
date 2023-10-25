@@ -13,9 +13,6 @@ export const ProcessPaymentListener = async (): Promise<void> => {
     const url = new URL(window.location.href);
     const authorizeUri = url.searchParams.get("authorize_uri");
     const scannable = url.searchParams.get("scannable");
-    
-    const path: string = window.location.pathname;
-    window.history.pushState(null, "", path);
 
     const authorizeElement = document.getElementById(EL_ID_PAYMENT_PROCESS_AUTHORIZE) as HTMLElement;
     if (authorizeElement) {
