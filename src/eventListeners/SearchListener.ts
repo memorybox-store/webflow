@@ -6,7 +6,17 @@ import {
 	EL_ID_SELECT_COMPANY,
 	EL_ID_SELECT_TRIP_DATE
 } from "../constants/elements";
-import { MSG_ERR_EMPTY_BOAT, MSG_ERR_EMPTY_COMPANY, MSG_ERR_EMPTY_DATE } from "../constants/messages";
+import { 
+	MSG_ERR_EMPTY_BOAT, 
+	MSG_ERR_EMPTY_COMPANY, 
+	MSG_ERR_EMPTY_DATE 
+} from "../constants/messages";
+import { 
+	DATA_ATT_EMPTY_BOAT, 
+	DATA_ATT_EMPTY_COMPANY, 
+	DATA_ATT_EMPTY_DATE, 
+	DATA_ATT_RESULT_URI 
+} from "../constants/attributes";
 
 import moment from '../config/moment';
 
@@ -356,9 +366,9 @@ export const SearchListener = (): void => {
 	if (formElement) {
 		formElement.addEventListener('submit', (event) => {
 
-			const msgEmptyCompany: string = formElement.getAttribute('data-empty-company') || MSG_ERR_EMPTY_COMPANY;
-			const msgEmptyDate: string = formElement.getAttribute('data-empty-date') || MSG_ERR_EMPTY_DATE;
-			const msgEmptyBoat: string = formElement.getAttribute('data-empty-boat') || MSG_ERR_EMPTY_BOAT;
+			const msgEmptyCompany: string = formElement.getAttribute(DATA_ATT_EMPTY_COMPANY) || MSG_ERR_EMPTY_COMPANY;
+			const msgEmptyDate: string = formElement.getAttribute(DATA_ATT_EMPTY_DATE) || MSG_ERR_EMPTY_DATE;
+			const msgEmptyBoat: string = formElement.getAttribute(DATA_ATT_EMPTY_BOAT) || MSG_ERR_EMPTY_BOAT;
 
 			event.preventDefault();
 			event.stopPropagation();
@@ -371,7 +381,7 @@ export const SearchListener = (): void => {
 
 			if (company && date && boat) {
 				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
-				const result = formElement.getAttribute('data-result-uri') || '';
+				const result = formElement.getAttribute(DATA_ATT_RESULT_URI) || '';
 				if (result) {
 					location.href = `${result}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;
 				} else {

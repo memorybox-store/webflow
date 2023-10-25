@@ -168,6 +168,9 @@ export const signin = async (username: string, password: string) => {
 
 export const signout = async () => {
   return new Promise(async (resolve, reject) => {
+    removeStorage('status-mypic');
+    removeStorage('status-total');
+    removeStorage('status-boat');
     removeStorage('session').then(() => {
       removeStorage('profile').then(() => {
         removeStorage('cookie').then(() => {

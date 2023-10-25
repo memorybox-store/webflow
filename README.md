@@ -124,7 +124,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Login
 
-- **Login Form Redirect Attribute - URI:** `data-redirect-uri`
+- **Login Form Attribute - Redirect URI:** `data-redirect-uri`
 - **Login Form ID:** `email-form`
 - **Logout Button ID:** `logout-button`
 
@@ -171,6 +171,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Cart
 
+- **Cart Checkout Button Attribute - Result URI:** `data-checkout-uri`;
 - **Cart Items Badge ID:** `cart-items-badge`
 - **Cart Button ID:** `charge-button`
 - **Cart Checkout Button ID:** `cart-checkout-button`
@@ -234,6 +235,8 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 - **Payment Form Attribute - Payment Return URI:** `data-payment-return-uri`
 - **Payment Form Attribute - Empty Item:** `data-empty`
+- **Payment Form Attribute - Loading:** `data-wait`
+- **Payment Count ID:** `payment-count`
 - **Payment Form ID:** `payment-form`
 - **Payment Summary ID:** `payment-summary`
 - **Payment Discount Badge ID:** `payment-discount-badge`

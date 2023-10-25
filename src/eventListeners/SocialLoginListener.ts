@@ -9,6 +9,7 @@ import {
 	LINE_CHANNEL_ID,
 	SOCIAL_LOGIN_REDIRECT
 } from "../constants/configs";
+import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 
 import hello from '../config/hellojs';
 import { HelloJSLoginEventArguement } from "hellojs";
@@ -59,7 +60,7 @@ export const SocialLoginListener = (): void => {
 						if (!formElement) {
 							formElement = document.getElementById(EL_ID_REGISTER_FORM) as HTMLFormElement;
 						}
-						const redirect = formElement?.getAttribute('data-redirect-uri') || '';
+						const redirect = formElement?.getAttribute(DATA_ATT_REDIRECT_URI) || '';
 						if (redirect) {
 							location.href = redirect;
 						} else {
@@ -79,7 +80,7 @@ export const SocialLoginListener = (): void => {
 							if (!formElement) {
 								formElement = document.getElementById(EL_ID_REGISTER_FORM) as HTMLFormElement;
 							}
-							const redirect = formElement?.getAttribute('data-redirect-uri') || '';
+							const redirect = formElement?.getAttribute(DATA_ATT_REDIRECT_URI) || '';
 							if (redirect) {
 								location.href = redirect;
 							} else {

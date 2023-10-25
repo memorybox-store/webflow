@@ -21,6 +21,7 @@ import {
 } from "../constants/elements";
 import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING } from "../constants/names";
 import { MSG_INFO_NOT_AVAIL } from "../constants/messages";
+import { DATA_ATT_EMPTY } from "../constants/attributes";
 
 import moment from '../config/moment';
 
@@ -33,6 +34,7 @@ import { getProducts } from "../api/product";
 
 import { Product } from "../models/product";
 import { CartItem } from "../models/cart";
+import { getStorage, setStorage } from "../utils/storage";
 
 export const ProductListener = (): void => {
 
@@ -65,22 +67,25 @@ export const ProductListener = (): void => {
       // Init result of image includes my picture
       const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
       if (resultMyPicElement) {
-        const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
-        resultMyPicElement.innerText = msgEmptyMyPic;
+        await getStorage('status-mypic').then((data: string) => {
+          resultMyPicElement.innerText = data || resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
+        });
       }
 
       // Init result of total image
       const resultTotalElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
       if (resultTotalElement) {
-        const msgEmptyTotal: string = resultTotalElement.getAttribute('data-empty') || '0';
-        resultTotalElement.innerText = msgEmptyTotal;
+        await getStorage('status-total').then((data: string) => {
+          resultTotalElement.innerText = data || resultTotalElement.getAttribute(DATA_ATT_EMPTY) || '0';
+        });
       }
 
       // Init result of boat name
       const resultBoatElement = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
       if (resultBoatElement) {
-        const msgEmptyBoat: string = resultBoatElement.getAttribute('data-empty') || '-';
-        resultBoatElement.innerText = msgEmptyBoat;
+        await getStorage('status-boat').then((data: string) => {
+          resultBoatElement.innerText = data || resultBoatElement.getAttribute(DATA_ATT_EMPTY) || '-';
+        });
       }
 
       // Init result of company
@@ -152,11 +157,13 @@ export const ProductListener = (): void => {
           // Update result of image includes my picture
           if (resultTotalElement) {
             resultTotalElement.innerText = data.length.toString();
+            setStorage('status-total', data.length.toString());
           }
 
           // Update result of total image
           if (resultBoatElement) {
             resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
+            setStorage('status-boat', data.length.toString());
           }
 
           for (let item of data) {

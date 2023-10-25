@@ -14,6 +14,7 @@ import {
   MSG_INFO_SCANNING_STATUS 
 } from "../constants/messages";
 import { NAME_SCANNING } from "../constants/names";
+import { DATA_ATT_EMPTY } from "../constants/attributes";
 
 import {
   detectFace,
@@ -24,6 +25,7 @@ import {
 import { getProductsScan } from "../api/product";
 
 import { Product } from "../models/product";
+import { setStorage } from "../utils/storage";
 
 export const ScanListener = (): void => {
 
@@ -65,7 +67,7 @@ export const ScanListener = (): void => {
 
         const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
         if (resultMyPicElement) {
-          const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
+          const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
           resultMyPicElement.innerText = msgEmptyMyPic;
         }
 
@@ -147,6 +149,7 @@ export const ScanListener = (): void => {
                       const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
                       if (resultMyPicElement) {
                         resultMyPicElement.innerText = countAvailable.toString();
+                        setStorage('status-mypic', countAvailable.toString());
                       }
                       const scannedElements = document.querySelectorAll('.scanned') as NodeListOf<HTMLElement>;
                       if (scannedElements) {
@@ -218,7 +221,7 @@ export const ScanListener = (): void => {
                   }
                   const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
                   if (resultMyPicElement) {
-                    const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
+                    const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
                     resultMyPicElement.innerText = msgEmptyMyPic;
                   }
                 }
@@ -244,7 +247,7 @@ export const ScanListener = (): void => {
             }
             const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
             if (resultMyPicElement) {
-              const msgEmptyMyPic: string = resultMyPicElement.getAttribute('data-empty') || MSG_INFO_NOT_AVAIL;
+              const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
               resultMyPicElement.innerText = msgEmptyMyPic;
             }
           }

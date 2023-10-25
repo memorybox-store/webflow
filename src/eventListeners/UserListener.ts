@@ -4,13 +4,14 @@ import {
 	EL_ID_USER_TAB_DOWNLOAD,
 	EL_ID_USER_TAB_PAYMENT
 } from "../constants/elements";
+import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
 import { URL_USER } from "../constants/urls";
 
 export const UserListener = (): void => {
 
 	// Load on specific page
 	const path: string = window.location.pathname;
-	if (path === `/${URL_USER}` || path === `/th-${URL_USER}` || path === `/cn-${URL_USER}`) {
+	if (path === `/${URL_USER}` || path === `/${LANG_PREF_TH}${URL_USER}` || path === `/${LANG_PREF_CN}${URL_USER}`) {
 		const hash: string = window.location.hash;
 		if (hash === '#cart') {
 			const tabElement = document.getElementById(EL_ID_USER_TAB_CART) as HTMLElement;
@@ -42,7 +43,7 @@ export const UserListener = (): void => {
 			const type = url.searchParams.get("type") || '';
 			const orders = url.searchParams.get("orders") || '';
 			// console.log(window.location.href);
-			// window.history.pushState(null, "", path);
+			window.history.pushState(null, "", path);
 			paymentAuthorize(
 				status === 'successful' ? true : false,
 				ref,

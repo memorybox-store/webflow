@@ -4,6 +4,7 @@ import { signin } from "../api/user";
 
 import { Session } from "../models/user";
 import { URL_FINDER } from "../constants/urls";
+import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 
 export const LoginListener = (): void => {
 	const formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
@@ -18,7 +19,7 @@ export const LoginListener = (): void => {
 		const password = formData.get('password') as string || '';
 
 		signin(username, password).then((data: Session) => {
-			const redirect = formElement.getAttribute('data-redirect-uri') || '';
+			const redirect = formElement.getAttribute(DATA_ATT_REDIRECT_URI) || '';
 			if (redirect) {
 				location.href = redirect;
 			} else {

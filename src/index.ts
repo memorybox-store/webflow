@@ -1,7 +1,10 @@
 import { 
   EL_CLASS_USER_NAME, 
   EL_CLASS_USER_AVATAR, 
-  EL_ID_CHECKOUT_OMISE_FORM 
+  EL_ID_CHECKOUT_OMISE_FORM, 
+  EL_ID_RESULT_SUM_BOAT,
+  EL_ID_RESULT_SUM_TOTAL,
+  EL_ID_RESULT_SUM_MY_PIC
 } from './constants/elements';
 import { MSG_INFO_OMISE } from './constants/messages';
 import { 
@@ -14,6 +17,7 @@ import {
   URL_TERMS 
 } from './constants/urls';
 import { PAYMENT_REDIRECT } from './constants/configs';
+import { LANG_PREF_CN, LANG_PREF_TH } from './constants/languages';
 
 import { authen, retrieveProfile, signout } from './api/user';
 import { getStorage } from './utils/storage';
@@ -39,23 +43,23 @@ import { Order } from './models/order';
 const publicUrls = [
   `/`,
   `/${URL_LOGIN}`,
-  `/th-${URL_LOGIN}`,
-  `/cn-${URL_LOGIN}`,
+  `/${LANG_PREF_TH}${URL_LOGIN}`,
+  `/${LANG_PREF_CN}${URL_LOGIN}`,
   `/${URL_SIGNUP}`,
-  `/th-${URL_SIGNUP}`,
-  `/cn-${URL_SIGNUP}`,
+  `/${LANG_PREF_TH}${URL_SIGNUP}`,
+  `/${LANG_PREF_CN}${URL_SIGNUP}`,
   `/${URL_SIGNIN}`,
-  `/th-${URL_SIGNIN}`,
-  `/cn-${URL_SIGNIN}`,
+  `/${LANG_PREF_TH}${URL_SIGNIN}`,
+  `/${LANG_PREF_CN}${URL_SIGNIN}`,
   `/${URL_PRIVACY_POLICY}`,
-  `/th-${URL_PRIVACY_POLICY}`,
-  `/cn-${URL_PRIVACY_POLICY}`,
+  `/${LANG_PREF_TH}${URL_PRIVACY_POLICY}`,
+  `/${LANG_PREF_CN}${URL_PRIVACY_POLICY}`,
   `/${URL_TERMS}`,
-  `/th-${URL_TERMS}`,
-  `/cn-${URL_TERMS}`,
+  `/${LANG_PREF_TH}${URL_TERMS}`,
+  `/${LANG_PREF_CN}${URL_TERMS}`,
   `/${URL_HELP_CENTER}`,
-  `/th-${URL_HELP_CENTER}`,
-  `/cn-${URL_HELP_CENTER}`,
+  `/${LANG_PREF_TH}${URL_HELP_CENTER}`,
+  `/${LANG_PREF_CN}${URL_HELP_CENTER}`,
 ];
 
 const checkAuthen = () => {
@@ -64,7 +68,7 @@ const checkAuthen = () => {
     const path: string = window.location.pathname;
     await authen().then(async () => {
       result = true;
-      if (path === `/${URL_LOGIN}` || path === `/th-${URL_LOGIN}`) {
+      if (path === `/${URL_LOGIN}` || path === `/${LANG_PREF_TH}${URL_LOGIN}` || path === `/${LANG_PREF_CN}${URL_LOGIN}`) {
         const url = new URL(window.location.href);
         const redirect: string = decodeURIComponent(url.searchParams.get("redirect"));
         if (redirect) {
@@ -113,16 +117,46 @@ const initialize = () => {
   ScanListener();
   checkAuthen().then((result: boolean) => {
     if (result) {
+      
+      UserListener();
       CartListener();
       PaymentListener();
       SearchListener();
       ProductListener();
       ProcessPaymentListener();
       OrderListener();
-      UserListener();
       DownloadListener();
-      getOrder(false).then(async (orders: Order[]) => {
-      });
+
+      // Init result of image includes my picture
+      const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+      if (resultMyPicElement) {
+        getStorage('status-mypic').then((data: string) => {
+          if (data) {
+            resultMyPicElement.innerText = data;
+          }
+        });
+      }
+
+      // Init result of total image
+      const resultTotalElement = document.getElementById(EL_ID_RESULT_SUM_TOTAL) as HTMLElement;
+      if (resultTotalElement) {
+        getStorage('status-total').then((data: string) => {
+          if (data) {
+            resultTotalElement.innerText = data;
+          }
+        });
+      }
+
+      // Init result of boat name
+      const resultBoatElement = document.getElementById(EL_ID_RESULT_SUM_BOAT) as HTMLElement;
+      if (resultBoatElement) {
+        getStorage('status-boat').then((data: string) => {
+          if (data) {
+            resultBoatElement.innerText = data;
+          }
+        });
+      }
+
     }
   })
 }

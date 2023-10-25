@@ -17,9 +17,12 @@ import {
   EL_ID_PAYMENT_FORM,
   EL_ID_PAYMENT_CHECKBOX_ALL,
   EL_NAME_PAYMENT_CHECKBOX,
-  EL_ID_USER_TAB_PAYMENT
+  EL_ID_USER_TAB_PAYMENT,
+  EL_ID_PAYMENT_COUNT
 } from "../constants/elements";
 import { MSG_ERR_EMPTY_ORDER, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+import { PAYMENT_REDIRECT } from "../constants/configs";
+import { DATA_ATT_EMPTY, DATA_ATT_PAYMENT_RETURN_URI, DATA_ATT_WAIT } from "../constants/attributes";
 
 import { updateOrders } from "./OrderListener";
 import { removeCartItem, updateCartItems } from "./CartListener";
@@ -30,7 +33,8 @@ import { getCartItems } from "../api/cart";
 import { createOrder } from "../api/order";
 
 import { CartItem } from "../models/cart";
-import { PAYMENT_REDIRECT } from "../constants/configs";
+import { URL_USER } from "../constants/urls";
+import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -204,8 +208,16 @@ const resetPaymentAmount = async () => {
 
 }
 
+const updatePaymentCount = (data: CartItem[]) => {
+  const element = document.getElementById(EL_ID_PAYMENT_COUNT) as HTMLElement;
+  if (element) {
+    element.innerText = data.length.toString();
+  }
+};
+
 export const updatePaymentItems = (data: CartItem[]) => {
   // Batch update summary
+  updatePaymentCount(data);
   updatePaymentList(data);
   resetPaymentAmount();
 }
@@ -230,8 +242,8 @@ export const PaymentListener = async (): Promise<void> => {
   const element = document.getElementById(EL_ID_PAYMENT_FORM) as HTMLFormElement;
   if (element) {
 
-    const msgEmpty: string = element.getAttribute('data-empty') || MSG_ERR_EMPTY_ORDER;
-    const msgWait: string = element.getAttribute('data-wait') || MSG_LOADING;
+    const msgEmpty: string = element.getAttribute(DATA_ATT_EMPTY) || MSG_ERR_EMPTY_ORDER;
+    const msgWait: string = element.getAttribute(DATA_ATT_WAIT) || MSG_LOADING;
 
     element.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -271,7 +283,7 @@ export const PaymentListener = async (): Promise<void> => {
               }
               const omiseReturnURIElement = omiseFormElement.querySelector('input[name="omiseReturnURI"]') as HTMLInputElement;
               if (!omiseReturnURIElement) {
-                const returnURI = element.getAttribute('data-payment-return-uri') || '';
+                const returnURI = element.getAttribute(DATA_ATT_PAYMENT_RETURN_URI) || '';
                 if (returnURI) {
                   omiseReturnURIElement.setAttribute('value', returnURI);
                 } else {
@@ -287,7 +299,7 @@ export const PaymentListener = async (): Promise<void> => {
             });
             updateOrders();
             const path: string = window.location.pathname;
-            if (path === '/user') {
+            if (path === `/${URL_USER}` || path === `/${LANG_PREF_TH}${URL_USER}` || path === `/${LANG_PREF_CN}${URL_USER}`) {
               const tabPaymentElement = document.getElementById(EL_ID_USER_TAB_PAYMENT) as HTMLElement;
               tabPaymentElement?.click();
             }

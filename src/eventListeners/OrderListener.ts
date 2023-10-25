@@ -19,13 +19,14 @@ import {
   EL_CLASS_ORDER_NO
 } from "../constants/elements";
 import { MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+import { PAYMENT_REDIRECT } from "../constants/configs";
+import { DATA_ATT_PAYMENT_RETURN_URI, DATA_ATT_WAIT } from "../constants/attributes";
 
 import { loadImageAsBase64 } from "../utils/image";
 
 import { cancelOrder, getOrder } from "../api/order";
 
 import { Order, OrderItem } from "../models/order";
-import { PAYMENT_REDIRECT } from "../constants/configs";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -42,6 +43,13 @@ const THBcompact = new Intl.NumberFormat(
     minimumFractionDigits: 2,
   }
 );
+
+const updateOrderCount = (data: Order[]) => {
+  const element = document.getElementById(EL_ID_ORDER_COUNT) as HTMLElement;
+  if (element) {
+    element.innerHTML = data.length.toString();
+  }
+};
 
 const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) => {
 
@@ -180,14 +188,11 @@ export const updateOrders = async () => {
     if (templateElement) {
 
       templateElement.classList.add('hidden-force');
-      const msgWait: string = templateElement.getAttribute('data-wait') || MSG_LOADING;
+      const msgWait: string = templateElement.getAttribute(DATA_ATT_WAIT) || MSG_LOADING;
 
       await getOrder(false).then(async (orders: Order[]) => {
 
-        const orderCountElement = document.getElementById(EL_ID_ORDER_COUNT) as HTMLElement;
-        if (orderCountElement) {
-          orderCountElement.innerHTML = orders.length.toString();
-        }
+        updateOrderCount(orders);
 
         for (let order of orders) {
 
@@ -255,7 +260,7 @@ export const updateOrders = async () => {
               }
               const omiseReturnURIElement = omiseFormElement.querySelector('input[name="omiseReturnURI"]') as HTMLInputElement;
               if (!omiseReturnURIElement) {
-                const returnURI = formElement.getAttribute('data-payment-return-uri') || '';
+                const returnURI = formElement.getAttribute(DATA_ATT_PAYMENT_RETURN_URI) || '';
                 if (returnURI) {
                   omiseReturnURIElement.setAttribute('value', returnURI);
                 } else {

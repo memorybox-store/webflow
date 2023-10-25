@@ -1,6 +1,7 @@
 import { EL_ID_REGISTER_ACCEPT, EL_ID_REGISTER_FORM } from "../constants/elements";
 import { MSG_ERR_ACCEPT_TERMS, MSG_SUCCESS } from "../constants/messages";
 import { URL_LOGIN } from "../constants/urls";
+import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 
 import { register } from "../api/user";
 
@@ -26,7 +27,7 @@ export const RgisterListener = (): void => {
 	
 			register(name, email, password).then(() => {
 				alert(msgSuccess);
-				const redirect = formElement.getAttribute('data-redirect-uri') || '';
+				const redirect = formElement.getAttribute(DATA_ATT_REDIRECT_URI) || '';
 				if (redirect) {
 					location.href = redirect;
 				} else {

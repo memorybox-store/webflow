@@ -87,6 +87,7 @@ export const EL_CLASS_REPORT_ADMIN = 'report-admin';
 export const EL_CLASS_REPORT_EMAIL = 'report-email';
 
 /* Payment */
+export const EL_ID_PAYMENT_COUNT = 'payment-count';
 export const EL_ID_PAYMENT_FORM = 'payment-form';
 export const EL_ID_PAYMENT_SUMMARY = 'payment-summary';
 export const EL_ID_PAYMENT_DISCOUNT_BADGE = 'payment-discount-badge';
