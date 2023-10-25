@@ -163,7 +163,7 @@ export const ProductListener = (): void => {
           // Update result of total image
           if (resultBoatElement) {
             resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
-            setStorage('status-boat', data.length.toString());
+            setStorage('status-boat', data.length ? data[0].boat?.name : '-');
           }
 
           for (let item of data) {
