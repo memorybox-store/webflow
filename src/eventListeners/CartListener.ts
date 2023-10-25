@@ -23,6 +23,7 @@ import { getCartItems, removeItemFromCart } from "../api/cart";
 
 import { CartItem } from "../models/cart";
 import { DATA_ATT_CHECKOUT_URI } from "../constants/attributes";
+import { URL_USER } from "../constants/urls";
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -239,38 +240,36 @@ export const CartListener = async (): Promise<void> => {
 
   const element = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
   if (element) {
-    
     load();
+  }
 
-    const checkoutURI = element.getAttribute(DATA_ATT_CHECKOUT_URI);
+  const checkoutURI = element ? element.getAttribute(DATA_ATT_CHECKOUT_URI) : `./${URL_USER}#cart`;
 
-    // Init checkout button
-    const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
-    if (ecomCheckoutElement) {
-      ecomCheckoutElement.removeAttribute('data-node-type');
-      const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
-      checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
-      checkoutButtonElement.setAttribute('href', checkoutURI);
-      ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
-    }
-  
-    // Init cart modal
-    const modalElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART}"]`) as HTMLElement;
-    if (modalElement) {
-      modalElement.parentNode.removeChild(modalElement);
-      document.querySelector('body')?.appendChild(modalElement);
-      const modalLinkElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART_OPEN_LINK}"]`) as HTMLElement;
-      modalLinkElement?.addEventListener('click', async () => {
-        modalElement.classList.remove('hidden-force');
-        modalElement.classList.add('flex-force');
-      });
-      const modalCloseElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART_CLOSE_LINK}"]`) as HTMLElement;
-      modalCloseElement?.addEventListener('click', async () => {
-        modalElement.classList.remove('flex-force');
-        modalElement.classList.add('hidden-force');
-      });
-    }
-    
+  // Init checkout button
+  const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
+  if (ecomCheckoutElement) {
+    ecomCheckoutElement.removeAttribute('data-node-type');
+    const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
+    checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
+    checkoutButtonElement.setAttribute('href', checkoutURI);
+    ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
+  }
+
+  // Init cart modal
+  const modalElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART}"]`) as HTMLElement;
+  if (modalElement) {
+    modalElement.parentNode.removeChild(modalElement);
+    document.querySelector('body')?.appendChild(modalElement);
+    const modalLinkElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART_OPEN_LINK}"]`) as HTMLElement;
+    modalLinkElement?.addEventListener('click', async () => {
+      modalElement.classList.remove('hidden-force');
+      modalElement.classList.add('flex-force');
+    });
+    const modalCloseElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART_CLOSE_LINK}"]`) as HTMLElement;
+    modalCloseElement?.addEventListener('click', async () => {
+      modalElement.classList.remove('flex-force');
+      modalElement.classList.add('hidden-force');
+    });
   }
 
 }
