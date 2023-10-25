@@ -14,7 +14,7 @@ import {
   EL_ID_CART_CHECKOUT_BTN,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
-import { NAME_CANCEL, NAME_CART_ADD, NAME_CART_ADDED, NAME_CONFIRM } from "../constants/names";
+import { NAME_CANCEL, NAME_CART_ADD, NAME_CART_ADDED, NAME_CONFIRM, NAME_OK } from "../constants/names";
 import { URL_USER } from "../constants/urls";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
 import { 
@@ -43,7 +43,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -88,6 +88,7 @@ export const removeCartItem = (cartId: string, cartName: string) => {
       });
     });
     modalRemove.addFooterBtn(txtCancel, 'tingle-btn', () => modalRemove.close());
+    modalRemove.open();
   
   });
 }

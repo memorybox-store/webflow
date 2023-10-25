@@ -1,46 +1,57 @@
-import { EL_ID_REGISTER_ACCEPT, EL_ID_REGISTER_FORM } from "../constants/elements";
+import { EL_ID_REGISTER_FORM } from "../constants/elements";
 import { MSG_ERR_ACCEPT_TERMS, MSG_ERR_UNKNOWN, MSG_SUCCESS } from "../constants/messages";
 import { URL_LOGIN } from "../constants/urls";
 import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
+import { NAME_OK } from "../constants/names";
 
 import { register } from "../api/user";
 
 import * as tingle from 'tingle.js';
 
 const modal = new tingle.modal({
-  footer: true,
-  stickyFooter: false,
-  closeMethods: ['overlay', 'button', 'escape'],
-  closeLabel: '',
-  beforeClose: () => {
-    return true;
-  }
+	footer: true,
+	stickyFooter: false,
+	closeMethods: ['overlay', 'button', 'escape'],
+	closeLabel: '',
+	beforeClose: () => {
+		return true;
+	}
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 const modalSuccess = new tingle.modal({
-  footer: true,
-  stickyFooter: false,
-  closeMethods: ['overlay', 'button', 'escape'],
-  closeLabel: '',
+	footer: true,
+	stickyFooter: false,
+	closeMethods: ['overlay', 'button', 'escape'],
+	closeLabel: '',
 	onClose: () => {
 		const formElement = document.getElementById(EL_ID_REGISTER_FORM) as HTMLFormElement;
 		if (formElement) {
 			const redirect = formElement.getAttribute(DATA_ATT_REDIRECT_URI) || '';
+			const url = new URL(window.location.href);
+			const redirectPrev = url.searchParams.get("redirect");
 			if (redirect) {
-				location.href = redirect;
+				if (redirectPrev) {
+					location.href = `${redirect}?redirect=${redirectPrev}`;
+				} else {
+					location.href = redirect;
+				}
 			} else {
-				location.href = `./${URL_LOGIN}`;
+				if (redirectPrev) {
+					location.href = `./${URL_LOGIN}?redirect=${redirectPrev}`;
+				} else {
+					location.href = `./${URL_LOGIN}`;
+				}
 			}
 		}
 	},
-  beforeClose: () => {
-    return true;
-  }
+	beforeClose: () => {
+		return true;
+	}
 });
 modalSuccess.setContent('');
-modalSuccess.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modalSuccess.close());
+modalSuccess.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modalSuccess.close());
 
 export const RgisterListener = (): void => {
 	const formElement = document.getElementById(EL_ID_REGISTER_FORM) as HTMLFormElement;
@@ -51,7 +62,7 @@ export const RgisterListener = (): void => {
 
 		event.preventDefault();
 		event.stopPropagation();
-		
+
 		const formData = new FormData(formElement);
 
 		const acceptElement = document.querySelector(`.w-checkbox-input`) as HTMLInputElement;
@@ -61,13 +72,13 @@ export const RgisterListener = (): void => {
 			const name = formData.get('name') as string || '';
 			const email = formData.get('email') as string || '';
 			const password = formData.get('password_input') as string || '';
-	
+
 			register(name, email, password).then(() => {
-        modalSuccess.setContent(msgSuccess || MSG_ERR_UNKNOWN);
-        modalSuccess.open();
+				modalSuccess.setContent(msgSuccess || MSG_ERR_UNKNOWN);
+				modalSuccess.open();
 			}).catch((message) => {
-        modal.setContent(message || MSG_ERR_UNKNOWN);
-        modal.open();
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
 			});
 
 		} else {

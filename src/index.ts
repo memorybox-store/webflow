@@ -18,6 +18,7 @@ import {
 } from './constants/urls';
 import { PAYMENT_REDIRECT } from './constants/configs';
 import { LANG_PREF_CN, LANG_PREF_TH } from './constants/languages';
+import { NAME_OK } from './constants/names';
 
 import './style.css';
 
@@ -52,7 +53,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 const publicUrls = [
   `/`,
@@ -84,9 +85,9 @@ const checkAuthen = () => {
       result = true;
       if (path === `/${URL_LOGIN}` || path === `/${LANG_PREF_TH}${URL_LOGIN}` || path === `/${LANG_PREF_CN}${URL_LOGIN}`) {
         const url = new URL(window.location.href);
-        const redirect: string = decodeURIComponent(url.searchParams.get("redirect"));
-        if (redirect) {
-          location.href = redirect;
+        const redirectPrev: string = decodeURIComponent(url.searchParams.get("redirect"));
+        if (redirectPrev) {
+          location.href = redirectPrev;
         } else {
           location.href = `./${URL_FINDER}`;
         }

@@ -1,4 +1,3 @@
-import { paymentAuthorize } from "../api/payment";
 import {
 	EL_ID_USER_TAB_CART,
 	EL_ID_USER_TAB_DOWNLOAD,
@@ -6,7 +5,10 @@ import {
 } from "../constants/elements";
 import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
+import { NAME_OK } from "../constants/names";
 import { URL_USER } from "../constants/urls";
+
+import { paymentAuthorize } from "../api/payment";
 
 import * as tingle from 'tingle.js';
 
@@ -20,7 +22,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const UserListener = (): void => {
 

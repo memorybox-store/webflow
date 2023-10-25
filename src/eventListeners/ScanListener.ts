@@ -14,7 +14,7 @@ import {
   MSG_INFO_NOT_AVAIL, 
   MSG_INFO_SCANNING_STATUS 
 } from "../constants/messages";
-import { NAME_SCANNING } from "../constants/names";
+import { NAME_OK, NAME_SCANNING } from "../constants/names";
 import { DATA_ATT_EMPTY } from "../constants/attributes";
 
 import {
@@ -40,7 +40,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 const modalNoFace = new tingle.modal({
   footer: true,
@@ -70,7 +70,7 @@ const modalNoFace = new tingle.modal({
   }
 });
 modalNoFace.setContent('');
-modalNoFace.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modalNoFace.close());
+modalNoFace.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modalNoFace.close());
 
 const modalInvalid = new tingle.modal({
   footer: true,
@@ -102,7 +102,7 @@ const modalInvalid = new tingle.modal({
   }
 });
 modalInvalid.setContent('');
-modalInvalid.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modalInvalid.close());
+modalInvalid.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modalInvalid.close());
 
 export const ScanListener = (): void => {
 

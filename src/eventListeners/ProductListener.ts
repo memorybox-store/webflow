@@ -19,7 +19,7 @@ import {
   EL_ID_RESULT_HEADER_COMPANY,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
-import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING } from "../constants/names";
+import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING, NAME_OK } from "../constants/names";
 import { MSG_ERR_UNKNOWN, MSG_INFO_NOT_AVAIL } from "../constants/messages";
 import { DATA_ATT_EMPTY } from "../constants/attributes";
 
@@ -48,7 +48,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const ProductListener = (): void => {
 

@@ -132,7 +132,8 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 - **Register Form Attribute - Redirect URI:** `data-redirect-uri`
 - **Register Form ID:** `register-form`
-- **Register Accep IDt:** `register-accept`
+- **Register Accep ID:** `register-accept`
+- **Register Button ID:** `register-button`
 
 ## User
 

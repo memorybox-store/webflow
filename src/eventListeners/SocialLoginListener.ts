@@ -11,6 +11,8 @@ import {
 } from "../constants/configs";
 import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 import { URL_FINDER } from "../constants/urls";
+import { MSG_ERR_UNKNOWN } from "../constants/messages";
+import { NAME_OK } from "../constants/names";
 
 import hello from '../config/hellojs';
 import { HelloJSLoginEventArguement } from "hellojs";
@@ -26,7 +28,6 @@ import {
 } from "../api/user";
 
 import * as tingle from 'tingle.js';
-import { MSG_ERR_UNKNOWN } from "../constants/messages";
 
 const modal = new tingle.modal({
   footer: true,
@@ -38,7 +39,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const SocialLoginListener = (): void => {
 

@@ -4,6 +4,8 @@ import {
   EL_CLASS_DOWNLOAD_BUTTON,
   EL_ID_DOWNLOAD_COUNT
 } from "../constants/elements";
+import { NAME_OK } from "../constants/names";
+import { MSG_ERR_UNKNOWN } from "../constants/messages";
 
 import * as tingle from 'tingle.js';
 
@@ -11,7 +13,6 @@ import { loadImageAsBase64 } from "../utils/image";
 
 import { getOrder } from "../api/order";
 import { Order } from "../models/order";
-import { MSG_ERR_UNKNOWN } from "../constants/messages";
 
 const modal = new tingle.modal({
   footer: true,
@@ -23,7 +24,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const DownloadListener = async (): Promise<void> => {
 

@@ -27,7 +27,7 @@ import {
   DATA_ATT_PAYMENT_RETURN_URI, 
   DATA_ATT_WAIT 
 } from "../constants/attributes";
-import { NAME_CANCEL, NAME_CONFIRM } from "../constants/names";
+import { NAME_CANCEL, NAME_CONFIRM, NAME_OK } from "../constants/names";
 
 import * as tingle from 'tingle.js';
 
@@ -47,7 +47,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -264,6 +264,7 @@ export const updateOrders = async () => {
                 });
               });
               modalCancel.addFooterBtn(txtCancel, 'tingle-btn', () => modalCancel.close());
+              modalCancel.open();
 
             });
           }

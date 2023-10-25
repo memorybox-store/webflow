@@ -1,6 +1,7 @@
 import { EL_ID_LOGOUT_BTN } from "../constants/elements";
 import { URL_LOGIN } from "../constants/urls";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
+import { NAME_OK } from "../constants/names";
 
 import * as tingle from 'tingle.js';
 
@@ -16,7 +17,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const LogoutListener = (): void => {
 	const element = document.getElementById(EL_ID_LOGOUT_BTN) as HTMLElement;

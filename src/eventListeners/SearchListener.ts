@@ -19,6 +19,7 @@ import {
 	DATA_ATT_RESULT_URI 
 } from "../constants/attributes";
 import { URL_RESULT } from "../constants/urls";
+import { NAME_OK } from "../constants/names";
 
 import moment from '../config/moment';
 
@@ -38,7 +39,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const SearchListener = (): void => {
 

@@ -1,11 +1,9 @@
 import {
   EL_ID_PAYMENT_PROCESS,
   EL_ID_PAYMENT_PROCESS_AUTHORIZE,
-  EL_ID_PAYMENT_PROCESS_CANCEL,
   EL_ID_PAYMENT_PROCESS_SCANNABLE,
   EL_ID_PAYMENT_PROCESS_SCANNABLE_HELPER
 } from "../constants/elements";
-import { URL_USER } from "../constants/urls";
 
 export const ProcessPaymentListener = async (): Promise<void> => {
 

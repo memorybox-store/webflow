@@ -24,6 +24,7 @@ import { MSG_ERR_EMPTY_ORDER, MSG_ERR_UNKNOWN, MSG_INFO_OMISE, MSG_LOADING } fro
 import { PAYMENT_REDIRECT } from "../constants/configs";
 import { DATA_ATT_EMPTY, DATA_ATT_PAYMENT_RETURN_URI, DATA_ATT_WAIT } from "../constants/attributes";
 import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
+import { NAME_OK } from "../constants/names";
 
 import { updateOrders } from "./OrderListener";
 import { removeCartItem, updateCartItems } from "./CartListener";
@@ -48,7 +49,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 // Init price format
 const THB = new Intl.NumberFormat(

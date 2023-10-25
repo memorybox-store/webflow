@@ -1,7 +1,8 @@
-import { EL_ID_LOGIN_FORM } from "../constants/elements";
+import { EL_ID_LOGIN_FORM, EL_ID_REGISTER_BTN } from "../constants/elements";
 import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
 import { URL_FINDER } from "../constants/urls";
+import { NAME_OK } from "../constants/names";
 
 import { signin } from "../api/user";
 
@@ -19,7 +20,7 @@ const modal = new tingle.modal({
   }
 });
 modal.setContent('');
-modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const LoginListener = (): void => {
 	const formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
@@ -34,8 +35,12 @@ export const LoginListener = (): void => {
 		const password = formData.get('password') as string || '';
 
 		signin(username, password).then((data: Session) => {
+			const url = new URL(window.location.href);
+      const redirectPrev = url.searchParams.get("redirect");
 			const redirect = formElement.getAttribute(DATA_ATT_REDIRECT_URI) || '';
-			if (redirect) {
+			if (redirectPrev) {
+				location.href = decodeURIComponent(redirectPrev);
+			} else if (redirect) {
 				location.href = redirect;
 			} else {
 				location.href = `./${URL_FINDER}`;
@@ -46,4 +51,15 @@ export const LoginListener = (): void => {
 		});
 
 	});
+
+	const registerElement = document.getElementById(EL_ID_REGISTER_BTN) as HTMLElement;
+	if (registerElement) {
+		const url = new URL(window.location.href);
+		const redirectPrev = url.searchParams.get("redirect");
+		if (redirectPrev) {
+			const href: string = registerElement.getAttribute('href');
+			registerElement.setAttribute('href', `${href}?redirect=${redirectPrev}`)
+		}
+	}
+
 };
