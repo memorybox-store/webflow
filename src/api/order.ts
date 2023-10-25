@@ -39,12 +39,14 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
             for (let item of data.filter((item: any) => item.order_no === orderNo)) {
               let itemProduct: Product | null = null;
               let itemProductDetails: ProductDetail | null = null;
-              await getProduct(item.item_id).then(async (dataProduct: Product) => {
-                itemProduct = dataProduct;
-              }).catch(() => { });
-              await getProductDetails(item.item_id).then(async (dataProductDetail: ProductDetail) => {
-                itemProductDetails = dataProductDetail;
-              }).catch(() => { });
+              if (!success) {
+                await getProduct(item.item_id).then(async (dataProduct: Product) => {
+                  itemProduct = dataProduct;
+                }).catch(() => { });
+                await getProductDetails(item.item_id).then(async (dataProductDetail: ProductDetail) => {
+                  itemProductDetails = dataProductDetail;
+                }).catch(() => { });
+              }
               const boat: Boat = {
                 id: null,
                 name: item.mst_name || null,

@@ -198,26 +198,6 @@
     </div>
   </div>
 
-  <div>
-    <form id="payment-form">
-      <div id="payment-list">
-        <input type="checkbox" id="checkbox-payment-all" />
-        <div id="payment-item-sample">
-          <input type="checkbox" name="checkbox_payment">
-          <img class="payment-item-image" src="" width="40">
-          <div class="payment-item-name">MEM66718</div>
-          <div class="payment-item-company">Tip Top Destination®</div>
-          <div class="payment-item-size">3840x2560</div>
-          <div class="payment-item-price">฿ 100.00</div>
-          <img src="https://assets-global.website-files.com/64bf3a6357b2eb45b38e5e39/64d277a9a5668c1df3e15adb_Bin.svg"
-            width="24" class="payment-item-remove">
-        </div>
-        <button id="payment-checkout-button">Pay</button>
-    </form>
-  </div>
-
-  <div id="order-summary"></div>
-
   <form id="checkout-omise-form" method="POST"
     action="http://localhost:5001/memorybox-store/us-central1/app/opn/charge">
     <script type="text/javascript" src="https://cdn.omise.co/omise.js" data-key="pkey_test_5x66z2s0d6z4aobvn7f"
@@ -230,6 +210,8 @@
     <input type="hidden" name="Authenticate" value="" />
     <input type="hidden" name="orders" value="" />
   </form>
+
+
 
   <div id="payment-process" style="text-align: center;">
     <img id="payment-process-scannable" width="500" height="500" />
