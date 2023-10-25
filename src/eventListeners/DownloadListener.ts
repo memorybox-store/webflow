@@ -61,15 +61,8 @@ export const DownloadListener = async (): Promise<void> => {
                 imgElement.crossOrigin = 'anonymous';
                 imgElement.setAttribute('crossorigin', 'anonymous');
   
-                imgElement.src = '';
-                imgElement.srcset = '';
-                loadImageAsBase64(item.product.image.unmarked).then((base64Data) => {
-                  // Use the base64Data in the src attribute of the img element
-                  imgElement.src = base64Data;
-                  imgElement.srcset = base64Data;
-                }).catch((error) => {
-                  console.error(error.message);
-                });
+                imgElement.src = item.product.image.unmarked;
+                imgElement.srcset = item.product.image.unmarked;
   
                 imgElement.setAttribute('alt', item.product.name);
               }

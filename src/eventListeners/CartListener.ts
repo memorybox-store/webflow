@@ -253,7 +253,11 @@ export const CartListener = async (): Promise<void> => {
       checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
       checkoutButtonElement.setAttribute('href', checkoutURI);
       checkoutButtonElement.addEventListener('click', async () => {
-        location.href = checkoutURI;
+        const modalElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART}"]`) as HTMLElement;
+        if (modalElement) {
+          modalElement.classList.remove('flex-force');
+          modalElement.classList.add('hidden-force');
+        }
       });
       ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
     }
