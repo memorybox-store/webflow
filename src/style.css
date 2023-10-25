@@ -139,3 +139,7 @@
   background-color: #ffeff0;
   color: #dc2b2b;
 }
+
+.tingle-modal--visible {
+  z-index: 100000;
+}

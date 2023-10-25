@@ -248,6 +248,7 @@ export const updateOrders = async () => {
               });
               modalCancel.setContent(txtPrompt.replace('{{name}}', order.orderNo));
               modalCancel.addFooterBtn(txtConfirm, 'tingle-btn tingle-btn--danger', async () => {
+                modalCancel.close();
                 await cancelOrder(order.id).then(async () => {
                   const orderRemoveElement = document.getElementById(`order-${order.id}`) as HTMLElement;
                   orderRemoveElement?.parentElement.removeChild(orderRemoveElement);

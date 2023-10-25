@@ -81,6 +81,7 @@ export const removeCartItem = (cartId: string, cartName: string) => {
     });
     modalRemove.setContent(txtPrompt.replace('{{name}}', cartName));
     modalRemove.addFooterBtn(txtConfirm, 'tingle-btn tingle-btn--danger', async () => {
+      modalRemove.close();
       await removeItemFromCart(cartId).then(async (data: CartItem[]) => {
         resolve(data);
       }).catch((error) => {
