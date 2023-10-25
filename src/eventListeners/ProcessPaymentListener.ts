@@ -9,8 +9,14 @@ export const ProcessPaymentListener = async (): Promise<void> => {
 
   const element = document.getElementById(EL_ID_PAYMENT_PROCESS) as HTMLElement;
   if (element) {
+
     const url = new URL(window.location.href);
     const authorizeUri = url.searchParams.get("authorize_uri");
+    const scannable = url.searchParams.get("scannable");
+    
+    const path: string = window.location.pathname;
+    window.history.pushState(null, "", path);
+
     const authorizeElement = document.getElementById(EL_ID_PAYMENT_PROCESS_AUTHORIZE) as HTMLElement;
     if (authorizeElement) {
       if (authorizeUri) {
@@ -22,7 +28,7 @@ export const ProcessPaymentListener = async (): Promise<void> => {
         authorizeElement.classList.add('hidden-force');
       }
     }
-    const scannable = url.searchParams.get("scannable");
+    
     const imgElement = document.getElementById(EL_ID_PAYMENT_PROCESS_SCANNABLE) as HTMLImageElement;
     if (imgElement) {
       const helperElement = document.getElementById(EL_ID_PAYMENT_PROCESS_SCANNABLE_HELPER) as HTMLImageElement;
