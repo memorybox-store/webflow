@@ -33,13 +33,13 @@ const modalSuccess = new tingle.modal({
 			const redirectPrev = url.searchParams.get("redirect");
 			if (redirect) {
 				if (redirectPrev) {
-					location.href = `${redirect}?redirect=${redirectPrev}`;
+					location.href = `${redirect}?redirect=${encodeURIComponent(redirectPrev)}`;
 				} else {
 					location.href = redirect;
 				}
 			} else {
 				if (redirectPrev) {
-					location.href = `./${URL_LOGIN}?redirect=${redirectPrev}`;
+					location.href = `./${URL_LOGIN}?redirect=${encodeURIComponent(redirectPrev)}`;
 				} else {
 					location.href = `./${URL_LOGIN}`;
 				}

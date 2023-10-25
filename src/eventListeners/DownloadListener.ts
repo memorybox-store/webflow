@@ -56,8 +56,6 @@ export const DownloadListener = async (): Promise<void> => {
 
             for (let item of order.items) {
 
-              console.log(item);
-
               const downloadCountElement = document.getElementById(EL_ID_DOWNLOAD_COUNT) as HTMLElement;
               if (downloadCountElement) {
                 let count = 0;

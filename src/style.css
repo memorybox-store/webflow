@@ -85,6 +85,16 @@
   display: none;
 }
 
+.tingle-modal {
+  background: rgb(0 0 0 / 50%);
+}
+
+@media (max-width: 540px) {
+  .tingle-modal__closeIcon {
+    margin-right: 0;
+  }
+}
+
 .tingle-modal-box {
   min-width: 40%;
   width: initial;

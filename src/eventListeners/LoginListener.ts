@@ -58,7 +58,7 @@ export const LoginListener = (): void => {
 		const redirectPrev = url.searchParams.get("redirect");
 		if (redirectPrev) {
 			const href: string = registerElement.getAttribute('href');
-			registerElement.setAttribute('href', `${href}?redirect=${redirectPrev}`)
+			registerElement.setAttribute('href', `${href}?redirect=${encodeURIComponent(redirectPrev)}`)
 		}
 	}
 
