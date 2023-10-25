@@ -20,9 +20,10 @@ import {
   EL_ID_USER_TAB_PAYMENT,
   EL_ID_PAYMENT_COUNT
 } from "../constants/elements";
-import { MSG_ERR_EMPTY_ORDER, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+import { MSG_ERR_EMPTY_ORDER, MSG_ERR_UNKNOWN, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
 import { PAYMENT_REDIRECT } from "../constants/configs";
 import { DATA_ATT_EMPTY, DATA_ATT_PAYMENT_RETURN_URI, DATA_ATT_WAIT } from "../constants/attributes";
+import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
 
 import { updateOrders } from "./OrderListener";
 import { removeCartItem, updateCartItems } from "./CartListener";
@@ -34,7 +35,20 @@ import { createOrder } from "../api/order";
 
 import { CartItem } from "../models/cart";
 import { URL_USER } from "../constants/urls";
-import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
+
+import * as tingle from 'tingle.js';
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -133,11 +147,13 @@ const updatePaymentList = async (data: CartItem[]) => {
               await getCartItems().then(async (updatedData: CartItem[]) => {
                 updateCartItems(updatedData);
                 updatePaymentItems(updatedData);
-              }).catch((error) => {
-                alert(error);
+              }).catch((message) => {
+                modal.setContent(message || MSG_ERR_UNKNOWN);
+                modal.open();
               });
-            }).catch((error) => {
-              alert(error);
+            }).catch((message) => {
+              modal.setContent(message || MSG_ERR_UNKNOWN);
+              modal.open();
             });
           });
         }
@@ -233,8 +249,9 @@ export const PaymentListener = async (): Promise<void> => {
       await getCartItems().then(async (data: CartItem[]) => {
         initializeElements(data);
         resolve(data);
-      }).catch((error) => {
-        alert(error);
+      }).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
       });
     });
   }
@@ -294,8 +311,9 @@ export const PaymentListener = async (): Promise<void> => {
             getCartItems().then((updatedData: CartItem[]) => {
               updateCartItems(updatedData);
               updatePaymentItems(updatedData);
-            }).catch((error) => {
-              alert(error);
+            }).catch((message) => {
+              modal.setContent(message || MSG_ERR_UNKNOWN);
+              modal.open();
             });
             updateOrders();
             const path: string = window.location.pathname;
@@ -303,14 +321,17 @@ export const PaymentListener = async (): Promise<void> => {
               const tabPaymentElement = document.getElementById(EL_ID_USER_TAB_PAYMENT) as HTMLElement;
               tabPaymentElement?.click();
             }
-          }).catch((error) => {
-            alert(error);
+          }).catch((message) => {
+            modal.setContent(message || MSG_ERR_UNKNOWN);
+            modal.open();
           });
         } else {
-          alert(msgEmpty)
+          modal.setContent(msgEmpty || MSG_ERR_UNKNOWN);
+          modal.open();
         }
-      }).catch((error) => {
-        alert(error);
+      }).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
       });
       paymentButtonElement.setAttribute('value', paymentButtonLabel);
     });
@@ -323,8 +344,9 @@ export const PaymentListener = async (): Promise<void> => {
           (item: CartItem) => checks.includes(item.product.details.id.toString())
         );
         updatePaymentAmount(items);
-      }).catch((error) => {
-        alert(error);
+      }).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
       });
     });
 

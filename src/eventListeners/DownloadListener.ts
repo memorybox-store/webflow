@@ -5,10 +5,25 @@ import {
   EL_ID_DOWNLOAD_COUNT
 } from "../constants/elements";
 
+import * as tingle from 'tingle.js';
+
 import { loadImageAsBase64 } from "../utils/image";
 
 import { getOrder } from "../api/order";
 import { Order } from "../models/order";
+import { MSG_ERR_UNKNOWN } from "../constants/messages";
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const DownloadListener = async (): Promise<void> => {
 
@@ -74,17 +89,11 @@ export const DownloadListener = async (): Promise<void> => {
                 });
 
                 imgElement.setAttribute('alt', item.product.name);
-              }
 
-              const downloadButtonElement = cardElement.querySelector(`.${EL_CLASS_DOWNLOAD_BUTTON}`) as HTMLElement;
-              if (downloadButtonElement) {
-
-                downloadButtonElement.style.cursor = 'pointer';
-
-                downloadButtonElement.addEventListener('click', () => {
+                imgElement.onload = () => {
 
                   // Split the URL by dot
-                  
+
                   const names = item.product.image.unmarked.split('/');
                   const nameFull = names[names.length - 1];
 
@@ -95,41 +104,34 @@ export const DownloadListener = async (): Promise<void> => {
                   const extension = parts[parts.length - 1];
                   const lowercaseExtension = extension.toLowerCase();
 
-                  // Create an image element to load the image
-                  const img = new Image();
+                  // Create a canvas to draw the image
+                  const canvas = document.createElement('canvas');
+                  canvas.width = imgElement.width;
+                  canvas.height = imgElement.height;
+                  const ctx = canvas.getContext('2d');
+                  ctx.drawImage(imgElement, 0, 0);
 
-                  img.crossOrigin = 'anonymous';
-                  img.setAttribute('crossorigin', 'anonymous');
+                  // Convert the canvas content to a data URL
+                  const dataURL = canvas.toDataURL('image/jpeg'); // Change format if needed
 
-                  img.src = item.product.image.unmarked;
+                  const downloadButtonElement = cardElement.querySelector(`.${EL_CLASS_DOWNLOAD_BUTTON}`) as HTMLElement;
+                  if (downloadButtonElement) {
 
-                  img.onload = function () {
-                    // Create a canvas to draw the image
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
+                    downloadButtonElement.style.cursor = 'pointer';
 
-                    // Convert the canvas content to a data URL
-                    const dataURL = canvas.toDataURL('image/jpeg'); // Change format if needed
+                    downloadButtonElement.addEventListener('click', () => {
+                      const a = document.createElement('a');
+                      a.href = dataURL;
+                      a.download = `${item.product.boat.name} - ${name}.${lowercaseExtension}`;
+                      a.style.display = 'none';
+                      document.body.appendChild(a);
+                      a.click();
+                      document.body.removeChild(a);
+                    });
 
-                    // Create a link element to trigger the download
-                    const a = document.createElement('a');
-                    a.href = dataURL;
-                    a.download = `${item.product.boat.name} - ${name}.${lowercaseExtension}`; // Set the filename for the download
-                    a.style.display = 'none';
+                  }
 
-                    // Add the link to the DOM and trigger the click event
-                    document.body.appendChild(a);
-                    a.click();
-
-                    // Remove the link element from the DOM
-                    document.body.removeChild(a);
-                  };
-
-                });
-
+                };
               }
 
               element.appendChild(cardElement);
@@ -137,8 +139,9 @@ export const DownloadListener = async (): Promise<void> => {
             }
 
           }
-        }).catch((error) => {
-          alert(error);
+        }).catch((message) => {
+          modal.setContent(message || MSG_ERR_UNKNOWN);
+          modal.open();
         });
 
       }

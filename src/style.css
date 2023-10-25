@@ -1,0 +1,131 @@
+@import '~tingle.js/dist/tingle.css';
+
+.hidden-force {
+  display: none !important;
+}
+
+.display-force {
+  display: block !important;
+}
+
+.flex-force {
+  display: flex !important;
+}
+
+.visible-force {
+  visibility: initial !important;
+}
+
+.invisible-force {
+  visibility: hidden !important;
+}
+
+.grid-force {
+  display: grid !important;
+}
+
+.open-popup-button {
+  cursor: pointer;
+}
+
+.popup-display-force {
+  opacity: 1 !important;
+  display: flex !important;
+  pointer-events: all !important;
+  overflow-y: auto;
+}
+
+.popup-display-force .popup {
+  transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg) !important;
+  transform-style: preserve-3d;
+}
+
+.popup.photo img {
+  max-height: calc(100vh - 226px) !important;
+}
+
+.popup.scanning img {
+  max-height: calc(100vh - 246px) !important;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.clickable {
+  cursor: pointer !important;
+}
+
+.omise-checkout-button {
+  color: #fff;
+  text-align: center;
+  letter-spacing: .3px;
+  transform-style: preserve-3d;
+  background-color: #1476ff;
+  border-radius: 44px;
+  justify-content: center;
+  padding: 18px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.143em;
+  text-decoration: none;
+  transition: background-color .3s, transform .3s, color .3s;
+  box-shadow: 0 4px 10px rgba(2, 87, 251, .2);
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+}
+
+#checkout-omise-form {
+  width: 100%;
+}
+
+.popup-wrapper-photo {
+  display: none;
+}
+
+.tingle-modal-box {
+  min-width: 40%;
+  width: initial;
+  border-radius: 20px;
+}
+
+.tingle-modal-box__footer {
+  background-color: transparent;
+}
+
+.tingle-btn {
+  border-radius: 2rem;
+  border: 1px solid #e9eaf3;
+  box-shadow: 0 4px 10px 0 rgb(20 20 43 / 4%);
+  background-color: #ffffff;
+  color: #0b0e2c;
+  transition: 0.2s;
+}
+
+.tingle-btn:hover {
+  background-color: #1476ff;
+  border: 1px solid #1476ff;
+  color: #fff;
+}
+
+.tingle-modal__close {
+  background: transparent;
+}
+
+.tingle-modal-box__footer {
+  padding: 0.5rem 2rem 1.5rem;
+}
+
+.tingle-btn--primary {
+  background-color: #1476ff;
+  border: 1px solid #1476ff;
+  color: #fff;
+  box-shadow: 0 0 rgba(10, 49, 114, 0), 0 1px 0.4px rgba(10, 49, 114, .075), 0 2.1px 1px rgba(10, 49, 114, .09), 0 3.7px 2px rgba(10, 49, 114, .098), 0 6.4px 4px rgba(10, 49, 114, .1), 0 11.7px 8.4px rgba(10, 49, 114, .106), 0 24.6px 19.9px rgba(10, 49, 114, .118);
+}
+
+.tingle-btn--danger {
+  background-color: #ffeff0;
+  color: #dc2b2b;
+}

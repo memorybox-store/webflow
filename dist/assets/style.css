@@ -82,3 +82,11 @@
 .popup-wrapper-photo {
   display: none;
 }
+
+.modal {
+  display: none;
+}
+
+.modal.is-open {
+  display: block;
+}

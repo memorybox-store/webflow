@@ -5,7 +5,22 @@ import {
 	EL_ID_USER_TAB_PAYMENT
 } from "../constants/elements";
 import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
+import { MSG_ERR_UNKNOWN } from "../constants/messages";
 import { URL_USER } from "../constants/urls";
+
+import * as tingle from 'tingle.js';
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const UserListener = (): void => {
 
@@ -53,10 +68,12 @@ export const UserListener = (): void => {
 				orders
 			).then(() => {
 				if (status === 'error' && message) {
-					alert(decodeURIComponent(message));
+					modal.setContent(decodeURIComponent(message) || MSG_ERR_UNKNOWN);
+					modal.open();
 				}
 			}).catch((message) => {
-				alert(message);
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
 			});
 		}
 

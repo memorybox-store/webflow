@@ -18,15 +18,36 @@ import {
   EL_CLASS_ORDER_CANCEL_BTN,
   EL_CLASS_ORDER_NO
 } from "../constants/elements";
-import { MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+import { MSG_ERR_UNKNOWN, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
 import { PAYMENT_REDIRECT } from "../constants/configs";
-import { DATA_ATT_PAYMENT_RETURN_URI, DATA_ATT_WAIT } from "../constants/attributes";
+import { 
+  DATA_ATT_CANCEL, 
+  DATA_ATT_CANCEL_BTN_CANCEL, 
+  DATA_ATT_CANCEL_BTN_CONFIRM, 
+  DATA_ATT_PAYMENT_RETURN_URI, 
+  DATA_ATT_WAIT 
+} from "../constants/attributes";
+import { NAME_CANCEL, NAME_CONFIRM } from "../constants/names";
+
+import * as tingle from 'tingle.js';
 
 import { loadImageAsBase64 } from "../utils/image";
 
 import { cancelOrder, getOrder } from "../api/order";
 
 import { Order, OrderItem } from "../models/order";
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -200,6 +221,10 @@ export const updateOrders = async () => {
           formElement.classList.remove('hidden-force');
           formElement.setAttribute('id', `order-${order.id}`);
 
+          const txtPrompt: string = formElement?.getAttribute(DATA_ATT_CANCEL) || `Do you want to cancel {{name}}?`;
+          const txtConfirm: string = formElement?.getAttribute(DATA_ATT_CANCEL_BTN_CONFIRM) || NAME_CONFIRM;
+          const txtCancel: string = formElement?.getAttribute(DATA_ATT_CANCEL_BTN_CANCEL) || NAME_CANCEL;
+
           updateOrderItems(formElement, order.items);
 
           // Update order number
@@ -211,7 +236,18 @@ export const updateOrders = async () => {
           const cancelButtonElement = formElement.querySelector(`.${EL_CLASS_ORDER_CANCEL_BTN}`) as HTMLInputElement;
           if (cancelButtonElement) {
             cancelButtonElement.addEventListener('click', async () => {
-              if (confirm(`Do you want to cancel "${order.orderNo}"?`)) {
+
+              const modalCancel = new tingle.modal({
+                footer: true,
+                stickyFooter: false,
+                closeMethods: ['overlay', 'button', 'escape'],
+                closeLabel: '',
+                beforeClose: () => {
+                  return true;
+                }
+              });
+              modalCancel.setContent(txtPrompt.replace('{{name}}', order.orderNo));
+              modalCancel.addFooterBtn(txtConfirm, 'tingle-btn tingle-btn--danger', async () => {
                 await cancelOrder(order.id).then(async () => {
                   const orderRemoveElement = document.getElementById(`order-${order.id}`) as HTMLElement;
                   orderRemoveElement?.parentElement.removeChild(orderRemoveElement);
@@ -223,9 +259,12 @@ export const updateOrders = async () => {
                     }
                   }
                 }).catch((message) => {
-                  alert(message);
+                  modal.setContent(message || MSG_ERR_UNKNOWN);
+                  modal.open();
                 });
-              }
+              });
+              modalCancel.addFooterBtn(txtCancel, 'tingle-btn', () => modalCancel.close());
+
             });
           }
 
@@ -274,8 +313,9 @@ export const updateOrders = async () => {
           element.appendChild(formElement);
 
         }
-      }).catch((error) => {
-        alert(error);
+      }).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
       });
     }
 

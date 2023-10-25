@@ -9,7 +9,8 @@ import {
 import { 
 	MSG_ERR_EMPTY_BOAT, 
 	MSG_ERR_EMPTY_COMPANY, 
-	MSG_ERR_EMPTY_DATE 
+	MSG_ERR_EMPTY_DATE, 
+	MSG_ERR_UNKNOWN
 } from "../constants/messages";
 import { 
 	DATA_ATT_EMPTY_BOAT, 
@@ -17,13 +18,27 @@ import {
 	DATA_ATT_EMPTY_DATE, 
 	DATA_ATT_RESULT_URI 
 } from "../constants/attributes";
+import { URL_RESULT } from "../constants/urls";
 
 import moment from '../config/moment';
 
 import { getCompanies, getBoats } from "../api/sale";
 
 import { Company } from "../models/sale";
-import { URL_RESULT } from "../constants/urls";
+
+import * as tingle from 'tingle.js';
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const SearchListener = (): void => {
 
@@ -276,8 +291,9 @@ export const SearchListener = (): void => {
 			await getCompanies().then(async (data: Array<any>) => {
 				setCompanies(data);
 				resolve(data);
-			}).catch((error) => {
-				alert(error);
+			}).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
 			});
 		});
 	}
@@ -287,8 +303,9 @@ export const SearchListener = (): void => {
 			await getBoats(companyId, tripDate).then(async (data: Array<any>) => {
 				setBoats(data);
 				resolve(data);
-			}).catch((error) => {
-				alert(error);
+			}).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
 			});
 		});
 	}
@@ -389,11 +406,14 @@ export const SearchListener = (): void => {
 				}
 			} else {
 				if (!company) {
-					alert(msgEmptyCompany);
+					modal.setContent(msgEmptyCompany || MSG_ERR_UNKNOWN);
+					modal.open();
 				} else if (!date) {
-					alert(msgEmptyDate);
+					modal.setContent(msgEmptyDate || MSG_ERR_UNKNOWN);
+					modal.open();
 				} else if (!boat) {
-					alert(msgEmptyBoat);
+					modal.setContent(msgEmptyBoat || MSG_ERR_UNKNOWN);
+					modal.open();
 				}
 			}
 

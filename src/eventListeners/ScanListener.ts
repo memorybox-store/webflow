@@ -9,6 +9,7 @@ import {
 import { 
   MSG_ERR_INVALID_IMAGE, 
   MSG_ERR_NO_FACE, 
+  MSG_ERR_UNKNOWN, 
   MSG_FACESCAN_INITIALIZING, 
   MSG_INFO_NOT_AVAIL, 
   MSG_INFO_SCANNING_STATUS 
@@ -26,6 +27,82 @@ import { getProductsScan } from "../api/product";
 
 import { Product } from "../models/product";
 import { setStorage } from "../utils/storage";
+
+import * as tingle from 'tingle.js';
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
+
+const modalNoFace = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+	onClose: () => {
+    const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+    scanningElement?.classList.remove('popup-display-force');
+    const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
+    if (imageMarkElements) {
+      for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
+        if (imageMarkElement.id !== EL_ID_RESULT_SAMPLE) {
+          imageMarkElement.classList.remove('hidden-force');
+          imageMarkElement.classList.add('flex-force');
+        }
+      }
+    }
+    const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+    if (resultMyPicElement) {
+      const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
+      resultMyPicElement.innerText = msgEmptyMyPic;
+    }
+	},
+  beforeClose: () => {
+    return true;
+  }
+});
+modalNoFace.setContent('');
+modalNoFace.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modalNoFace.close());
+
+const modalInvalid = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+	onClose: () => {
+    const inputFileElement = document.getElementById('facescan-input') as HTMLInputElement;
+    if (inputFileElement) {
+      inputFileElement.value = '';
+      const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
+      if (imageMarkElements) {
+        for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
+          if (imageMarkElement.id !== EL_ID_RESULT_SAMPLE) {
+            imageMarkElement.classList.remove('hidden-force');
+            imageMarkElement.classList.add('flex-force');
+          }
+        }
+      }
+      const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+      if (resultMyPicElement) {
+        const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
+        resultMyPicElement.innerText = msgEmptyMyPic;
+      }
+    }
+	},
+  beforeClose: () => {
+    return true;
+  }
+});
+modalInvalid.setContent('');
+modalInvalid.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modalInvalid.close());
 
 export const ScanListener = (): void => {
 
@@ -60,6 +137,7 @@ export const ScanListener = (): void => {
       element.style.opacity = '1';
 
       const inputFileElement = document.createElement('input') as HTMLInputElement;
+      inputFileElement.id = 'facescan-input';
       inputFileElement.type = 'file';
       inputFileElement.style.display = 'none';
       element.parentElement.appendChild(inputFileElement);
@@ -207,26 +285,12 @@ export const ScanListener = (): void => {
                     });
                   }
                 } else {
-                  alert(msgNoFace);
-                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                  scanningElement?.classList.remove('popup-display-force');
-                  const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
-                  if (imageMarkElements) {
-                    for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
-                      if (imageMarkElement.id !== EL_ID_RESULT_SAMPLE) {
-                        imageMarkElement.classList.remove('hidden-force');
-                        imageMarkElement.classList.add('flex-force');
-                      }
-                    }
-                  }
-                  const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
-                  if (resultMyPicElement) {
-                    const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
-                    resultMyPicElement.innerText = msgEmptyMyPic;
-                  }
+                  modalNoFace.setContent(msgNoFace || MSG_ERR_UNKNOWN);
+                  modalNoFace.open();
                 }
               }).catch((message) => {
-                alert(message);
+                modal.setContent(message || MSG_ERR_UNKNOWN);
+                modal.open();
               });
 
             };
@@ -234,22 +298,8 @@ export const ScanListener = (): void => {
             reader.readAsDataURL(selectedFile);
 
           } else {
-            alert(msgInvalidImage);
-            input.value = '';
-            const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
-            if (imageMarkElements) {
-              for (const [_, imageMarkElement] of Object.entries(imageMarkElements)) {
-                if (imageMarkElement.id !== EL_ID_RESULT_SAMPLE) {
-                  imageMarkElement.classList.remove('hidden-force');
-                  imageMarkElement.classList.add('flex-force');
-                }
-              }
-            }
-            const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
-            if (resultMyPicElement) {
-              const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
-              resultMyPicElement.innerText = msgEmptyMyPic;
-            }
+            modalInvalid.setContent(msgInvalidImage || MSG_ERR_UNKNOWN);
+            modalInvalid.open();
           }
         }
       });

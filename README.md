@@ -171,7 +171,10 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Cart
 
-- **Cart Checkout Button Attribute - Result URI:** `data-checkout-uri`;
+- **Cart Checkout Badge Attribute - Result URI:** `data-checkout-uri`
+- **Cart Checkout Badge Attribute - Remove Prompt Message:** `data-remove-prompt` ({{name}} = Item name)
+- **Cart Checkout Badge Attribute - Cancel Button Confirm Text:** `data-remove-button-confirm`
+- **Cart Checkout Badge Attribute - Cancel Button Cancel Text:** `data-remove-button-cancel`
 - **Cart Items Badge ID:** `cart-items-badge`
 - **Cart Button ID:** `charge-button`
 - **Cart Checkout Button ID:** `cart-checkout-button`
@@ -189,7 +192,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 ## Face Scan
 
 - **Facescan Button Attribute - No Face Message:** `data-noface`
-- **Facescan Button Attribute - Scanning Message:** `data-scanning`
+- **Facescan Button Attribute - Scanning Message:** `data-scanning` ({{scanned}} = Scanned number, {{total}} = Total number, {{found}} = Found number)
 - **Facescan Button Attribute - Scanning Status Message:** `data-scanning-status`
 - **Facescan Button Attribute - Invalid Photo Message:** `data-invalid`
 - **Facescan Button Attribute - Initializing Message:** `data-initializing`
@@ -266,6 +269,9 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 ## Order
 
 - **Order Form Attribute - Payment Return URI:** `data-payment-return-uri`
+- **Order Form Attribute - Cancel Prompt Message:** `data-cancel-prompt` ({{name}} = Item name)
+- **Order Form Attribute - Cancel Button Confirm Text:** `data-cancel-button-confirm`
+- **Order Form Attribute - Cancel Button Cancel Text:** `data-cancel-button-cancel`
 - **Order Count ID:** `order-count`
 - **Order Form List ID:** `order-form-list`
 - **Order Form Sample ID:** `order-form-sample`

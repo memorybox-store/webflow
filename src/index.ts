@@ -1,23 +1,27 @@
-import { 
-  EL_CLASS_USER_NAME, 
-  EL_CLASS_USER_AVATAR, 
-  EL_ID_CHECKOUT_OMISE_FORM, 
+import {
+  EL_CLASS_USER_NAME,
+  EL_CLASS_USER_AVATAR,
+  EL_ID_CHECKOUT_OMISE_FORM,
   EL_ID_RESULT_SUM_BOAT,
   EL_ID_RESULT_SUM_TOTAL,
   EL_ID_RESULT_SUM_MY_PIC
 } from './constants/elements';
-import { MSG_INFO_OMISE } from './constants/messages';
-import { 
-  URL_FINDER, 
-  URL_HELP_CENTER, 
-  URL_LOGIN, 
-  URL_PRIVACY_POLICY, 
-  URL_SIGNIN, 
-  URL_SIGNUP, 
-  URL_TERMS 
+import { MSG_ERR_UNKNOWN, MSG_INFO_OMISE } from './constants/messages';
+import {
+  URL_FINDER,
+  URL_HELP_CENTER,
+  URL_LOGIN,
+  URL_PRIVACY_POLICY,
+  URL_SIGNIN,
+  URL_SIGNUP,
+  URL_TERMS
 } from './constants/urls';
 import { PAYMENT_REDIRECT } from './constants/configs';
 import { LANG_PREF_CN, LANG_PREF_TH } from './constants/languages';
+
+import './style.css';
+
+import * as tingle from 'tingle.js';
 
 import { authen, retrieveProfile, signout } from './api/user';
 import { getStorage } from './utils/storage';
@@ -37,8 +41,18 @@ import { OrderListener } from './eventListeners/OrderListener';
 import { UserListener } from './eventListeners/UserListener';
 import { RgisterListener } from './eventListeners/RegisterListener';
 import { DownloadListener } from './eventListeners/DownloadListener';
-import { getOrder } from './api/order';
-import { Order } from './models/order';
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 const publicUrls = [
   `/`,
@@ -93,12 +107,14 @@ const checkAuthen = () => {
             }
           }
         }).catch((message) => {
-          alert(message);
+          modal.setContent(message || MSG_ERR_UNKNOWN);
+          modal.open();
         });
       }
     }).catch(async () => {
       await signout().catch((message?) => {
-        alert(message || '');
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
       });
       if (!publicUrls.includes(path)) {
         const redirect: string = encodeURIComponent(window.location.href);
@@ -117,7 +133,7 @@ const initialize = () => {
   ScanListener();
   checkAuthen().then((result: boolean) => {
     if (result) {
-      
+
       UserListener();
       CartListener();
       PaymentListener();

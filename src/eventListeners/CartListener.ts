@@ -14,7 +14,17 @@ import {
   EL_ID_CART_CHECKOUT_BTN,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
-import { NAME_CART_ADD, NAME_CART_ADDED } from "../constants/names";
+import { NAME_CANCEL, NAME_CART_ADD, NAME_CART_ADDED, NAME_CONFIRM } from "../constants/names";
+import { URL_USER } from "../constants/urls";
+import { MSG_ERR_UNKNOWN } from "../constants/messages";
+import { 
+  DATA_ATT_CHECKOUT_URI, 
+  DATA_ATT_REMOVE, 
+  DATA_ATT_REMOVE_BTN_CANCEL, 
+  DATA_ATT_REMOVE_BTN_CONFIRM 
+} from "../constants/attributes";
+
+import * as tingle from 'tingle.js';
 
 import { cartItemTemplate } from "../templates/cart";
 
@@ -22,8 +32,18 @@ import { updatePaymentItems } from "./PaymentListener";
 import { getCartItems, removeItemFromCart } from "../api/cart";
 
 import { CartItem } from "../models/cart";
-import { DATA_ATT_CHECKOUT_URI } from "../constants/attributes";
-import { URL_USER } from "../constants/urls";
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 // Init price format
 const THB = new Intl.NumberFormat(
@@ -43,13 +63,32 @@ const THBcompact = new Intl.NumberFormat(
 
 export const removeCartItem = (cartId: string, cartName: string) => {
   return new Promise(async (resolve, reject) => {
-    if (confirm(`Do you want to remove "${cartName}" from cart?`)) {
+    
+    const element = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
+
+    const txtPrompt: string = element?.getAttribute(DATA_ATT_REMOVE) || `Do you want to remove {{name}} from cart?`;
+    const txtConfirm: string = element?.getAttribute(DATA_ATT_REMOVE_BTN_CONFIRM) || NAME_CONFIRM;
+    const txtCancel: string = element?.getAttribute(DATA_ATT_REMOVE_BTN_CANCEL) || NAME_CANCEL;
+
+    const modalRemove = new tingle.modal({
+      footer: true,
+      stickyFooter: false,
+      closeMethods: ['overlay', 'button', 'escape'],
+      closeLabel: '',
+      beforeClose: () => {
+        return true;
+      }
+    });
+    modalRemove.setContent(txtPrompt.replace('{{name}}', cartName));
+    modalRemove.addFooterBtn(txtConfirm, 'tingle-btn tingle-btn--danger', async () => {
       await removeItemFromCart(cartId).then(async (data: CartItem[]) => {
         resolve(data);
       }).catch((error) => {
         reject(error);
       });
-    }
+    });
+    modalRemove.addFooterBtn(txtCancel, 'tingle-btn', () => modalRemove.close());
+  
   });
 }
 
@@ -129,11 +168,13 @@ const updateCartList = (data: CartItem[]) => {
               await getCartItems().then(async (updatedData: CartItem[]) => {
                 updateCartItems(updatedData);
                 updatePaymentItems(updatedData);
-              }).catch((error) => {
-                alert(error);
+              }).catch((message) => {
+                modal.setContent(message || MSG_ERR_UNKNOWN);
+                modal.open();
               });
-            }).catch((error) => {
-              alert(error);
+            }).catch((message) => {
+              modal.setContent(message || MSG_ERR_UNKNOWN);
+              modal.open();
             });
           }
         });
@@ -232,8 +273,9 @@ export const CartListener = async (): Promise<void> => {
       await getCartItems().then(async (data: CartItem[]) => {
         initializeElements(data);
         resolve(data);
-      }).catch((error) => {
-        alert(error);
+      }).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
       });
     });
   }

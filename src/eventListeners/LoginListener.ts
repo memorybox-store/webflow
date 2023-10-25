@@ -1,10 +1,25 @@
 import { EL_ID_LOGIN_FORM } from "../constants/elements";
+import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
+import { MSG_ERR_UNKNOWN } from "../constants/messages";
+import { URL_FINDER } from "../constants/urls";
 
 import { signin } from "../api/user";
 
 import { Session } from "../models/user";
-import { URL_FINDER } from "../constants/urls";
-import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
+
+import * as tingle from 'tingle.js';
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const LoginListener = (): void => {
 	const formElement = document.getElementById(EL_ID_LOGIN_FORM) as HTMLFormElement;
@@ -26,7 +41,8 @@ export const LoginListener = (): void => {
 				location.href = `./${URL_FINDER}`;
 			}
 		}).catch((message) => {
-			alert(message);
+			modal.setContent(message || MSG_ERR_UNKNOWN);
+			modal.open();
 		});
 
 	});

@@ -20,7 +20,7 @@ import {
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
 import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING } from "../constants/names";
-import { MSG_INFO_NOT_AVAIL } from "../constants/messages";
+import { MSG_ERR_UNKNOWN, MSG_INFO_NOT_AVAIL } from "../constants/messages";
 import { DATA_ATT_EMPTY } from "../constants/attributes";
 
 import moment from '../config/moment';
@@ -35,6 +35,20 @@ import { getProducts } from "../api/product";
 import { Product } from "../models/product";
 import { CartItem } from "../models/cart";
 import { getStorage, setStorage } from "../utils/storage";
+
+import * as tingle from 'tingle.js';
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const ProductListener = (): void => {
 
@@ -135,12 +149,14 @@ export const ProductListener = (): void => {
               await getCartItems().then(async (updatedData: CartItem[]) => {
                 // Update cart count badges in header
                 updateCartItems(updatedData);
-              }).catch((error) => {
-                alert(error);
+              }).catch((message) => {
+                modal.setContent(message || MSG_ERR_UNKNOWN);
+                modal.open();
                 reset();
               });
-            }).catch((error) => {
-              alert(error);
+            }).catch((message) => {
+              modal.setContent(message || MSG_ERR_UNKNOWN);
+              modal.open();
               reset();
             });
           });
@@ -317,12 +333,14 @@ export const ProductListener = (): void => {
 
           resolve(data);
 
-        }).catch((error) => {
-          alert(error);
+        }).catch((message) => {
+          modal.setContent(message || MSG_ERR_UNKNOWN);
+          modal.open();
         });
 
-      }).catch((error) => {
-        alert(error);
+      }).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
       });
 
     });

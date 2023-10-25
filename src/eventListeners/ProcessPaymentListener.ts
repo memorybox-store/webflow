@@ -12,10 +12,6 @@ export const ProcessPaymentListener = async (): Promise<void> => {
   const element = document.getElementById(EL_ID_PAYMENT_PROCESS) as HTMLElement;
   if (element) {
     const url = new URL(window.location.href);
-    const cancelElement = document.getElementById(EL_ID_PAYMENT_PROCESS_CANCEL) as HTMLElement;
-    cancelElement?.addEventListener('click', async () => {
-      location.href = `./${URL_USER}?status=cancel`;
-    });
     const authorizeUri = url.searchParams.get("authorize_uri");
     const authorizeElement = document.getElementById(EL_ID_PAYMENT_PROCESS_AUTHORIZE) as HTMLElement;
     if (authorizeElement) {

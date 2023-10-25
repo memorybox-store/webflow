@@ -10,6 +10,7 @@ import {
 	SOCIAL_LOGIN_REDIRECT
 } from "../constants/configs";
 import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
+import { URL_FINDER } from "../constants/urls";
 
 import hello from '../config/hellojs';
 import { HelloJSLoginEventArguement } from "hellojs";
@@ -23,7 +24,21 @@ import {
 	signin,
 	lineVerify
 } from "../api/user";
-import { URL_FINDER } from "../constants/urls";
+
+import * as tingle from 'tingle.js';
+import { MSG_ERR_UNKNOWN } from "../constants/messages";
+
+const modal = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: ['overlay', 'button', 'escape'],
+  closeLabel: '',
+  beforeClose: () => {
+    return true;
+  }
+});
+modal.setContent('');
+modal.addFooterBtn('OK', 'tingle-btn tingle-btn--primary', () => modal.close());
 
 export const SocialLoginListener = (): void => {
 
@@ -67,10 +82,12 @@ export const SocialLoginListener = (): void => {
 							location.href = `./${URL_FINDER}`;
 						}
 					}).catch((message) => {
-						alert(message);
+						modal.setContent(message || MSG_ERR_UNKNOWN);
+						modal.open();
 					});
 				}).catch((message) => {
-					alert(message);
+					modal.setContent(message || MSG_ERR_UNKNOWN);
+					modal.open();
 				});
 			} else {
 				register(socialName, socialId, password, 'line').then(() => {
@@ -87,17 +104,21 @@ export const SocialLoginListener = (): void => {
 								location.href = `./${URL_FINDER}`;
 							}
 						}).catch((message) => {
-							alert(message);
+							modal.setContent(message || MSG_ERR_UNKNOWN);
+							modal.open();
 						});
 					}).catch((message) => {
-						alert(message);
+						modal.setContent(message || MSG_ERR_UNKNOWN);
+						modal.open();
 					});
 				}).catch((message) => {
-					alert(message);
+					modal.setContent(message || MSG_ERR_UNKNOWN);
+					modal.open();
 				});
 			}
 		}, (e) => {
-			alert(e.error.message);
+			modal.setContent(e.error.message || MSG_ERR_UNKNOWN);
+			modal.open();
 		});
 	}
 	const url = new URL(window.location.href);
@@ -112,7 +133,8 @@ export const SocialLoginListener = (): void => {
 					hello('facebook').api('me').then((json: any) => {
 						afterSocial('fb', json.id, json.name, password);
 					}, (e) => {
-						alert('Signin error: ' + e.error.message);
+						modal.setContent(e.error.message || MSG_ERR_UNKNOWN);
+						modal.open();
 					});
 				}
 			});
@@ -127,7 +149,8 @@ export const SocialLoginListener = (): void => {
 					hello('google').api('me').then((json: any) => {
 						afterSocial('google', json.id, json.name, password);
 					}, (e) => {
-						alert('Signin error: ' + e.error.message);
+						modal.setContent(e.error.message || MSG_ERR_UNKNOWN);
+						modal.open();
 					});
 				}
 			});
@@ -146,23 +169,14 @@ export const SocialLoginListener = (): void => {
 				lineVerify(idToken).then((data: any) => {
 					afterSocial('line', data.sub, data.name, password);
 				}).catch((message) => {
-					alert(message);
+					modal.setContent(message || MSG_ERR_UNKNOWN);
+					modal.open();
 				});
 			}).catch((message) => {
-				alert(message);
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
 			});
 		}
 	}
-
-	// var online = (session: HelloJSAuthResponse) => {
-	// 	const currentTime = (new Date()).getTime() / 1000;
-	// 	return session && session.access_token && session.expires > currentTime;
-	// };
-
-	// var fb: HelloJSAuthResponse = hello('facebook').getAuthResponse();
-
-	// if (online(fb)) {
-	// 	alert('Signed');
-	// }
 
 };
