@@ -28,7 +28,7 @@ modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close(
 
 export const DownloadListener = async (): Promise<void> => {
 
-  const load = async () => {
+  const updateDownloads = async () => {
     const element = document.getElementById(EL_ID_DOWNLOAD_LIST) as HTMLElement;
     if (element) {
 
@@ -148,6 +148,6 @@ export const DownloadListener = async (): Promise<void> => {
     }
   }
 
-  load();
+  updateDownloads();
 
 }

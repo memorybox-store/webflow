@@ -11,6 +11,7 @@ import { URL_USER } from "../constants/urls";
 import { paymentAuthorize } from "../api/payment";
 
 import * as tingle from 'tingle.js';
+import { updateOrders } from "./OrderListener";
 
 const modal = new tingle.modal({
   footer: true,
@@ -72,6 +73,9 @@ export const UserListener = (): void => {
 				if (status === 'error' && message) {
 					modal.setContent(decodeURIComponent(message) || MSG_ERR_UNKNOWN);
 					modal.open();
+				} else {
+					updateOrders();
+					updateDownloads();
 				}
 			}).catch((message) => {
 				modal.setContent(message || MSG_ERR_UNKNOWN);
@@ -82,3 +86,7 @@ export const UserListener = (): void => {
 	}
 
 };
+
+function updateDownloads() {
+	throw new Error("Function not implemented.");
+}
