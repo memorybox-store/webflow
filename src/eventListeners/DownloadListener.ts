@@ -26,6 +26,18 @@ const modal = new tingle.modal({
 modal.setContent('');
 modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
+const modalLoading = new tingle.modal({
+  footer: true,
+  stickyFooter: false,
+  closeMethods: [],
+  closeLabel: '',
+  cssClass: ['modal-loading'],
+  beforeClose: () => {
+    return true;
+  }
+});
+modalLoading.setContent('<div class="lds-ripple"><div></div><div></div></div>');
+
 export const DownloadListener = async (): Promise<void> => {
 
   const updateDownloads = async () => {
@@ -48,7 +60,6 @@ export const DownloadListener = async (): Promise<void> => {
       if (sampleElement) {
 
         sampleElement.classList.add('hidden-force');
-
 
         await getOrder(true).then(async (orders: Order[]) => {
 
@@ -74,6 +85,7 @@ export const DownloadListener = async (): Promise<void> => {
               // Init image
               const imgElement: HTMLImageElement = cardElement.querySelector('img');
               if (imgElement) {
+
                 imgElement.crossOrigin = 'anonymous';
                 imgElement.setAttribute('crossorigin', 'anonymous');
 
@@ -89,36 +101,46 @@ export const DownloadListener = async (): Promise<void> => {
 
                 imgElement.setAttribute('alt', item.product.name);
 
-                imgElement.onload = () => {
+              }
 
-                  // Split the URL by dot
+              const downloadButtonElement = cardElement.querySelector(`.${EL_CLASS_DOWNLOAD_BUTTON}`) as HTMLElement;
+              if (downloadButtonElement) {
 
-                  const names = item.product.image.unmarked.split('/');
-                  const nameFull = names[names.length - 1];
+                downloadButtonElement.style.cursor = 'pointer';
 
-                  const parts = nameFull.split('.');
-                  const name = parts[0];
+                downloadButtonElement.addEventListener('click', () => {
 
-                  // Get the last part (file extension)
-                  const extension = parts[parts.length - 1];
-                  const lowercaseExtension = extension.toLowerCase();
+                  modalLoading.open();
 
-                  // Create a canvas to draw the image
-                  const canvas = document.createElement('canvas');
-                  canvas.width = imgElement.width;
-                  canvas.height = imgElement.height;
-                  const ctx = canvas.getContext('2d');
-                  ctx.drawImage(imgElement, 0, 0);
+                  try {
 
-                  // Convert the canvas content to a data URL
-                  const dataURL = canvas.toDataURL('image/jpeg'); // Change format if needed
+                    // Create an image element to load the image
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous';
+                    img.src = item.product.image.unmarked;
 
-                  const downloadButtonElement = cardElement.querySelector(`.${EL_CLASS_DOWNLOAD_BUTTON}`) as HTMLElement;
-                  if (downloadButtonElement) {
+                    const names = item.product.image.unmarked.split('/');
+                    const nameFull = names[names.length - 1];
 
-                    downloadButtonElement.style.cursor = 'pointer';
+                    const parts = nameFull.split('.');
+                    const name = parts[0];
 
-                    downloadButtonElement.addEventListener('click', () => {
+                    // Get the last part (file extension)
+                    const extension = parts[parts.length - 1];
+                    const lowercaseExtension = extension.toLowerCase();
+
+                    img.onload = () => {
+
+                      // Create a canvas to draw the image
+                      const canvas = document.createElement('canvas');
+                      canvas.width = img.width;
+                      canvas.height = img.height;
+                      const ctx = canvas.getContext('2d');
+                      ctx.drawImage(img, 0, 0);
+
+                      // Convert the canvas content to a data URL
+                      const dataURL = canvas.toDataURL('image/jpeg'); // Change format if needed
+
                       const a = document.createElement('a');
                       a.href = dataURL;
                       a.download = `${item.product.boat.name} - ${name}.${lowercaseExtension}`;
@@ -126,11 +148,19 @@ export const DownloadListener = async (): Promise<void> => {
                       document.body.appendChild(a);
                       a.click();
                       document.body.removeChild(a);
-                    });
+
+                      modalLoading.close();
+
+                    }
+
+                  } catch {
+
+                    modalLoading.close();
 
                   }
 
-                };
+                });
+
               }
 
               element.appendChild(cardElement);
