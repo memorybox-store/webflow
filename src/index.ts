@@ -97,9 +97,9 @@ const checkAuthen = () => {
       result = true;
       if (path === `/${URL_LOGIN}` || path === `/${LANG_PREF_TH}${URL_LOGIN}` || path === `/${LANG_PREF_CN}${URL_LOGIN}`) {
         const url = new URL(window.location.href);
-        const redirectPrev: string = decodeURIComponent(url.searchParams.get("redirect"));
+        const redirectPrev: string = url.searchParams.get("redirect");
         if (redirectPrev) {
-          location.href = redirectPrev;
+          location.href = decodeURIComponent(redirectPrev);
         } else {
           location.href = `./${URL_FINDER}`;
         }
