@@ -83,8 +83,10 @@ export const UserListener = (): void => {
 				modal.open();
 			});
 		} else {
-			modal.setContent(message || MSG_ERR_UNKNOWN);
-			modal.open();
+			if (status === 'error' && message) {
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
+			}
 		}
 
 	}

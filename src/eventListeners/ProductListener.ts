@@ -257,7 +257,7 @@ export const ProductListener = async (): Promise<void> => {
 
                 imgPopupElement.crossOrigin = 'anonymous';
                 imgPopupElement.setAttribute('crossorigin', 'anonymous');
-  
+
                 imgPopupElement.src = '';
                 imgPopupElement.srcset = '';
                 loadImageAsBase64(item.image.marked).then((base64Data) => {
@@ -350,17 +350,31 @@ export const ProductListener = async (): Promise<void> => {
   const element = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
   if (element) {
     const url = new URL(window.location.href);
-    await getStorage('result-fid').then(async (boatId: string) => {
-      if (boatId) {
+    await getStorage('result-fid').then(async (boat: string) => {
+      if (!boat) {
+        boat = url.searchParams.get("fid");
+				await setStorage('result-fid', boat);
+      }
+      if (boat) {
         await getStorage('result-date').then(async (date: string) => {
-          await getStorage('result-company').then((companyName: string) => {
+          if (!date) {
+            date = url.searchParams.get("date");
+            await setStorage('result-date', date);
+          }
+          await getStorage('result-company').then(async (companyName: string) => {
+            if (!companyName) {
+              companyName = decodeURI(url.searchParams.get("company") || '');
+              await setStorage('result-company', companyName);
+            }
+            const path: string = window.location.pathname;
+            window.history.pushState(null, "", `${path}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`);
             const imageId = url.searchParams.get("mid");
-            load(boatId, date, companyName);
+            load(boat, date, companyName);
           });
         });
       }
     });
-    
+
   }
 
 }

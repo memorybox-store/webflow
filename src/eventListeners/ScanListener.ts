@@ -267,9 +267,9 @@ export const ScanListener = (): void => {
 
               detectFace('facescan-preview', options).then(async (resultSource: any) => {
                 if (resultSource && resultSource.detections.length) {
-                  await getStorage('result-fid').then(async (boatId: string) => {
-                    if (boatId) {
-                      await getProductsScan(boatId).then(async (data: Product[]) => {
+                  await getStorage('result-fid').then(async (boat: string) => {
+                    if (boat) {
+                      await getProductsScan(boat).then(async (data: Product[]) => {
                         const chunkSize = 1;
                         defer(0, data, resultSource.detections[0], chunkSize, () => {
                           const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;

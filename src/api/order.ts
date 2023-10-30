@@ -186,7 +186,7 @@ export const createOrder = async (cartItems: CartItem[]) => {
       const payload = {
         CompId: companyId,
         Doctype: "E-SO",
-        OrderDate: moment().format(),
+        OrderDate: moment().format('YYYY-MM-DD'),
         Rate: "1",
         Total: price,
         Discount: discount,
@@ -198,19 +198,8 @@ export const createOrder = async (cartItems: CartItem[]) => {
         ItemOrder: items
       }
       const itemIds = payload.ItemOrder.map((item: any) => item.ItemId);
-      await checkPartnership(companyId).then(async (partnership: any) => {
-        if (!partnership) {
-          await savePartnership(companyId).then(async () => {
-            await create(payload, itemIds);
-          }).catch(() => {
-            errors = [...errors, ...itemIds];
-          });
-        } else {
-          await create(payload, itemIds);
-        }
-      }).catch(() => {
-        errors = [...errors, ...itemIds];
-      });
+      await savePartnership(companyId).catch(() => {});
+      await create(payload, itemIds);
     }
     if (!errors.length) {
       resolve({
