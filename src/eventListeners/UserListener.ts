@@ -54,14 +54,15 @@ export const UserListener = (): void => {
 
 		const url = new URL(window.location.href);
 		const ref = url.searchParams.get("ref") || '';
-		if (ref) {
-			const status = url.searchParams.get("status") || 'successful';
-			const code = url.searchParams.get("code") || '';
-			const message = url.searchParams.get("message") || '';
-			const type = url.searchParams.get("type") || '';
-			const orders = url.searchParams.get("orders") || '';
+		const status = url.searchParams.get("status") || 'successful';
+		const code = url.searchParams.get("code") || '';
+		const message = url.searchParams.get("message") || '';
+		const type = url.searchParams.get("type") || '';
+		const orders = url.searchParams.get("orders") || '';
+		
+		window.history.pushState(null, "", path);
 
-			window.history.pushState(null, "", path);
+		if (ref) {
 			paymentAuthorize(
 				status === 'successful' ? true : false,
 				ref,
@@ -81,6 +82,9 @@ export const UserListener = (): void => {
 				modal.setContent(message || MSG_ERR_UNKNOWN);
 				modal.open();
 			});
+		} else {
+			modal.setContent(message || MSG_ERR_UNKNOWN);
+			modal.open();
 		}
 
 	}
