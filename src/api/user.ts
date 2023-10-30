@@ -30,17 +30,44 @@ export const authen = async () => {
   });
 };
 
-export const register = async (name: string = '', email: string, password: string, social: string | false = false) => {
+export const register = async (
+  name: string = '', 
+  email: string, 
+  password: string, 
+  social: string | false = false
+) => {
   return new Promise(async (resolve, reject) => {
-    const payload = {
-      "User_Name": name,
-      "UserName": email,
-      "Password": password,
-      "Email": email
-    }
     if (!social) {
       await checkEmail(email).then(async (result) => {
         if (!result) {
+          const payload = {
+            PhoneNumber: '',
+            UserName: email,
+            Password: password,
+            Email: email,
+            User_Name: name
+          }
+          await axios.post(
+            `${SERVER}/api/Main/Register`,
+            payload,
+            {
+              ...{
+                headers: await createRequestHeader(false, true)
+              }
+            }
+          ).then(async (response: AxiosResponse<any, any>) => {
+            if (response.data) {
+              if (response.data.Status === 'Success') {
+                resolve(true);
+              } else {
+                reject(response.data.Message);
+              }
+            } else {
+              reject(MSG_ERR_EMPTY_RES);
+            }
+          }).catch((error) => {
+            reject(handleResponseError(error));
+          });
         } else {
           reject(MSG_ERR_EMAIL_EXIST);
         }
@@ -49,9 +76,9 @@ export const register = async (name: string = '', email: string, password: strin
       });
     } else {
       const payload = {
-        "User_Name": name,
-        "UserName": email,
-        "Password": password
+        User_Name: name,
+        UserName: email,
+        Password: password
       }
       await axios.post(
         `${SERVER}/api/Main/Register`,

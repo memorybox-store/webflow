@@ -58,33 +58,25 @@ export const RgisterListener = (): void => {
 	formElement?.addEventListener('submit', (event) => {
 
 		const msgSuccess: string = formElement.getAttribute('data-success') || MSG_SUCCESS;
-		const msgAccept: string = formElement.getAttribute('data-accept') || MSG_ERR_ACCEPT_TERMS;
 
 		event.preventDefault();
 		event.stopPropagation();
 
 		const formData = new FormData(formElement);
 
-		const acceptElement = document.querySelector(`.w-checkbox-input`) as HTMLInputElement;
+		const firstName = formData.get('first_name') as string || '';
+		const lastName = formData.get('last_name') as string || '';
+		const name = `${firstName} ${lastName}`;
+		const email = formData.get('email') as string || '';
+		const password = formData.get('password_input') as string || '';
 
-		if (!acceptElement || acceptElement.classList.contains('w--redirected-checked')) {
-
-			const name = formData.get('name') as string || '';
-			const email = formData.get('email') as string || '';
-			const password = formData.get('password_input') as string || '';
-
-			register(name, email, password).then(() => {
-				modalSuccess.setContent(msgSuccess || MSG_ERR_UNKNOWN);
-				modalSuccess.open();
-			}).catch((message) => {
-				modal.setContent(message || MSG_ERR_UNKNOWN);
-				modal.open();
-			});
-
-		} else {
-			modal.setContent(msgAccept || MSG_ERR_UNKNOWN);
+		register(name, email, password).then(() => {
+			modalSuccess.setContent(msgSuccess || MSG_ERR_UNKNOWN);
+			modalSuccess.open();
+		}).catch((message) => {
+			modal.setContent(message || MSG_ERR_UNKNOWN);
 			modal.open();
-		}
+		});
 
 	});
 };
