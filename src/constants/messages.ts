@@ -2,6 +2,7 @@
 export const MSG_LOADING = `Please wait...`;
 export const MSG_FACESCAN_INITIALIZING = 'Initializing...';
 export const MSG_SUCCESS = 'Success!';
+export const MSG_MISMATCH = 'Password and Confirm are mismatched';
 
 /* Info */
 export const MSG_INFO_OMISE = `Picture(s) from Memory Box`;

@@ -1,5 +1,5 @@
 import { EL_ID_REGISTER_FORM } from "../constants/elements";
-import { MSG_ERR_ACCEPT_TERMS, MSG_ERR_UNKNOWN, MSG_SUCCESS } from "../constants/messages";
+import { MSG_ERR_ACCEPT_TERMS, MSG_ERR_UNKNOWN, MSG_MISMATCH, MSG_SUCCESS } from "../constants/messages";
 import { URL_LOGIN } from "../constants/urls";
 import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 import { NAME_OK } from "../constants/names";
@@ -58,6 +58,7 @@ export const RgisterListener = (): void => {
 	formElement?.addEventListener('submit', (event) => {
 
 		const msgSuccess: string = formElement.getAttribute('data-success') || MSG_SUCCESS;
+		const msgMismath: string = formElement.getAttribute('data-password-mismatch') || MSG_MISMATCH;
 
 		event.preventDefault();
 		event.stopPropagation();
@@ -66,17 +67,23 @@ export const RgisterListener = (): void => {
 
 		const firstName = formData.get('first_name') as string || '';
 		const lastName = formData.get('last_name') as string || '';
-		const name = `${firstName} ${lastName}`;
+		const name = lastName ? `${firstName} ${lastName}` : firstName;
 		const email = formData.get('email') as string || '';
 		const password = formData.get('password_input') as string || '';
+		const passwordConfirm = formData.get('password_confirm') as string || '';
 
-		register(name, email, password).then(() => {
-			modalSuccess.setContent(msgSuccess || MSG_ERR_UNKNOWN);
-			modalSuccess.open();
-		}).catch((message) => {
-			modal.setContent(message || MSG_ERR_UNKNOWN);
+		if (password === passwordConfirm) {
+			register(name, email, password).then(() => {
+				modalSuccess.setContent(msgSuccess || MSG_ERR_UNKNOWN);
+				modalSuccess.open();
+			}).catch((message) => {
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
+			});
+		} else {
+			modal.setContent(msgMismath);
 			modal.open();
-		});
+		}
 
 	});
 };
