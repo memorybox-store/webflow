@@ -218,7 +218,7 @@ export const createOrder = async (cartItems: CartItem[]) => {
         total: totalCalculation
       });
     } else {
-      reject(`Unable to creae order for items ${errors.join(', ')}`)
+      reject(`Unable to create order for items ${errors.join(', ')}`)
     }
   });
 }
