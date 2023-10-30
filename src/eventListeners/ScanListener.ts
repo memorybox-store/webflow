@@ -6,13 +6,13 @@ import {
   EL_ID_RESULT_SAMPLE,
   EL_ID_RESULT_SUM_MY_PIC
 } from "../constants/elements";
-import { 
-  MSG_ERR_INVALID_IMAGE, 
-  MSG_ERR_NO_FACE, 
-  MSG_ERR_UNKNOWN, 
-  MSG_FACESCAN_INITIALIZING, 
-  MSG_INFO_NOT_AVAIL, 
-  MSG_INFO_SCANNING_STATUS 
+import {
+  MSG_ERR_INVALID_IMAGE,
+  MSG_ERR_NO_FACE,
+  MSG_ERR_UNKNOWN,
+  MSG_FACESCAN_INITIALIZING,
+  MSG_INFO_NOT_AVAIL,
+  MSG_INFO_SCANNING_STATUS
 } from "../constants/messages";
 import { NAME_OK, NAME_SCANNING } from "../constants/names";
 import { DATA_ATT_EMPTY } from "../constants/attributes";
@@ -26,7 +26,7 @@ import {
 import { getProductsScan } from "../api/product";
 
 import { Product } from "../models/product";
-import { setStorage } from "../utils/storage";
+import { getStorage, setStorage } from "../utils/storage";
 
 import * as tingle from 'tingle.js';
 
@@ -47,7 +47,7 @@ const modalNoFace = new tingle.modal({
   stickyFooter: false,
   closeMethods: ['overlay', 'button', 'escape'],
   closeLabel: '',
-	onClose: () => {
+  onClose: () => {
     const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
     scanningElement?.classList.remove('popup-display-force');
     const imageMarkElements = document.querySelectorAll(`.${EL_CLASS_CARD_PHOTO}`) as NodeListOf<HTMLElement>;
@@ -64,7 +64,7 @@ const modalNoFace = new tingle.modal({
       const msgEmptyMyPic: string = resultMyPicElement.getAttribute(DATA_ATT_EMPTY) || MSG_INFO_NOT_AVAIL;
       resultMyPicElement.innerText = msgEmptyMyPic;
     }
-	},
+  },
   beforeClose: () => {
     return true;
   }
@@ -77,7 +77,7 @@ const modalInvalid = new tingle.modal({
   stickyFooter: false,
   closeMethods: ['overlay', 'button', 'escape'],
   closeLabel: '',
-	onClose: () => {
+  onClose: () => {
     const inputFileElement = document.getElementById('facescan-input') as HTMLInputElement;
     if (inputFileElement) {
       inputFileElement.value = '';
@@ -96,7 +96,7 @@ const modalInvalid = new tingle.modal({
         resultMyPicElement.innerText = msgEmptyMyPic;
       }
     }
-	},
+  },
   beforeClose: () => {
     return true;
   }
@@ -267,23 +267,21 @@ export const ScanListener = (): void => {
 
               detectFace('facescan-preview', options).then(async (resultSource: any) => {
                 if (resultSource && resultSource.detections.length) {
-
-                  const url = new URL(window.location.href);
-                  const boatId = url.searchParams.get("fid");
-                  if (boatId) {
-
-                    await getProductsScan(boatId).then(async (data: Product[]) => {
-                      const chunkSize = 1;
-                      defer(0, data, resultSource.detections[0], chunkSize, () => {
-                        const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                        scanningElement?.classList.remove('popup-display-force');
-                        const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
-                        if (resultRealtimeElement) {
-                          resultRealtimeElement.innerText = '';
-                        }
+                  await getStorage('result-fid').then(async (boatId: string) => {
+                    if (boatId) {
+                      await getProductsScan(boatId).then(async (data: Product[]) => {
+                        const chunkSize = 1;
+                        defer(0, data, resultSource.detections[0], chunkSize, () => {
+                          const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                          scanningElement?.classList.remove('popup-display-force');
+                          const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
+                          if (resultRealtimeElement) {
+                            resultRealtimeElement.innerText = '';
+                          }
+                        });
                       });
-                    });
-                  }
+                    }
+                  });
                 } else {
                   modalNoFace.setContent(msgNoFace || MSG_ERR_UNKNOWN);
                   modalNoFace.open();

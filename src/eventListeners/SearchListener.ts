@@ -28,6 +28,7 @@ import { getCompanies, getBoats } from "../api/sale";
 import { Company } from "../models/sale";
 
 import * as tingle from 'tingle.js';
+import { setStorage } from "../utils/storage";
 
 const modal = new tingle.modal({
   footer: true,
@@ -382,7 +383,7 @@ export const SearchListener = (): void => {
 
 	const formElement = document.getElementById(EL_ID_FIND_FORM) as HTMLFormElement;
 	if (formElement) {
-		formElement.addEventListener('submit', (event) => {
+		formElement.addEventListener('submit', async (event) => {
 
 			const msgEmptyCompany: string = formElement.getAttribute(DATA_ATT_EMPTY_COMPANY) || MSG_ERR_EMPTY_COMPANY;
 			const msgEmptyDate: string = formElement.getAttribute(DATA_ATT_EMPTY_DATE) || MSG_ERR_EMPTY_DATE;
@@ -399,6 +400,9 @@ export const SearchListener = (): void => {
 
 			if (company && date && boat) {
 				const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
+				await setStorage('result-fid', boat);
+				await setStorage('result-date', date);
+				await setStorage('result-company', companyName);
 				const result = formElement.getAttribute(DATA_ATT_RESULT_URI) || '';
 				if (result) {
 					location.href = `${result}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`;

@@ -50,7 +50,7 @@ const modal = new tingle.modal({
 modal.setContent('');
 modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
-export const ProductListener = (): void => {
+export const ProductListener = async (): Promise<void> => {
 
   // Add product to cart
   const add = (id: string, companyId: string, itemId: string) => {
@@ -350,13 +350,17 @@ export const ProductListener = (): void => {
   const element = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
   if (element) {
     const url = new URL(window.location.href);
-    const boatId = url.searchParams.get("fid");
-    const date = url.searchParams.get("date");
-    const companyName = decodeURI(url.searchParams.get("company") || '');
-    const imageId = url.searchParams.get("mid");
-    if (boatId) {
-      load(boatId, date, companyName);
-    }
+    await getStorage('result-fid').then(async (boatId: string) => {
+      if (boatId) {
+        await getStorage('result-date').then(async (date: string) => {
+          await getStorage('result-company').then((companyName: string) => {
+            const imageId = url.searchParams.get("mid");
+            load(boatId, date, companyName);
+          });
+        });
+      }
+    });
+    
   }
 
 }

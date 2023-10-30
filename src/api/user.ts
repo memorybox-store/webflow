@@ -198,6 +198,9 @@ export const signout = async () => {
     removeStorage('status-mypic');
     removeStorage('status-total');
     removeStorage('status-boat');
+    removeStorage('result-fid');
+    removeStorage('result-date');
+    removeStorage('result-company');
     removeStorage('session').then(() => {
       removeStorage('profile').then(() => {
         removeStorage('cookie').then(() => {
