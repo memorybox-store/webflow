@@ -25,7 +25,7 @@ export interface ProductDetail {
   status?: string | null;
   unit?: {
     id?: number | null;
-    name?: number | null;
+    name?: string | null;
     price?: number | null;
   }
   package?: {

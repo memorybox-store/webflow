@@ -132,8 +132,8 @@ const updateOrderList = async (formElement: HTMLFormElement, data: OrderItem[]) 
 
         const itemSizeElement = itemElement.querySelector(`.${EL_CLASS_ORDER_ITEM_SIZE}`) as HTMLElement;
         if (itemSizeElement) {
-          itemSizeElement.innerHTML = item.product.details.package
-            ? `${item.product.details.package.width}x${item.product.details.package.height}`
+          itemSizeElement.innerHTML = item.product.details.unit.name
+            ? item.product.details.unit.name
             : '-';
         }
 
