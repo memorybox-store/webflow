@@ -6,8 +6,9 @@ import { AxiosResponse } from 'axios';
 import moment from '../config/moment';
 
 import { createRequestHeader, handleResponseError } from '../utils/rest';
+import { getProduct, getProductDetails } from './product';
 
-import { checkPartnership, savePartnership } from './partner';
+import { savePartnership } from './partner';
 
 import { CartItem } from '../models/cart';
 import { Boat, Company } from '../models/sale';
@@ -20,7 +21,7 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
       OrderId: parseInt(orderId.toString())
     }
     await axios.post(
-      `${SERVER}/api/${success ? 'MemoryBox/SelectOrderInv' : 'MainSale/SelectOrderItemNotInv'}`,
+      `${SERVER}/api/${success ? 'MemoryBox/SelectOrderInv' : 'MainSale/SelectOrderNotInv'}`,
       payload,
       {
         ...{
@@ -36,6 +37,16 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
           for (let orderNo of orderNos) {
             let orderItems: OrderItem[] = [];
             for (let item of data.filter((item: any) => item.order_no === orderNo)) {
+              let itemProduct: Product | null = null;
+              let itemProductDetails: ProductDetail | null = null;
+              if (!success) {
+                await getProduct(item.item_id).then(async (dataProduct: Product) => {
+                  itemProduct = dataProduct;
+                }).catch(() => { });
+                await getProductDetails(item.item_id).then(async (dataProductDetail: ProductDetail) => {
+                  itemProductDetails = dataProductDetail;
+                }).catch(() => { });
+              }
               const boat: Boat = {
                 id: null,
                 name: item.mst_name || null,
@@ -54,36 +65,36 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 website: null,
                 image: null,
               };
-              const productDetail: ProductDetail = {
-                id: item.item_id,
-                optionId: item.slist_option_id,
-                option: item.itemoption,
-                unit: {
-                  id: item.unitid || null,
-                  name: item.unitname || null,
-                  price: item.unit_price || null,
-                },
-                package: {
-                  depth: item.package_depth,
-                  height: item.package_height,
-                  width: item.package_width,
-                  weight: item.package_weight,
-                },
-                file: {
-                  name: item.fitem_name
-                },
-                referenceId: item.ms_id
-              }
+              const productDetail: ProductDetail = itemProductDetails
+                ? itemProductDetails
+                : {
+                  id: item.item_id,
+                  unit: {
+                    id: item.unitid || null,
+                    name: item.unitname || null,
+                    price: item.unit_price || null,
+                  },
+                  package: {
+                    depth: item.package_depth,
+                    height: item.package_height,
+                    width: item.package_width,
+                    weight: item.package_weight,
+                  },
+                  file: {
+                    name: item.fitem_name
+                  },
+                  referenceId: item.ms_id
+                }
               const product: Product = {
                 id: item.item_id,
-                name: item.slist_name || null,
-                description: item.slist_details || null,
+                name: item.slist_name || itemProduct?.name || null,
+                description: item.slist_details || itemProduct?.description || null,
                 tag: item.Tag,
-                minPrice: item.minprice || item.unit_price || null,
-                maxPrice: item.maxprice || item.unit_price || null,
-                price: item.maxprice || item.unit_price || null,
+                minPrice: item.minprice || item.unit_price || itemProductDetails?.unit?.price || null,
+                maxPrice: item.maxprice || item.unit_price || itemProductDetails?.unit?.price || null,
+                price: item.maxprice || item.unit_price || itemProductDetails?.unit?.price || null,
                 image: {
-                  marked: item.img_path,
+                  marked: itemProduct?.image.marked || null,
                   unmarked: success ? item.img_path : null,
                 },
                 details: productDetail,
@@ -94,7 +105,7 @@ export const getOrder = async (success: boolean, orderId: number | string | '' =
                 id: item.ms_id,
                 product: product,
                 quantity: item.qty,
-                amount: item.unit_price || null,
+                amount: item.unit_price || itemProductDetails?.unit?.price || null,
                 discount: item.item_discount,
                 total: item.total,
                 remark: item.remark,
@@ -198,8 +209,9 @@ export const createOrder = async (cartItems: CartItem[]) => {
         ItemOrder: items
       }
       const itemIds = payload.ItemOrder.map((item: any) => item.ItemId);
-      await savePartnership(companyId).catch(() => {});
-      await create(payload, itemIds);
+      await savePartnership(companyId).then(async () => {
+        await create(payload, itemIds);
+      }).catch(() => {});
     }
     if (!errors.length) {
       resolve({
