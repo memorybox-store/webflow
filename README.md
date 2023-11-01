@@ -87,7 +87,7 @@ The Opn Payments (Omise) prebuilt form is neccessary for payment, add the follow
 
 ```bash
 <!-- Initialize Opn Payments (Omise) -->
-<form id="checkout-omise-form" method="POST" action="https://memorybox-store.web.app/opn/charge">
+<form id="checkout-omise-form" method="POST" action="https://asia-southeast1-memorybox-store.cloudfunctions.net/app/opn/charge">
   <script type="text/javascript" src="https://cdn.omise.co/omise.js"
           data-key="<PUBLIC_KEY>"
           data-button-label="Checkout 0.00 THB"
@@ -102,7 +102,7 @@ The Opn Payments (Omise) prebuilt form is neccessary for payment, add the follow
 
 Replace `<PUBLIC_KEY>` with **Opn Payments** `Public Key`.
 
-The `action` atrribute for **form** must be set to the charge endpoint at [https://memorybox-store.web.app/opn/charge](https://memorybox-store.web.app/opn/charge) on the server [memorybox-store.web.app](https://memorybox-store.web.app) running on [Firebase Hosting project](https://github.com/memorybox-store/server) because **Opn API** only works on **server-side** for security reasons.
+The `action` atrribute for **form** must be set to the charge endpoint at [https://asia-southeast1-memorybox-store.cloudfunctions.net/app/opn/charge](https://asia-southeast1-memorybox-store.cloudfunctions.net/app/opn/charge) on the server [asia-southeast1-memorybox-store.cloudfunctions.net/app](https://asia-southeast1-memorybox-store.cloudfunctions.net/app) running on [Firebase Hosting project](https://github.com/memorybox-store/server) because **Opn API** only works on **server-side** for security reasons.
 
 # For Designers
 
