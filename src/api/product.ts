@@ -17,7 +17,7 @@ export const getProducts = async (boatId: string) => {
       Category: boatId
     }
     await axios.post(
-      `${SERVER}/api/MainSale/SelectDataSaleList`,
+      `${SERVER}/api/MemoryBox/SelectDataSaleList`,
       payload,
       {
         ...{
@@ -48,7 +48,7 @@ export const getProducts = async (boatId: string) => {
               image: null,
             };
             const productDetail: ProductDetail = {
-              id: null,
+              id: item.item_id,
               file: {
                 id: item.fitem_id
               },
