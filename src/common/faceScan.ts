@@ -135,97 +135,9 @@ export const detectFace = async (image: string | HTMLImageElement, options?: Arr
   });
 }
 
-export const drawFaceDetections = async (
-  outputId: string,
-  detections: string,
-  inputElement: any,
-  options?: Array<any>
-) => {
-  return new Promise(async (resolve, reject) => {
-
-    try {
-
-      if (typeof inputElement === 'string') {
-        inputElement = document.getElementById(inputElement);
-      }
-
-      const detectionsForSize: any = resizeResults(
-        detections,
-        {
-          width: inputElement.width,
-          height: inputElement.height
-        }
-      );
-
-      // draw them into a canvas
-      const canvas: any = document.getElementById(outputId) as any;
-      canvas.width = inputElement.width;
-      canvas.height = inputElement.height;
-
-      const draws: Array<any> = [draw.drawDetections(canvas, detectionsForSize)];
-      if (options && options.length) {
-        if (options.includes('landmark')) {
-          await draws.push(draw.drawFaceLandmarks(canvas, detectionsForSize.map((res: any) => res.landmarks)));
-        }
-        if (options.includes('ageGender')) {
-          await draws.push(
-            detectionsForSize.forEach(async (res: any) => {
-              const { age, gender, genderProbability } = res
-              await new draw.DrawTextField(
-                [
-                  `${utils.round(age, 0)} years`,
-                  `${gender} (${utils.round(genderProbability)})`
-                ],
-                res.detection.box.bottomLeft
-              ).draw(canvas)
-            })
-          );
-        }
-        if (options.includes('expression')) {
-          await draws.push(draw.drawFaceExpressions(canvas, detectionsForSize));
-        }
-      }
-
-      Promise.all(draws).then(() => {
-        resolve(canvas);
-      }).catch((error) => {
-        reject(error);
-      });
-
-    } catch (error) {
-      reject(error);
-    }
-
-  });
-}
-
-export const compareFaces = (source: any, target: any) => {
-  return new Promise(async (resolve) => {
-    const sourceDescriptor = source.descriptor;
-    const targetDescriptor = target.descriptor;
-    const distance = euclideanDistance(sourceDescriptor, targetDescriptor);
-    if (distance < recognitionTreshold) {
-      resolve(true);
-    } else {
-      resolve(false);
-    }
-  });
-}
-
 export const matchFaces = (source: any, target: any) => {
   const sourceDescriptor = source.descriptor;
   const targetDescriptor = target.descriptor;
   const distance = euclideanDistance(sourceDescriptor, targetDescriptor);
   return (distance < recognitionTreshold) ? true : false;
-}
-
-export const saveResultToImage = async (targetFile: string, canvas: any) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      // saveFile('faceDetection.jpg', canvas.toBuffer('image/jpeg'));
-      resolve(true);
-    } catch (error) {
-      reject(error);
-    }
-  });
 }

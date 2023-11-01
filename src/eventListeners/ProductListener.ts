@@ -351,20 +351,22 @@ export const ProductListener = async (): Promise<void> => {
   if (element) {
     const url = new URL(window.location.href);
     await getStorage('result-fid').then(async (boat: string) => {
-      if (!boat) {
+      if (!boat || boat === 'null') {
         boat = url.searchParams.get("fid");
-				await setStorage('result-fid', boat);
+        await setStorage('result-fid', boat ? boat : '');
       }
       if (boat) {
         await getStorage('result-date').then(async (date: string) => {
-          if (!date) {
+          if (!date || date === 'null') {
             date = url.searchParams.get("date");
-            await setStorage('result-date', date);
+            if (date) {
+              await setStorage('result-date', date ? date : '');
+            }
           }
           await getStorage('result-company').then(async (companyName: string) => {
-            if (!companyName) {
+            if (!companyName || companyName === 'null') {
               companyName = decodeURI(url.searchParams.get("company") || '');
-              await setStorage('result-company', companyName);
+              await setStorage('result-company', companyName ? companyName : '');
             }
             const path: string = window.location.pathname;
             window.history.pushState(null, "", `${path}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`);

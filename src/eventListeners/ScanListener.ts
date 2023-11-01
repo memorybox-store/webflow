@@ -200,23 +200,26 @@ export const ScanListener = (): void => {
                   imgElement.height = height;
                   const id: string = imgElement.getAttribute('data-target');
                   await detectFace(imgElement, options).then(async (resultTarget: any) => {
+
                     const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
-                    imgTargetElement.classList.remove('flex-force');
-                    imgTargetElement.classList.add('hidden-force');
-                    imgTargetElement.classList.remove('found-face');
-                    if (!resultTarget || !resultTarget.detections.length) {
-                      const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                      scanningElement?.classList.remove('popup-display-force');
-                    }
-                    if (imgTargetElement && imgTargetElement.id !== EL_ID_RESULT_SAMPLE) {
-                      const results = resultTarget.detections.map((detection: any) => {
-                        return matchFaces(sourceDetections, detection);
-                      });
-                      imgTargetElement.classList.add('scanned');
-                      if (results.includes(true)) {
-                        imgTargetElement.classList.remove('hidden-force');
-                        imgTargetElement.classList.add('flex-force');
-                        imgTargetElement.classList.add('found-face');
+                    if (imgTargetElement) {
+                      imgTargetElement.classList.remove('flex-force');
+                      imgTargetElement.classList.add('hidden-force');
+                      imgTargetElement.classList.remove('found-face');
+                      if (!resultTarget || !resultTarget.detections.length) {
+                        const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                        scanningElement?.classList.remove('popup-display-force');
+                      }
+                      if (imgTargetElement && imgTargetElement.id !== EL_ID_RESULT_SAMPLE) {
+                        const results = resultTarget.detections.map((detection: any) => {
+                          return matchFaces(sourceDetections, detection);
+                        });
+                        imgTargetElement.classList.add('scanned');
+                        if (results.includes(true)) {
+                          imgTargetElement.classList.remove('hidden-force');
+                          imgTargetElement.classList.add('flex-force');
+                          imgTargetElement.classList.add('found-face');
+                        }
                       }
                     }
 
@@ -257,39 +260,70 @@ export const ScanListener = (): void => {
 
             reader.onload = async (e) => {
 
-              const imgElement = document.getElementById('facescan-preview') as HTMLImageElement;
-              imgElement.src = e.target?.result as string;
-              imgElement.alt = "My picture preview";
-              imgElement.style.objectFit = 'cover';
+              if (e.target && e.target.result) {
 
-              const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-              scanningElement?.classList.add('popup-display-force');
+                const img = new Image();
+                img.src = e.target.result as string;
 
-              detectFace('facescan-preview', options).then(async (resultSource: any) => {
-                if (resultSource && resultSource.detections.length) {
-                  await getStorage('result-fid').then(async (boat: string) => {
-                    if (boat) {
-                      await getProductsScan(boat).then(async (data: Product[]) => {
-                        const chunkSize = 1;
-                        defer(0, data, resultSource.detections[0], chunkSize, () => {
-                          const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                          scanningElement?.classList.remove('popup-display-force');
-                          const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
-                          if (resultRealtimeElement) {
-                            resultRealtimeElement.innerText = '';
-                          }
-                        });
+                img.onload = () => {
+
+                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                  scanningElement?.classList.add('popup-display-force');
+
+                  detectFace(img, options).then(async (resultSource: any) => {
+                    if (resultSource && resultSource.detections.length) {
+
+                      const resultBox = resultSource.detections[0].alignedRect._box;
+
+                      const canvasElement = document.createElement('canvas');
+                      canvasElement.width = resultBox.width; // Set the width of the canvas
+                      canvasElement.height = resultBox.height;
+                      const ctx = canvasElement.getContext('2d');
+
+                      ctx.drawImage(
+                        img, 
+                        resultBox.left, 
+                        resultBox.top, 
+                        resultBox.width, 
+                        resultBox.height, 
+                        0, 
+                        0, 
+                        resultBox.width, 
+                        resultBox.height
+                      );
+
+                      const imgElement = document.getElementById('facescan-preview') as HTMLImageElement;
+                      imgElement.src = canvasElement.toDataURL('image/jpeg');
+                      imgElement.alt = "My picture preview";
+                      imgElement.style.objectFit = 'cover';
+
+                      await getStorage('result-fid').then(async (boat: string) => {
+                        if (boat && boat !== 'null') {
+                          await getProductsScan(boat).then(async (data: Product[]) => {
+                            const chunkSize = 1;
+                            defer(0, data, resultSource.detections[0], chunkSize, () => {
+                              const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                              scanningElement?.classList.remove('popup-display-force');
+                              const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
+                              if (resultRealtimeElement) {
+                                resultRealtimeElement.innerText = '';
+                              }
+                            });
+                          });
+                        }
                       });
+                    } else {
+                      modalNoFace.setContent(msgNoFace || MSG_ERR_UNKNOWN);
+                      modalNoFace.open();
                     }
+                  }).catch((message) => {
+                    modal.setContent(message || MSG_ERR_UNKNOWN);
+                    modal.open();
                   });
-                } else {
-                  modalNoFace.setContent(msgNoFace || MSG_ERR_UNKNOWN);
-                  modalNoFace.open();
-                }
-              }).catch((message) => {
-                modal.setContent(message || MSG_ERR_UNKNOWN);
-                modal.open();
-              });
+
+                };
+
+              }
 
             };
 
