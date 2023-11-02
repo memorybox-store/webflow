@@ -77,10 +77,6 @@ export const UserListener = (): void => {
 				} else {
 					updateOrders();
 					updateDownloads();
-					setTimeout(() => {
-						updateOrders();
-						updateDownloads();
-					}, 3000);
 				}
 			}).catch((message) => {
 				modal.setContent(message || MSG_ERR_UNKNOWN);

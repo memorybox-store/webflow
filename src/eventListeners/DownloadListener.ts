@@ -38,145 +38,145 @@ const modalLoading = new tingle.modal({
 });
 modalLoading.setContent('<div class="lds-ripple"><div></div><div></div></div>');
 
-export const DownloadListener = async (): Promise<void> => {
+const updateDownloads = async () => {
+  const element = document.getElementById(EL_ID_DOWNLOAD_LIST) as HTMLElement;
+  if (element) {
 
-  const updateDownloads = async () => {
-    const element = document.getElementById(EL_ID_DOWNLOAD_LIST) as HTMLElement;
-    if (element) {
-
-      // Clear list
-      if (element.hasChildNodes()) {
-        const childNodes: Array<any> = Object.entries(element.childNodes).map(
-          ([_, childNode]) => childNode
-        );
-        for (const childNode of childNodes) {
-          if (childNode.id !== EL_ID_DOWNLOAD_ITEM_SAMPLE) {
-            element.removeChild(childNode);
-          }
+    // Clear list
+    if (element.hasChildNodes()) {
+      const childNodes: Array<any> = Object.entries(element.childNodes).map(
+        ([_, childNode]) => childNode
+      );
+      for (const childNode of childNodes) {
+        if (childNode.id !== EL_ID_DOWNLOAD_ITEM_SAMPLE) {
+          element.removeChild(childNode);
         }
       }
+    }
 
-      const sampleElement = document.getElementById(EL_ID_DOWNLOAD_ITEM_SAMPLE) as HTMLFormElement;
-      if (sampleElement) {
+    const sampleElement = document.getElementById(EL_ID_DOWNLOAD_ITEM_SAMPLE) as HTMLFormElement;
+    if (sampleElement) {
 
-        sampleElement.classList.add('hidden-force');
+      sampleElement.classList.add('hidden-force');
 
-        await getOrder(true).then(async (orders: Order[]) => {
+      await getOrder(true).then(async (orders: Order[]) => {
 
-          for (let order of orders) {
+        for (let order of orders) {
 
-            for (let item of order.items) {
+          for (let item of order.items) {
 
-              const downloadCountElement = document.getElementById(EL_ID_DOWNLOAD_COUNT) as HTMLElement;
-              if (downloadCountElement) {
-                let count = 0;
-                if (downloadCountElement.innerText && downloadCountElement.innerText !== '0') {
-                  count = parseInt(downloadCountElement.innerText);
-                }
-                count += 1;
-                downloadCountElement.innerHTML = count.toString();
+            const downloadCountElement = document.getElementById(EL_ID_DOWNLOAD_COUNT) as HTMLElement;
+            if (downloadCountElement) {
+              let count = 0;
+              if (downloadCountElement.innerText && downloadCountElement.innerText !== '0') {
+                count = parseInt(downloadCountElement.innerText);
               }
+              count += 1;
+              downloadCountElement.innerHTML = count.toString();
+            }
 
-              // Init card (Cloned from sample element)
-              const cardElement = sampleElement.cloneNode(true) as HTMLElement;
-              cardElement.removeAttribute("id");
-              cardElement.classList.remove("hidden-force");
+            // Init card (Cloned from sample element)
+            const cardElement = sampleElement.cloneNode(true) as HTMLElement;
+            cardElement.removeAttribute("id");
+            cardElement.classList.remove("hidden-force");
 
-              // Init image
-              const imgElement: HTMLImageElement = cardElement.querySelector('img');
-              if (imgElement) {
+            // Init image
+            const imgElement: HTMLImageElement = cardElement.querySelector('img');
+            if (imgElement) {
 
-                imgElement.crossOrigin = 'anonymous';
-                imgElement.setAttribute('crossorigin', 'anonymous');
+              imgElement.crossOrigin = 'anonymous';
+              imgElement.setAttribute('crossorigin', 'anonymous');
 
-                imgElement.src = '';
-                imgElement.srcset = '';
-                loadImageAsBase64(item.product.image.unmarked).then((base64Data) => {
-                  // Use the base64Data in the src attribute of the img element
-                  imgElement.src = base64Data;
-                  imgElement.srcset = base64Data;
-                }).catch((error) => {
-                  console.error(error.message);
-                });
+              imgElement.src = '';
+              imgElement.srcset = '';
+              loadImageAsBase64(item.product.image.unmarked).then((base64Data) => {
+                // Use the base64Data in the src attribute of the img element
+                imgElement.src = base64Data;
+                imgElement.srcset = base64Data;
+              }).catch((error) => {
+                console.error(error.message);
+              });
 
-                imgElement.setAttribute('alt', item.product.name);
+              imgElement.setAttribute('alt', item.product.name);
 
-              }
+            }
 
-              const downloadButtonElement = cardElement.querySelector(`.${EL_CLASS_DOWNLOAD_BUTTON}`) as HTMLElement;
-              if (downloadButtonElement) {
+            const downloadButtonElement = cardElement.querySelector(`.${EL_CLASS_DOWNLOAD_BUTTON}`) as HTMLElement;
+            if (downloadButtonElement) {
 
-                downloadButtonElement.style.cursor = 'pointer';
+              downloadButtonElement.style.cursor = 'pointer';
 
-                downloadButtonElement.addEventListener('click', () => {
+              downloadButtonElement.addEventListener('click', () => {
 
-                  modalLoading.open();
+                modalLoading.open();
 
-                  try {
+                try {
 
-                    // Create an image element to load the image
-                    const img = new Image();
-                    img.crossOrigin = 'anonymous';
-                    img.src = item.product.image.unmarked;
+                  // Create an image element to load the image
+                  const img = new Image();
+                  img.crossOrigin = 'anonymous';
+                  img.src = item.product.image.unmarked;
 
-                    const names = item.product.image.unmarked.split('/');
-                    const nameFull = names[names.length - 1];
+                  const names = item.product.image.unmarked.split('/');
+                  const nameFull = names[names.length - 1];
 
-                    const parts = nameFull.split('.');
-                    const name = parts[0];
+                  const parts = nameFull.split('.');
+                  const name = parts[0];
 
-                    // Get the last part (file extension)
-                    const extension = parts[parts.length - 1];
-                    const lowercaseExtension = extension.toLowerCase();
+                  // Get the last part (file extension)
+                  const extension = parts[parts.length - 1];
+                  const lowercaseExtension = extension.toLowerCase();
 
-                    img.onload = () => {
+                  img.onload = () => {
 
-                      // Create a canvas to draw the image
-                      const canvas = document.createElement('canvas');
-                      canvas.width = img.width;
-                      canvas.height = img.height;
-                      const ctx = canvas.getContext('2d');
-                      ctx.drawImage(img, 0, 0);
+                    // Create a canvas to draw the image
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
 
-                      // Convert the canvas content to a data URL
-                      const dataURL = canvas.toDataURL('image/jpeg'); // Change format if needed
+                    // Convert the canvas content to a data URL
+                    const dataURL = canvas.toDataURL('image/jpeg'); // Change format if needed
 
-                      const a = document.createElement('a');
-                      a.href = dataURL;
-                      a.download = `${item.product.boat.name} - ${name}.${lowercaseExtension}`;
-                      a.style.display = 'none';
-                      document.body.appendChild(a);
-                      a.click();
-                      document.body.removeChild(a);
-
-                      modalLoading.close();
-
-                    }
-
-                  } catch {
+                    const a = document.createElement('a');
+                    a.href = dataURL;
+                    a.download = `${item.product.boat.name} - ${name}.${lowercaseExtension}`;
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
 
                     modalLoading.close();
 
                   }
 
-                });
+                } catch {
 
-              }
+                  modalLoading.close();
 
-              element.appendChild(cardElement);
+                }
+
+              });
 
             }
 
-          }
-        }).catch((message) => {
-          modal.setContent(message || MSG_ERR_UNKNOWN);
-          modal.open();
-        });
+            element.appendChild(cardElement);
 
-      }
+          }
+
+        }
+      }).catch((message) => {
+        modal.setContent(message || MSG_ERR_UNKNOWN);
+        modal.open();
+      });
 
     }
+
   }
+}
+
+export const DownloadListener = async (): Promise<void> => {
 
   updateDownloads();
 
