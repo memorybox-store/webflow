@@ -12,6 +12,7 @@ import { paymentAuthorize } from "../api/payment";
 
 import * as tingle from 'tingle.js';
 import { updateOrders } from "./OrderListener";
+import { updateDownloads } from "./DownloadListener";
 
 const modal = new tingle.modal({
   footer: true,
@@ -92,7 +93,3 @@ export const UserListener = (): void => {
 	}
 
 };
-
-function updateDownloads() {
-	throw new Error("Function not implemented.");
-}

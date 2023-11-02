@@ -38,7 +38,7 @@ const modalLoading = new tingle.modal({
 });
 modalLoading.setContent('<div class="lds-ripple"><div></div><div></div></div>');
 
-const updateDownloads = async () => {
+export const updateDownloads = async () => {
   const element = document.getElementById(EL_ID_DOWNLOAD_LIST) as HTMLElement;
   if (element) {
 
