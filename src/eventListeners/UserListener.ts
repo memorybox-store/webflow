@@ -25,18 +25,6 @@ const modal = new tingle.modal({
 modal.setContent('');
 modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
 
-const modalLoading = new tingle.modal({
-  footer: true,
-  stickyFooter: false,
-  closeMethods: [],
-  closeLabel: '',
-  cssClass: ['modal-loading'],
-  beforeClose: () => {
-    return true;
-  }
-});
-modalLoading.setContent('<div class="lds-ripple"><div></div><div></div></div>');
-
 export const UserListener = (): void => {
 
 	// Load on specific page
@@ -75,36 +63,34 @@ export const UserListener = (): void => {
 		window.history.pushState(null, "", path);
 
 		if (ref) {
-			modalLoading.open();
-			setTimeout(() => {
-				paymentAuthorize(
-					status === 'successful' ? true : false,
-					ref,
-					type,
-					code,
-					message,
-					orders
-				).then(() => {
-					if (status === 'error' && message) {
-						modal.setContent(decodeURIComponent(message) || MSG_ERR_UNKNOWN);
-						modal.open();
-					} else {
+			paymentAuthorize(
+				status === 'successful' ? true : false,
+				ref,
+				type,
+				code,
+				message,
+				orders
+			).then(() => {
+				if (status === 'error' && message) {
+					modal.setContent(decodeURIComponent(message) || MSG_ERR_UNKNOWN);
+					modal.open();
+				} else {
+					updateOrders();
+					updateDownloads();
+					setTimeout(() => {
 						updateOrders();
 						updateDownloads();
-					}
-					modalLoading.close();
-				}).catch((message) => {
-					modal.setContent(message || MSG_ERR_UNKNOWN);
-					modal.open();
-					modalLoading.close();
-				});
-			}, 1000);
+					}, 3000);
+				}
+			}).catch((message) => {
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
+			});
 		} else {
 			if (status === 'error' && message) {
 				modal.setContent(message || MSG_ERR_UNKNOWN);
 				modal.open();
 			}
-			modalLoading.close();
 		}
 
 	}
