@@ -368,6 +368,8 @@ export const ProductListener = async (): Promise<void> => {
             date = dateStored;
           }
         });
+      } else {
+        await setStorage('result-date', boat ? boat : '');
       }
       if (date) {
         let companyName = url.searchParams.get("company");
