@@ -95,7 +95,12 @@ const checkAuthen = () => {
     const path: string = window.location.pathname;
     await authen().then(async () => {
       result = true;
-      if (path === `/${URL_LOGIN}` || path === `/${LANG_PREF_TH}${URL_LOGIN}` || path === `/${LANG_PREF_CN}${URL_LOGIN}`) {
+      if (
+        path === `/` 
+        || path === `/${URL_LOGIN}` 
+        || path === `/${LANG_PREF_TH}${URL_LOGIN}` 
+        || path === `/${LANG_PREF_CN}${URL_LOGIN}`
+        ) {
         const url = new URL(window.location.href);
         const redirectPrev: string = url.searchParams.get("redirect");
         if (redirectPrev) {
