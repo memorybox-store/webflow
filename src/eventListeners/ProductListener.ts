@@ -350,32 +350,45 @@ export const ProductListener = async (): Promise<void> => {
   const element = document.getElementById(EL_ID_RESULT_CONTAINER) as HTMLElement;
   if (element) {
     const url = new URL(window.location.href);
-    await getStorage('result-fid').then(async (boat: string) => {
-      if (!boat || boat === 'null') {
-        boat = url.searchParams.get("fid");
-        await setStorage('result-fid', boat ? boat : '');
-      }
-      if (boat) {
-        await getStorage('result-date').then(async (date: string) => {
-          if (!date || date === 'null') {
-            date = url.searchParams.get("date");
-            if (date) {
-              await setStorage('result-date', date ? date : '');
-            }
+    let boat = url.searchParams.get("fid");
+    if (!boat) {
+      await getStorage('result-fid').then(async (boatStored: string) => {
+        if (boatStored && boatStored !== 'null') {
+          boat = boatStored;
+        }
+      });
+    } else {
+      await setStorage('result-fid', boat ? boat : '');
+    }
+    if (boat) {
+      let date = url.searchParams.get("date");
+      if (!date) {
+        await getStorage('result-date').then(async (dateStored: string) => {
+          if (dateStored && dateStored !== 'null') {
+            date = dateStored;
           }
-          await getStorage('result-company').then(async (companyName: string) => {
-            if (!companyName || companyName === 'null') {
-              companyName = decodeURI(url.searchParams.get("company") || '');
-              await setStorage('result-company', companyName ? companyName : '');
-            }
-            const path: string = window.location.pathname;
-            window.history.pushState(null, "", `${path}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}`);
-            const imageId = url.searchParams.get("mid");
-            load(boat, date, companyName);
-          });
         });
       }
-    });
+      if (date) {
+        let companyName = url.searchParams.get("company");
+        if (!companyName) {
+          await getStorage('result-company').then(async (companyNameStored: string) => {
+            if (!companyNameStored || companyNameStored === 'null') {
+              companyName = companyNameStored;
+            }
+          });
+        } else {
+          companyName = decodeURI(url.searchParams.get("company") || '');
+          await setStorage('result-company', companyName ? companyName : '');
+        }
+        if (companyName) {
+          const path: string = window.location.pathname;
+          window.history.pushState(null, "", `${path}?fid=${boat}&date=${date}&company=${encodeURI(companyName)}`);
+          const imageId = url.searchParams.get("mid");
+          load(boat, date, companyName);
+        }
+      }
+    }
 
   }
 
