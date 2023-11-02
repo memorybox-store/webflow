@@ -369,7 +369,7 @@ export const ProductListener = async (): Promise<void> => {
           }
         });
       } else {
-        await setStorage('result-date', boat ? boat : '');
+        await setStorage('result-date', date ? date : '');
       }
       if (date) {
         let companyName = url.searchParams.get("company");
