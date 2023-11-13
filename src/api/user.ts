@@ -31,9 +31,9 @@ export const authen = async () => {
 };
 
 export const register = async (
-  name: string = '', 
-  email: string, 
-  password: string, 
+  name: string = '',
+  email: string,
+  password: string,
   social: string | false = false
 ) => {
   return new Promise(async (resolve, reject) => {
@@ -180,6 +180,21 @@ export const signin = async (username: string, password: string) => {
           }
         ).then(async (response: any) => {
           await setStorage('cookie', response.data.Data);
+          await retrieveProfile().then(async (profile: Profile) => {
+            let storedProfile: Profile = await getStorage('profile', true) as Profile || null;
+            if (storedProfile && profile && storedProfile.username !== profile.username) {
+              await Promise.all([
+                removeStorage('face'), 
+                removeStorage('status-mypic'), 
+                removeStorage('status-total'),
+                removeStorage('status-boat'),
+                removeStorage('result-fid'),
+                removeStorage('result-date'),
+                removeStorage('result-company')
+              ]);
+            }
+            await setStorage('profile', profile);
+          }).catch(() => { });
           resolve(session);
         }).catch((error) => {
           reject(handleResponseError(error));
@@ -195,20 +210,10 @@ export const signin = async (username: string, password: string) => {
 
 export const signout = async () => {
   return new Promise(async (resolve, reject) => {
-    removeStorage('status-mypic');
-    removeStorage('status-total');
-    removeStorage('status-boat');
-    removeStorage('result-fid');
-    removeStorage('result-date');
-    removeStorage('result-company');
     removeStorage('session').then(() => {
-      removeStorage('profile').then(() => {
-        removeStorage('cookie').then(() => {
-          removeStorage('auhv').then(() => {
-            resolve(true);
-          }).catch(() => {
-            reject();
-          });
+      removeStorage('cookie').then(() => {
+        removeStorage('auhv').then(() => {
+          resolve(true);
         }).catch(() => {
           reject();
         });

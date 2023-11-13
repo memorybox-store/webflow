@@ -17,7 +17,7 @@ export const getCompanies = async () => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(false, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {
@@ -63,7 +63,7 @@ export const getBoats = async (compId: string, date: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(false, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {

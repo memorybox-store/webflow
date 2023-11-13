@@ -156,6 +156,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Select Company ID:** `company-select`
 - **Select Trip Date ID:** `date-input`
 - **Select Boat ID:** `boat-select`
+- **Select Guide ID:** `guide-select`
 - **Dropdown Company ID (Deprecated):** `company-selector`
 - **Dropdown Boat (Deprecated):** `boat-selector`
 - **Select Class (Deprecated):** `w-dropdown-link`
@@ -200,6 +201,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Button Attribute - Scanning Status Message:** `data-scanning-status`
 - **Button Attribute - Invalid Photo Message:** `data-invalid`
 - **Button Attribute - Initializing Message:** `data-initializing`
+- **Button Attribute - Redirect URI (Button outside Finder page) :** `data-redirect-uri`
 - **Uploader ID:** `facescan-uploader`
 - **Form ID:** `facescan-form`
 - **Input ID:** `facescan-input`

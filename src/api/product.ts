@@ -21,7 +21,7 @@ export const getProducts = async (boatId: string) => {
       payload,
       {
         ...{
-          headers: await createRequestHeader(true, true)
+          headers: await createRequestHeader(false, true)
         }
       }
     ).then(async (response: AxiosResponse<any, any>) => {

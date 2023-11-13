@@ -15,7 +15,7 @@ import {
   MSG_INFO_SCANNING_STATUS
 } from "../constants/messages";
 import { NAME_OK, NAME_SCANNING } from "../constants/names";
-import { DATA_ATT_EMPTY } from "../constants/attributes";
+import { DATA_ATT_EMPTY, DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 
 import {
   detectFace,
@@ -29,6 +29,8 @@ import { Product } from "../models/product";
 import { getStorage, setStorage } from "../utils/storage";
 
 import * as tingle from 'tingle.js';
+import { URL_FINDER } from "../constants/urls";
+import { LANG_PREF_TH, LANG_PREF_CN } from "../constants/languages";
 
 const modal = new tingle.modal({
   footer: true,
@@ -136,6 +138,161 @@ export const ScanListener = (): void => {
       element.style.pointerEvents = 'all';
       element.style.opacity = '1';
 
+      const defer = async (startIndex: number, items: Product[], sourceDetections: any, chunkSize: number, callback: any) => {
+
+        const endIndex = Math.min(startIndex + chunkSize, items.length);
+
+        for (let i = startIndex; i < endIndex; i++) {
+          const item: Product = items[i];
+          if (item.image.unmarked) {
+            const imgElement: HTMLImageElement = document.createElement("img");
+            imgElement.crossOrigin = 'anonymous';
+            imgElement.setAttribute('crossorigin', 'anonymous');
+            imgElement.setAttribute('data-target', item.id);
+            imgElement.src = item.image.unmarked;
+            imgElement.style.display = 'none';
+            const width = imgElement.width;
+            const height = imgElement.height;
+            imgElement.width = width;
+            imgElement.height = height;
+            const id: string = imgElement.getAttribute('data-target');
+            await detectFace(imgElement, options).then(async (resultTarget: any) => {
+
+              const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
+              if (imgTargetElement) {
+                imgTargetElement.classList.remove('flex-force');
+                imgTargetElement.classList.add('hidden-force');
+                imgTargetElement.classList.remove('found-face');
+                if (!resultTarget || !resultTarget.detections.length) {
+                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                  scanningElement?.classList.remove('popup-display-force');
+                }
+                if (imgTargetElement && imgTargetElement.id !== EL_ID_RESULT_SAMPLE) {
+                  const results = resultTarget.detections.map((detection: any) => {
+                    return matchFaces(sourceDetections, detection);
+                  });
+                  imgTargetElement.classList.add('scanned');
+                  if (results.includes(true)) {
+                    imgTargetElement.classList.remove('hidden-force');
+                    imgTargetElement.classList.add('flex-force');
+                    imgTargetElement.classList.add('found-face');
+                  }
+                }
+              }
+
+              const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
+              if (countElements) {
+                const countAvailable = Object.entries(countElements).length || 0;
+                // Init result of image includes my picture
+                const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
+                if (resultMyPicElement) {
+                  resultMyPicElement.innerText = countAvailable.toString();
+                  setStorage('status-mypic', countAvailable.toString());
+                }
+                const scannedElements = document.querySelectorAll('.scanned') as NodeListOf<HTMLElement>;
+                if (scannedElements) {
+                  const countScanned = Object.entries(scannedElements).length || 0;
+                  const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
+                  if (resultRealtimeElement) {
+                    resultRealtimeElement.innerText = msgScanningStatus
+                      .replace('{{scanned}}', countScanned.toString())
+                      .replace('{{total}}', items.length.toString())
+                      .replace('{{found}}', countAvailable.toString());
+                  }
+                }
+              }
+            });
+          }
+        }
+
+        if (endIndex < items.length) {
+          setTimeout(() => {
+            defer(endIndex, items, sourceDetections, chunkSize, callback);
+          }, 0);
+        } else {
+          callback();
+        }
+
+      }
+
+      const scan = (src: string) => {
+        setStorage('face', src).then(() => {
+          const path: string = window.location.pathname;
+          if (path !== `/${URL_FINDER}` && path !== `/${LANG_PREF_TH}${URL_FINDER}` && path !== `/${LANG_PREF_CN}${URL_FINDER}`) {
+            const redirect = element.getAttribute(DATA_ATT_REDIRECT_URI) || '';
+            if (redirect) {
+              location.href = `${redirect}?run=true`;
+            } else {
+              location.href = `./${URL_FINDER}?run=true`;
+            }
+          } else {
+
+            const img = new Image();
+
+            img.onload = () => {
+
+              const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+              scanningElement?.classList.add('popup-display-force');
+
+              detectFace(img, options).then(async (resultSource: any) => {
+                if (resultSource && resultSource.detections.length) {
+
+                  const resultBox = resultSource.detections[0].alignedRect._box;
+
+                  const canvasElement = document.createElement('canvas');
+                  canvasElement.width = resultBox.width; // Set the width of the canvas
+                  canvasElement.height = resultBox.height;
+                  const ctx = canvasElement.getContext('2d');
+
+                  ctx.drawImage(
+                    img,
+                    resultBox.left,
+                    resultBox.top,
+                    resultBox.width,
+                    resultBox.height,
+                    0,
+                    0,
+                    resultBox.width,
+                    resultBox.height
+                  );
+
+                  const imgElement = document.getElementById('facescan-preview') as HTMLImageElement;
+                  imgElement.src = canvasElement.toDataURL('image/jpeg');
+                  imgElement.alt = "My picture preview";
+                  imgElement.style.objectFit = 'cover';
+
+                  await getStorage('result-fid').then(async (boat: string) => {
+                    if (boat && boat !== 'null') {
+                      await getProductsScan(boat).then(async (data: Product[]) => {
+                        const chunkSize = 1;
+                        defer(0, data, resultSource.detections[0], chunkSize, () => {
+                          const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                          scanningElement?.classList.remove('popup-display-force');
+                          const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
+                          if (resultRealtimeElement) {
+                            resultRealtimeElement.innerText = '';
+                          }
+                        });
+                      });
+                    }
+                  });
+                } else {
+                  modalNoFace.setContent(msgNoFace || MSG_ERR_UNKNOWN);
+                  modalNoFace.open();
+                }
+              }).catch((message) => {
+                modal.setContent(message || MSG_ERR_UNKNOWN);
+                modal.open();
+              });
+
+            };
+
+            img.src = src;
+
+          }
+        });
+      }
+
       const inputFileElement = document.createElement('input') as HTMLInputElement;
       inputFileElement.id = 'facescan-input';
       inputFileElement.type = 'file';
@@ -181,150 +338,11 @@ export const ScanListener = (): void => {
 
             const reader = new FileReader();
 
-            const defer = async (startIndex: number, items: Product[], sourceDetections: any, chunkSize: number, callback: any) => {
-
-              const endIndex = Math.min(startIndex + chunkSize, items.length);
-
-              for (let i = startIndex; i < endIndex; i++) {
-                const item: Product = items[i];
-                if (item.image.unmarked) {
-                  const imgElement: HTMLImageElement = document.createElement("img");
-                  imgElement.crossOrigin = 'anonymous';
-                  imgElement.setAttribute('crossorigin', 'anonymous');
-                  imgElement.setAttribute('data-target', item.id);
-                  imgElement.src = item.image.unmarked;
-                  imgElement.style.display = 'none';
-                  const width = imgElement.width;
-                  const height = imgElement.height;
-                  imgElement.width = width;
-                  imgElement.height = height;
-                  const id: string = imgElement.getAttribute('data-target');
-                  await detectFace(imgElement, options).then(async (resultTarget: any) => {
-
-                    const imgTargetElement = document.getElementById(`product-${id}`) as HTMLImageElement;
-                    if (imgTargetElement) {
-                      imgTargetElement.classList.remove('flex-force');
-                      imgTargetElement.classList.add('hidden-force');
-                      imgTargetElement.classList.remove('found-face');
-                      if (!resultTarget || !resultTarget.detections.length) {
-                        const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                        scanningElement?.classList.remove('popup-display-force');
-                      }
-                      if (imgTargetElement && imgTargetElement.id !== EL_ID_RESULT_SAMPLE) {
-                        const results = resultTarget.detections.map((detection: any) => {
-                          return matchFaces(sourceDetections, detection);
-                        });
-                        imgTargetElement.classList.add('scanned');
-                        if (results.includes(true)) {
-                          imgTargetElement.classList.remove('hidden-force');
-                          imgTargetElement.classList.add('flex-force');
-                          imgTargetElement.classList.add('found-face');
-                        }
-                      }
-                    }
-
-                    const countElements = document.querySelectorAll('.found-face') as NodeListOf<HTMLElement>;
-                    if (countElements) {
-                      const countAvailable = Object.entries(countElements).length || 0;
-                      // Init result of image includes my picture
-                      const resultMyPicElement = document.getElementById(EL_ID_RESULT_SUM_MY_PIC) as HTMLElement;
-                      if (resultMyPicElement) {
-                        resultMyPicElement.innerText = countAvailable.toString();
-                        setStorage('status-mypic', countAvailable.toString());
-                      }
-                      const scannedElements = document.querySelectorAll('.scanned') as NodeListOf<HTMLElement>;
-                      if (scannedElements) {
-                        const countScanned = Object.entries(scannedElements).length || 0;
-                        const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
-                        if (resultRealtimeElement) {
-                          resultRealtimeElement.innerText = msgScanningStatus
-                            .replace('{{scanned}}', countScanned.toString())
-                            .replace('{{total}}', items.length.toString())
-                            .replace('{{found}}', countAvailable.toString());
-                        }
-                      }
-                    }
-                  });
-                }
-              }
-
-              if (endIndex < items.length) {
-                setTimeout(() => {
-                  defer(endIndex, items, sourceDetections, chunkSize, callback);
-                }, 0);
-              } else {
-                callback();
-              }
-
-            }
-
             reader.onload = async (e) => {
-
               if (e.target && e.target.result) {
-
-                const img = new Image();
-                img.src = e.target.result as string;
-
-                img.onload = () => {
-
-                  const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                  scanningElement?.classList.add('popup-display-force');
-
-                  detectFace(img, options).then(async (resultSource: any) => {
-                    if (resultSource && resultSource.detections.length) {
-
-                      const resultBox = resultSource.detections[0].alignedRect._box;
-
-                      const canvasElement = document.createElement('canvas');
-                      canvasElement.width = resultBox.width; // Set the width of the canvas
-                      canvasElement.height = resultBox.height;
-                      const ctx = canvasElement.getContext('2d');
-
-                      ctx.drawImage(
-                        img, 
-                        resultBox.left, 
-                        resultBox.top, 
-                        resultBox.width, 
-                        resultBox.height, 
-                        0, 
-                        0, 
-                        resultBox.width, 
-                        resultBox.height
-                      );
-
-                      const imgElement = document.getElementById('facescan-preview') as HTMLImageElement;
-                      imgElement.src = canvasElement.toDataURL('image/jpeg');
-                      imgElement.alt = "My picture preview";
-                      imgElement.style.objectFit = 'cover';
-
-                      await getStorage('result-fid').then(async (boat: string) => {
-                        if (boat && boat !== 'null') {
-                          await getProductsScan(boat).then(async (data: Product[]) => {
-                            const chunkSize = 1;
-                            defer(0, data, resultSource.detections[0], chunkSize, () => {
-                              const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
-                              scanningElement?.classList.remove('popup-display-force');
-                              const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
-                              if (resultRealtimeElement) {
-                                resultRealtimeElement.innerText = '';
-                              }
-                            });
-                          });
-                        }
-                      });
-                    } else {
-                      modalNoFace.setContent(msgNoFace || MSG_ERR_UNKNOWN);
-                      modalNoFace.open();
-                    }
-                  }).catch((message) => {
-                    modal.setContent(message || MSG_ERR_UNKNOWN);
-                    modal.open();
-                  });
-
-                };
-
+                const src = e.target.result as string;
+                scan(src);
               }
-
             };
 
             reader.readAsDataURL(selectedFile);
@@ -343,6 +361,18 @@ export const ScanListener = (): void => {
           inputFileElement.click();
         });
         selectButtonElement.parentElement.replaceChild(fileSelectElement, selectButtonElement);
+      }
+            
+      const url = new URL(window.location.href);
+      let run = url.searchParams.get("run");
+      if (run) {
+        const path: string = window.location.pathname;
+        window.history.pushState(null, "", path);
+        getStorage('face').then((face: string) => {
+          if (face) {
+            scan(face);
+          }
+        });
       }
 
     }).catch((error) => {

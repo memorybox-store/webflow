@@ -16,7 +16,7 @@ import {
   URL_SIGNUP,
   URL_TERMS
 } from './constants/urls';
-import { PAYMENT_REDIRECT, PAYMENT_SERVER } from './constants/configs';
+import { PAYMENT_REDIRECT } from './constants/configs';
 import { LANG_PREF_CN, LANG_PREF_TH } from './constants/languages';
 import { NAME_OK } from './constants/names';
 
@@ -25,7 +25,7 @@ import './style.css';
 import * as tingle from 'tingle.js';
 
 import { authen, retrieveProfile, signout } from './api/user';
-import { getStorage, setStorage } from './utils/storage';
+import { getStorage } from './utils/storage';
 
 import { Profile, Session } from './models/user';
 
