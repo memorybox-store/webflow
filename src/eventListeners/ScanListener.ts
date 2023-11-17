@@ -259,18 +259,13 @@ export const ScanListener = (): void => {
 
               await getCompanies().then(async (companies: Array<any>) => {
 
-                console.log(companies);
-
                 const url = new URL(window.location.href);
                 let companyParam = url.searchParams.get("company");
-                console.log(companyParam);
                 if (companyParam) {
                   const companySelected: Company = companies.find((data: Company) => data.shortname === companyParam);
-                  console.log(companySelected);
                   if (companySelected) {
                     company = companySelected.id.toString();
                   }
-                  console.log(company);
                 }
 
                 if (company && dateValue && boatValue) {
@@ -279,13 +274,10 @@ export const ScanListener = (): void => {
                   await setStorage('result-date', dateValue);
                   await setStorage('result-company', companyName);
                   const result = element.getAttribute(DATA_ATT_RESULT_URI) || '';
-                  console.log(result);
                   if (result) {
-                    console.log(`${result}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`);
                     location.href = `${result}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`;
                   } else {
                     location.href = `./${URL_RESULT}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`;
-                    console.log(`./${URL_RESULT}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`);
                   }
                 } else {
                   if (!company) {
@@ -306,10 +298,12 @@ export const ScanListener = (): void => {
             }
 
           } else {
-
+            
             const img = new Image();
 
             img.onload = () => {
+
+              console.log('loaded');
 
               const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
               scanningElement?.classList.add('popup-display-force');
@@ -373,6 +367,7 @@ export const ScanListener = (): void => {
             };
 
             img.src = src;
+            console.log(src);
 
           }
         });
@@ -454,6 +449,7 @@ export const ScanListener = (): void => {
         const path: string = window.location.pathname;
         window.history.pushState(null, "", path);
         getStorage('face').then((face: string) => {
+          console.log(face);
           if (face) {
             scan(face);
           }
