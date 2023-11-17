@@ -78,7 +78,7 @@ export const ProductListener = async (): Promise<void> => {
           reject(error);
         });
       }).catch(async () => {
-        await getStorage('cart-items', true).then(async (stored: []) => {
+        await getStorage('cart-items', true).then(async (stored: [] | null) => {
           let cartItems: CartItem[] = [];
           if (stored && stored.length) {
             cartItems = stored as CartItem[];

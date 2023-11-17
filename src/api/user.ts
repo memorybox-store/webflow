@@ -196,12 +196,12 @@ export const signin = async (username: string, password: string) => {
                 removeStorage('status-boat'),
                 removeStorage('result-fid'),
                 removeStorage('result-date'),
-                removeStorage('result-company')
+                removeStorage('result-company'),
               ]);
             }
-            await setStorage('profile', profile);
+            await setStorage('profile', profile, true);
             let cartItems: CartItem[] = [];
-            await getStorage('cart-items', true).then(async (stored: []) => {
+            await getStorage('cart-items', true).then(async (stored: [] | null) => {
               if (stored && stored.length) {
                 cartItems = stored as CartItem[];
               }
@@ -231,6 +231,7 @@ export const signin = async (username: string, password: string) => {
 
 export const signout = async () => {
   return new Promise(async (resolve, reject) => {
+    removeStorage('cart-items');
     removeStorage('session').then(() => {
       removeStorage('cookie').then(() => {
         removeStorage('auhv').then(() => {

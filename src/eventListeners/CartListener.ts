@@ -99,7 +99,7 @@ export const removeCartItem = (cartId: string, cartName: string) => {
         });
       }).catch(async () => {
         let cartItems: CartItem[] = [];
-        await getStorage('cart-items', true).then(async (stored: []) => {
+        await getStorage('cart-items', true).then(async (stored: [] | null) => {
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
@@ -202,7 +202,7 @@ const updateCartList = (data: CartItem[]) => {
                 });
               }).catch(async () => {
                 let cartItems: CartItem[] = [];
-                await getStorage('cart-items', true).then(async (stored: []) => {
+                await getStorage('cart-items', true).then(async (stored: [] | null) => {
                   if (stored && stored.length) {
                     cartItems = stored as CartItem[];
                   }
@@ -267,8 +267,6 @@ export const updateCartItems = (data: CartItem[]) => {
   updateCartList(data);
   updateCartAmount(data);
 
-  setStorage('cart-items', data, true);
-
   // Update add buttons
   const addedItems = data.map((item: CartItem) => item.product.id.toString());
   const update = (elements: NodeListOf<HTMLElement>) => {
@@ -320,7 +318,7 @@ export const CartListener = async (): Promise<void> => {
         });
       }).catch(async () => {
         let cartItems: CartItem[] = [];
-        await getStorage('cart-items', true).then(async (stored: []) => {
+        await getStorage('cart-items', true).then(async (stored: [] | null) => {
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
