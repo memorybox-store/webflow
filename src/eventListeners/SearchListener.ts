@@ -10,12 +10,14 @@ import {
 	MSG_ERR_EMPTY_BOAT, 
 	MSG_ERR_EMPTY_COMPANY, 
 	MSG_ERR_EMPTY_DATE, 
+	MSG_ERR_EMPTY_GUIDE, 
 	MSG_ERR_UNKNOWN
 } from "../constants/messages";
 import { 
 	DATA_ATT_EMPTY_BOAT, 
 	DATA_ATT_EMPTY_COMPANY, 
 	DATA_ATT_EMPTY_DATE, 
+	DATA_ATT_EMPTY_GUIDE, 
 	DATA_ATT_RESULT_URI 
 } from "../constants/attributes";
 import { URL_RESULT } from "../constants/urls";
@@ -388,6 +390,7 @@ export const SearchListener = (): void => {
 			const msgEmptyCompany: string = formElement.getAttribute(DATA_ATT_EMPTY_COMPANY) || MSG_ERR_EMPTY_COMPANY;
 			const msgEmptyDate: string = formElement.getAttribute(DATA_ATT_EMPTY_DATE) || MSG_ERR_EMPTY_DATE;
 			const msgEmptyBoat: string = formElement.getAttribute(DATA_ATT_EMPTY_BOAT) || MSG_ERR_EMPTY_BOAT;
+			const msgEmptyGuide: string = formElement.getAttribute(DATA_ATT_EMPTY_GUIDE) || MSG_ERR_EMPTY_GUIDE;
 
 			event.preventDefault();
 			event.stopPropagation();

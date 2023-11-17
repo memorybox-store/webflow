@@ -1,12 +1,17 @@
 import {
   EL_CLASS_CARD_PHOTO,
   EL_ID_FACESCAN_BTN,
+  EL_ID_FIND_FORM,
   EL_ID_PHOTO_SCANNING,
   EL_ID_PHOTO_SCANNING_STATUS,
   EL_ID_RESULT_SAMPLE,
   EL_ID_RESULT_SUM_MY_PIC
 } from "../constants/elements";
 import {
+  MSG_ERR_EMPTY_BOAT,
+  MSG_ERR_EMPTY_COMPANY,
+  MSG_ERR_EMPTY_DATE,
+  MSG_ERR_EMPTY_GUIDE,
   MSG_ERR_INVALID_IMAGE,
   MSG_ERR_NO_FACE,
   MSG_ERR_UNKNOWN,
@@ -14,13 +19,18 @@ import {
   MSG_INFO_NOT_AVAIL,
   MSG_INFO_SCANNING_STATUS
 } from "../constants/messages";
-import { 
-  NAME_OK, 
-  NAME_SCANNING 
+import {
+  NAME_OK,
+  NAME_SCANNING
 } from "../constants/names";
-import { 
-  DATA_ATT_EMPTY, 
-  DATA_ATT_REDIRECT_URI 
+import {
+  DATA_ATT_EMPTY,
+  DATA_ATT_EMPTY_BOAT,
+  DATA_ATT_EMPTY_COMPANY,
+  DATA_ATT_EMPTY_DATE,
+  DATA_ATT_EMPTY_GUIDE,
+  DATA_ATT_REDIRECT_URI,
+  DATA_ATT_RESULT_URI
 } from "../constants/attributes";
 import { URL_RESULT } from "../constants/urls";
 
@@ -37,6 +47,8 @@ import { getStorage, setStorage } from "../utils/storage";
 
 import * as tingle from 'tingle.js';
 import { multiLanguageUrl } from "../utils/language";
+import { Company } from "../models/sale";
+import { getCompanies } from "../api/sale";
 
 const modal = new tingle.modal({
   footer: true,
@@ -222,15 +234,54 @@ export const ScanListener = (): void => {
       }
 
       const scan = (src: string) => {
-        setStorage('face', src).then(() => {
+        setStorage('face', src).then(async () => {
           const path: string = window.location.pathname;
           if (!multiLanguageUrl(URL_RESULT, true).includes(path)) {
-            const redirect = element.getAttribute(DATA_ATT_REDIRECT_URI) || '';
-            if (redirect) {
-              location.href = `${redirect}?run=true`;
-            } else {
-              location.href = `./${URL_RESULT}?run=true`;
+
+            const formElement = document.getElementById(EL_ID_FIND_FORM) as HTMLFormElement;
+            if (formElement) {
+
+              const msgEmptyCompany: string = formElement.getAttribute(DATA_ATT_EMPTY_COMPANY) || MSG_ERR_EMPTY_COMPANY;
+              const msgEmptyDate: string = formElement.getAttribute(DATA_ATT_EMPTY_DATE) || MSG_ERR_EMPTY_DATE;
+              const msgEmptyBoat: string = formElement.getAttribute(DATA_ATT_EMPTY_BOAT) || MSG_ERR_EMPTY_BOAT;
+              const msgEmptyGuide: string = formElement.getAttribute(DATA_ATT_EMPTY_GUIDE) || MSG_ERR_EMPTY_GUIDE;
+
+              const formData = new FormData(formElement);
+
+              const boat = formData.get('boat') as string || '';
+              const company = formData.get('company') as string || '';
+              const date = formData.get('date') as string || '';
+
+              if (company && date && boat) {
+                await getCompanies().then(async (companies: Array<any>) => {
+                  const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
+                  await setStorage('result-fid', boat);
+                  await setStorage('result-date', date);
+                  await setStorage('result-company', companyName);
+                  const result = formElement.getAttribute(DATA_ATT_RESULT_URI) || '';
+                  if (result) {
+                    location.href = `${result}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}&run=true`;
+                  } else {
+                    location.href = `./${URL_RESULT}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}&run=true`;
+                  }
+                }).catch((message) => {
+                  modal.setContent(message || MSG_ERR_UNKNOWN);
+                  modal.open();
+                });
+              } else {
+                if (!company) {
+                  modal.setContent(msgEmptyCompany || MSG_ERR_UNKNOWN);
+                  modal.open();
+                } else if (!date) {
+                  modal.setContent(msgEmptyDate || MSG_ERR_UNKNOWN);
+                  modal.open();
+                } else if (!boat) {
+                  modal.setContent(msgEmptyBoat || MSG_ERR_UNKNOWN);
+                  modal.open();
+                }
+              }
             }
+
           } else {
 
             const img = new Image();
@@ -373,7 +424,7 @@ export const ScanListener = (): void => {
         });
         selectButtonElement.parentElement.replaceChild(fileSelectElement, selectButtonElement);
       }
-            
+
       const url = new URL(window.location.href);
       let run = url.searchParams.get("run");
       if (run) {

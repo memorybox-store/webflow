@@ -21,10 +21,11 @@ import {
   NAME_CONFIRM, 
   NAME_OK 
 } from "../constants/names";
-import { URL_USER } from "../constants/urls";
+import { URL_LOGIN, URL_USER } from "../constants/urls";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
 import { 
   DATA_ATT_CHECKOUT_URI, 
+  DATA_ATT_LOGIN_URI, 
   DATA_ATT_REMOVE, 
   DATA_ATT_REMOVE_BTN_CANCEL, 
   DATA_ATT_REMOVE_BTN_CONFIRM 
@@ -38,6 +39,8 @@ import { updatePaymentItems } from "./PaymentListener";
 import { getCartItems, removeItemFromCart } from "../api/cart";
 
 import { CartItem } from "../models/cart";
+import { authen } from "../api/user";
+import { getStorage } from "../utils/storage";
 
 const modal = new tingle.modal({
   footer: true,
@@ -88,10 +91,21 @@ export const removeCartItem = (cartId: string, cartName: string) => {
     modalRemove.setContent(txtPrompt.replace('{{name}}', cartName));
     modalRemove.addFooterBtn(txtConfirm, 'tingle-btn tingle-btn--danger', async () => {
       modalRemove.close();
-      await removeItemFromCart(cartId).then(async (data: CartItem[]) => {
-        resolve(data);
-      }).catch((error) => {
-        reject(error);
+      await authen().then(async () => {
+        await removeItemFromCart(cartId).then(async (data: CartItem[]) => {
+          resolve(data);
+        }).catch((error) => {
+          reject(error);
+        });
+      }).catch(async () => {
+        await getStorage('cart-items', true).then(async (stored: []) => {
+          let cartItems: CartItem[] = [];
+          if (stored && stored.length) {
+            cartItems = stored as CartItem[];
+          }
+          const cartItem = cartItems.find((item: any) => item.id === cartId);
+          resolve(cartItem);
+        });
       });
     });
     modalRemove.addFooterBtn(txtCancel, 'tingle-btn', () => modalRemove.close());
@@ -173,12 +187,23 @@ const updateCartList = (data: CartItem[]) => {
           if (cartId) {
             const cartName = removeElement.getAttribute('data-name') || '';
             removeCartItem(cartId, cartName).then(async () => {
-              await getCartItems().then(async (updatedData: CartItem[]) => {
-                updateCartItems(updatedData);
-                updatePaymentItems(updatedData);
-              }).catch((message) => {
-                modal.setContent(message || MSG_ERR_UNKNOWN);
-                modal.open();
+              await authen().then(async () => {
+                await getCartItems().then(async (updatedData: CartItem[]) => {
+                  updateCartItems(updatedData);
+                  updatePaymentItems(updatedData);
+                }).catch((message) => {
+                  modal.setContent(message || MSG_ERR_UNKNOWN);
+                  modal.open();
+                });
+              }).catch(async () => {
+                await getStorage('cart-items', true).then(async (stored: []) => {
+                  let cartItems: CartItem[] = [];
+                  if (stored && stored.length) {
+                    cartItems = stored as CartItem[];
+                  }
+                  updateCartItems(cartItems);
+                  updatePaymentItems(cartItems);
+                });
               });
             }).catch((message) => {
               modal.setContent(message || MSG_ERR_UNKNOWN);
@@ -278,12 +303,23 @@ export const CartListener = async (): Promise<void> => {
 
   const load = () => {
     return new Promise(async (resolve) => {
-      await getCartItems().then(async (data: CartItem[]) => {
-        initializeElements(data);
-        resolve(data);
-      }).catch((message) => {
-        modal.setContent(message || MSG_ERR_UNKNOWN);
-        modal.open();
+      await authen().then(async () => {
+        await getCartItems().then(async (data: CartItem[]) => {
+          initializeElements(data);
+          resolve(data);
+        }).catch((message) => {
+          modal.setContent(message || MSG_ERR_UNKNOWN);
+          modal.open();
+        });
+      }).catch(async () => {
+        await getStorage('cart-items', true).then(async (stored: []) => {
+          let cartItems: CartItem[] = [];
+          if (stored && stored.length) {
+            cartItems = stored as CartItem[];
+          }
+          initializeElements(cartItems);
+          resolve(cartItems);
+        });
       });
     });
   }
@@ -294,6 +330,7 @@ export const CartListener = async (): Promise<void> => {
     load();
 
     const checkoutURI = element.getAttribute(DATA_ATT_CHECKOUT_URI) || `./${URL_USER}#cart`;
+    const loginURI = element.getAttribute(DATA_ATT_LOGIN_URI) || `./${URL_LOGIN}`;
   
     // Init checkout button
     const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
@@ -301,7 +338,11 @@ export const CartListener = async (): Promise<void> => {
       ecomCheckoutElement.removeAttribute('data-node-type');
       const checkoutButtonElement = ecomCheckoutElement.cloneNode(true) as HTMLElement;
       checkoutButtonElement.id = EL_ID_CART_CHECKOUT_BTN;
-      checkoutButtonElement.setAttribute('href', checkoutURI);
+      await authen().then(() => {
+        checkoutButtonElement.setAttribute('href', checkoutURI);
+      }).catch(() => {
+        location.href = `${loginURI}?redirect=${encodeURIComponent(checkoutURI)}`;
+      });
       checkoutButtonElement.addEventListener('click', async () => {
         const modalElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART}"]`) as HTMLElement;
         if (modalElement) {

@@ -145,11 +145,12 @@ const initialize = () => {
   ScanListener();
   SearchListener();
   ProductListener();
+  CartListener();
+  
   checkAuthen().then((result: boolean) => {
     if (result) {
 
       UserListener();
-      CartListener();
       PaymentListener();
       ProcessPaymentListener();
       OrderListener();

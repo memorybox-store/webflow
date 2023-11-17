@@ -153,6 +153,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Form Attribute - Empty Company Message:** `data-empty-company`
 - **Form Attribute - Empty Date Message:** `data-empty-date`
 - **Form Attribute - Empty Boat Message:** `data-empty-boat`
+- **Form Attribute - Empty Guide Message:** `data-empty-guide`
 - **Form ID:** `finder-form`
 - **Select Company ID:** `company-select`
 - **Select Trip Date ID:** `date-input`
@@ -178,6 +179,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 ## Cart
 
 - **Checkout Badge Attribute - Checkout URI:** `data-checkout-uri` (Full URI)
+- **Checkout Badge Attribute - Login URI:** `data-login-uri`
 - **Checkout Badge Attribute - Remove Prompt Message:** `data-remove-prompt` ({{name}} = Item name)
 - **Checkout Badge Attribute - Cancel Button Confirm Text:** `data-remove-button-confirm`
 - **Checkout Badge Attribute - Cancel Button Cancel Text:** `data-remove-button-cancel`

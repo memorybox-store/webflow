@@ -19,15 +19,15 @@ import {
   EL_ID_RESULT_HEADER_COMPANY,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
-import { 
-  NAME_CART_ADD, 
-  NAME_CART_ADDED, 
-  NAME_CART_ADDING, 
-  NAME_OK 
+import {
+  NAME_CART_ADD,
+  NAME_CART_ADDED,
+  NAME_CART_ADDING,
+  NAME_OK
 } from "../constants/names";
-import { 
-  MSG_ERR_UNKNOWN, 
-  MSG_INFO_NOT_AVAIL 
+import {
+  MSG_ERR_UNKNOWN,
+  MSG_INFO_NOT_AVAIL
 } from "../constants/messages";
 import { DATA_ATT_EMPTY } from "../constants/attributes";
 
@@ -63,18 +63,41 @@ modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close(
 export const ProductListener = async (): Promise<void> => {
 
   // Add product to cart
-  const add = (id: string, companyId: string, itemId: string) => {
+  const add = (item: Product) => {
     return new Promise(async (resolve, reject) => {
       // Add product to cart via API
       await authen().then(async () => {
-        await addItemToCart(id, companyId, itemId, 1).then(async (data: CartItem[]) => {
+        await addItemToCart(item.id,
+          item.company?.id.toString() || '',
+          item.details.id.toString() || '',
+          1
+        ).then(async (data: CartItem[]) => {
           resolve(data);
         }).catch((error) => {
           reject(error);
         });
-      }).catch(() => {
-        const redirect: string = encodeURIComponent(window.location.href);
-        location.href = `./${URL_LOGIN}?redirect=${redirect}`;
+      }).catch(async () => {
+        await getStorage('cart-items', true).then(async (stored: []) => {
+          const id: string = item.id;
+          let cartItems: CartItem[] = [];
+          if (stored && stored.length) {
+            cartItems = stored as CartItem[];
+          }
+          if (!cartItems.find((item: any) => item.id === id)) {
+            const cartItem: CartItem = {
+              id: id,
+              quantity: 1,
+              product: item
+            }
+            const updatedCartItems = [...cartItems, cartItem];
+            await setStorage('cart-items', updatedCartItems, true);
+            resolve(updatedCartItems);
+          } else {
+            resolve(cartItems);
+          }
+        });
+        // const redirect: string = encodeURIComponent(window.location.href);
+        // location.href = `./${URL_LOGIN}?redirect=${redirect}`;
       });
     });
   }
@@ -154,20 +177,20 @@ export const ProductListener = async (): Promise<void> => {
             }
             element.classList.add('disabled');
             element.innerText = NAME_CART_ADDING;
-            add(
-              item.id,
-              item.company?.id.toString() || '',
-              item.details.id.toString() || ''
-            ).then(async () => {
+            add(item).then(async (cartItems: CartItem[]) => {
               element.innerText = NAME_CART_ADDED;
               // Get updated items from cart for checking via API
-              await getCartItems().then(async (updatedData: CartItem[]) => {
-                // Update cart count badges in header
-                updateCartItems(updatedData);
-              }).catch((message) => {
-                modal.setContent(message || MSG_ERR_UNKNOWN);
-                modal.open();
-                reset();
+              await authen().then(async () => {
+                await getCartItems().then(async (updatedData: CartItem[]) => {
+                  // Update cart count badges in header
+                  updateCartItems(updatedData);
+                }).catch((message) => {
+                  modal.setContent(message || MSG_ERR_UNKNOWN);
+                  modal.open();
+                  reset();
+                });
+              }).catch(async () => {
+                updateCartItems(cartItems);
               });
             }).catch((message) => {
               modal.setContent(message || MSG_ERR_UNKNOWN);
@@ -178,180 +201,178 @@ export const ProductListener = async (): Promise<void> => {
         }
       }
 
+      let addedItems: string[] = [];
+
       // Get added items from cart for checking via API
-      getCartItems().then(async (cartItemsData: CartItem[]) => {
-        const addedItems = cartItemsData.map((item: CartItem) => item.product.id.toString());
+      await getCartItems().then(async (cartItemsData: CartItem[]) => {
+        addedItems = cartItemsData.map((item: CartItem) => item.product.id.toString());
+      }).catch(() => { });
 
-        // Get products from boat via API
-        await getProducts(boatId).then(async (data: Product[]) => {
+      // Get products from boat via API
+      await getProducts(boatId).then(async (data: Product[]) => {
 
-          // Update result of image includes my picture
-          if (resultTotalElement) {
-            resultTotalElement.innerText = data.length.toString();
-            setStorage('status-total', data.length.toString());
+        // Update result of image includes my picture
+        if (resultTotalElement) {
+          resultTotalElement.innerText = data.length.toString();
+          setStorage('status-total', data.length.toString());
+        }
+
+        // Update result of total image
+        if (resultBoatElement) {
+          resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
+          setStorage('status-boat', data.length ? data[0].boat?.name : '-');
+        }
+
+        for (let item of data) {
+
+          // Init card (Cloned from sample element)
+          const cardElement = sampleElement.cloneNode(true) as HTMLElement;
+          cardElement.classList.remove("hidden-force");
+          cardElement.removeAttribute('data-w-id');
+          cardElement.setAttribute('id', `product-${item.id}`);
+          cardElement.style.opacity = '1';
+          cardElement.style.display = 'flex';
+
+          // Init image
+          const imgElement: HTMLImageElement = cardElement.querySelector('img');
+          if (imgElement) {
+            imgElement.crossOrigin = 'anonymous';
+            imgElement.setAttribute('crossorigin', 'anonymous');
+
+            imgElement.src = '';
+            imgElement.srcset = '';
+            loadImageAsBase64(item.image.marked).then((base64Data) => {
+              // Use the base64Data in the src attribute of the img element
+              imgElement.src = base64Data;
+              imgElement.srcset = base64Data;
+            }).catch((error) => {
+              console.error(error.message);
+            });
+
+            imgElement.classList.add(EL_CLASS_PHOTO_IMAGE);
+            imgElement.setAttribute('id', `image-${item.id}`);
+            imgElement.addEventListener('click', async () => {
+              const popupElement = document.querySelector(`[data-popup="${item.id}"]`) as HTMLElement;
+              if (popupElement) {
+                popupElement.classList.add('popup-display-force');
+                popupElement.style.opacity = '1';
+                popupElement.style.pointerEvents = 'all';
+              }
+            });
           }
 
-          // Update result of total image
-          if (resultBoatElement) {
-            resultBoatElement.innerText = data.length ? data[0].boat?.name : '-';
-            setStorage('status-boat', data.length ? data[0].boat?.name : '-');
-          }
+          // Init add to cart button
+          const addButtonElement = cardElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`) as HTMLElement;
+          initAddToCartElement(addButtonElement, item, addedItems);
 
-          for (let item of data) {
+          // Init popup
+          const innerPopupElement = cardElement.querySelector(`.${EL_CLASS_POPUP}`) as HTMLElement;
+          if (innerPopupElement) {
 
-            // Init card (Cloned from sample element)
-            const cardElement = sampleElement.cloneNode(true) as HTMLElement;
-            cardElement.classList.remove("hidden-force");
-            cardElement.removeAttribute('data-w-id');
-            cardElement.setAttribute('id', `product-${item.id}`);
-            cardElement.style.opacity = '1';
-            cardElement.style.display = 'flex';
+            // Init popup
+            const popupElement = innerPopupElement.cloneNode(true) as HTMLElement;
 
-            // Init image
-            const imgElement: HTMLImageElement = cardElement.querySelector('img');
-            if (imgElement) {
-              imgElement.crossOrigin = 'anonymous';
-              imgElement.setAttribute('crossorigin', 'anonymous');
+            popupElement.setAttribute('data-popup', item.id);
+            popupElement.style.opacity = '0';
+            popupElement.style.pointerEvents = 'none';
 
-              imgElement.src = '';
-              imgElement.srcset = '';
+            // Init title
+            const titlePopupElements = popupElement.querySelector(`.${EL_CLASS_POPUP_TITLE}`) as HTMLElement;
+            if (titlePopupElements) {
+              titlePopupElements.innerText = moment(date).format('DD.MM.YYYY');
+            }
+
+            // Init subtitle
+            const subtitlePopupElements = popupElement.querySelector(`.${EL_CLASS_POPUP_SUBTITLE}`) as HTMLElement;
+            if (subtitlePopupElements) {
+              subtitlePopupElements.innerText = `${data.length ? data[0].boat?.name : '-'} x ${companyName}`;
+            }
+
+            // Init add to cart button in popup
+            const addPopupButtonElement = popupElement.querySelector(`.${EL_CLASS_ADD_TO_CART_POPUP_BTN}`) as HTMLElement;
+            initAddToCartElement(addPopupButtonElement, item, addedItems);
+
+            // Init image in popup
+            const imgPopupElement = popupElement.querySelector('img') as HTMLImageElement;
+            if (imgPopupElement) {
+
+              imgPopupElement.crossOrigin = 'anonymous';
+              imgPopupElement.setAttribute('crossorigin', 'anonymous');
+
+              imgPopupElement.src = '';
+              imgPopupElement.srcset = '';
               loadImageAsBase64(item.image.marked).then((base64Data) => {
                 // Use the base64Data in the src attribute of the img element
-                imgElement.src = base64Data;
-                imgElement.srcset = base64Data;
+                imgPopupElement.src = base64Data;
+                imgPopupElement.srcset = base64Data;
               }).catch((error) => {
                 console.error(error.message);
               });
 
-              imgElement.classList.add(EL_CLASS_PHOTO_IMAGE);
-              imgElement.setAttribute('id', `image-${item.id}`);
-              imgElement.addEventListener('click', async () => {
-                const popupElement = document.querySelector(`[data-popup="${item.id}"]`) as HTMLElement;
-                if (popupElement) {
-                  popupElement.classList.add('popup-display-force');
-                  popupElement.style.opacity = '1';
-                  popupElement.style.pointerEvents = 'all';
-                }
-              });
             }
 
-            // Init add to cart button
-            const addButtonElement = cardElement.querySelector(`.${EL_CLASS_ADD_TO_CART_BTN}`) as HTMLElement;
-            initAddToCartElement(addButtonElement, item, addedItems);
-
-            // Init popup
-            const innerPopupElement = cardElement.querySelector(`.${EL_CLASS_POPUP}`) as HTMLElement;
-            if (innerPopupElement) {
-
-              // Init popup
-              const popupElement = innerPopupElement.cloneNode(true) as HTMLElement;
-
-              popupElement.setAttribute('data-popup', item.id);
-              popupElement.style.opacity = '0';
-              popupElement.style.pointerEvents = 'none';
-
-              // Init title
-              const titlePopupElements = popupElement.querySelector(`.${EL_CLASS_POPUP_TITLE}`) as HTMLElement;
-              if (titlePopupElements) {
-                titlePopupElements.innerText = moment(date).format('DD.MM.YYYY');
-              }
-
-              // Init subtitle
-              const subtitlePopupElements = popupElement.querySelector(`.${EL_CLASS_POPUP_SUBTITLE}`) as HTMLElement;
-              if (subtitlePopupElements) {
-                subtitlePopupElements.innerText = `${data.length ? data[0].boat?.name : '-'} x ${companyName}`;
-              }
-
-              // Init add to cart button in popup
-              const addPopupButtonElement = popupElement.querySelector(`.${EL_CLASS_ADD_TO_CART_POPUP_BTN}`) as HTMLElement;
-              initAddToCartElement(addPopupButtonElement, item, addedItems);
-
-              // Init image in popup
-              const imgPopupElement = popupElement.querySelector('img') as HTMLImageElement;
-              if (imgPopupElement) {
-
-                imgPopupElement.crossOrigin = 'anonymous';
-                imgPopupElement.setAttribute('crossorigin', 'anonymous');
-
-                imgPopupElement.src = '';
-                imgPopupElement.srcset = '';
-                loadImageAsBase64(item.image.marked).then((base64Data) => {
-                  // Use the base64Data in the src attribute of the img element
-                  imgPopupElement.src = base64Data;
-                  imgPopupElement.srcset = base64Data;
-                }).catch((error) => {
-                  console.error(error.message);
+            // Register click event to dismiss popup
+            const closePopupButtonElements = popupElement.querySelectorAll(`.${EL_CLASS_POPUP_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
+            if (closePopupButtonElements) {
+              for (const [_, closePopupButtonElement] of Object.entries(closePopupButtonElements)) {
+                closePopupButtonElement?.addEventListener('click', async () => {
+                  popupElement.classList.remove('popup-display-force');
+                  popupElement.style.opacity = '0';
+                  popupElement.style.pointerEvents = 'none';
                 });
-
               }
+            }
+
+            // Register click event to dismiss popup
+            const reportButtonElement = popupElement.querySelector(`.${EL_CLASS_REPORT_BTN}`) as HTMLElement;
+            reportButtonElement?.addEventListener('click', async () => {
+              const reportElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`) as HTMLElement;
+              reportElement?.classList.add('popup-display-force');
+            });
+
+            // Init report
+            const innerReportElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`) as HTMLElement;
+            if (innerReportElement) {
+
+              const reportElement = innerReportElement.cloneNode(true) as HTMLElement;
+              reportElement.style.opacity = '0';
+              reportElement.style.display = 'none';
+              reportElement.style.pointerEvents = 'none';
+              reportElement.classList.remove('popup-display-force');
 
               // Register click event to dismiss popup
-              const closePopupButtonElements = popupElement.querySelectorAll(`.${EL_CLASS_POPUP_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
-              if (closePopupButtonElements) {
-                for (const [_, closePopupButtonElement] of Object.entries(closePopupButtonElements)) {
-                  closePopupButtonElement?.addEventListener('click', async () => {
-                    popupElement.classList.remove('popup-display-force');
-                    popupElement.style.opacity = '0';
-                    popupElement.style.pointerEvents = 'none';
+              const reportSubmitButtonElement = reportElement.querySelector(`.${EL_CLASS_REPORT_SUBMIT_BTN}`) as HTMLElement;
+              reportSubmitButtonElement?.addEventListener('click', async () => {
+                // Do submit
+              });
+
+              // Register click event to dismiss popup
+              const closeReportButtonElements = reportElement.querySelectorAll(`.${EL_CLASS_REPORT_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
+              if (closeReportButtonElements) {
+                for (const [_, closeReportButtonElement] of Object.entries(closeReportButtonElements)) {
+                  closeReportButtonElement?.addEventListener('click', async () => {
+                    reportElement.classList.remove('popup-display-force');
                   });
                 }
               }
 
-              // Register click event to dismiss popup
-              const reportButtonElement = popupElement.querySelector(`.${EL_CLASS_REPORT_BTN}`) as HTMLElement;
-              reportButtonElement?.addEventListener('click', async () => {
-                const reportElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`) as HTMLElement;
-                reportElement?.classList.add('popup-display-force');
-              });
-
-              // Init report
-              const innerReportElement = popupElement.querySelector(`.${EL_CLASS_REPORT}`) as HTMLElement;
-              if (innerReportElement) {
-
-                const reportElement = innerReportElement.cloneNode(true) as HTMLElement;
-                reportElement.style.opacity = '0';
-                reportElement.style.display = 'none';
-                reportElement.style.pointerEvents = 'none';
-                reportElement.classList.remove('popup-display-force');
-
-                // Register click event to dismiss popup
-                const reportSubmitButtonElement = reportElement.querySelector(`.${EL_CLASS_REPORT_SUBMIT_BTN}`) as HTMLElement;
-                reportSubmitButtonElement?.addEventListener('click', async () => {
-                  // Do submit
-                });
-
-                // Register click event to dismiss popup
-                const closeReportButtonElements = reportElement.querySelectorAll(`.${EL_CLASS_REPORT_CLOSE_BTN}`) as NodeListOf<HTMLElement>;
-                if (closeReportButtonElements) {
-                  for (const [_, closeReportButtonElement] of Object.entries(closeReportButtonElements)) {
-                    closeReportButtonElement?.addEventListener('click', async () => {
-                      reportElement.classList.remove('popup-display-force');
-                    });
-                  }
-                }
-
-                popupElement.appendChild(reportElement);
-                innerReportElement.parentElement.removeChild(innerReportElement);
-
-              }
-
-              // Change popup location
-              document.querySelector('body')?.appendChild(popupElement);
-              innerPopupElement.parentElement.removeChild(innerPopupElement);
+              popupElement.appendChild(reportElement);
+              innerReportElement.parentElement.removeChild(innerReportElement);
 
             }
 
-            // Append card to container
-            cardContainer?.appendChild(cardElement);
+            // Change popup location
+            document.querySelector('body')?.appendChild(popupElement);
+            innerPopupElement.parentElement.removeChild(innerPopupElement);
 
           }
 
-          resolve(data);
+          // Append card to container
+          cardContainer?.appendChild(cardElement);
 
-        }).catch((message) => {
-          modal.setContent(message || MSG_ERR_UNKNOWN);
-          modal.open();
-        });
+        }
+
+        resolve(data);
 
       }).catch((message) => {
         modal.setContent(message || MSG_ERR_UNKNOWN);
