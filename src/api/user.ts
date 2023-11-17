@@ -4,7 +4,11 @@ import {
   SERVER,
   SOCIAL_LOGIN_REDIRECT
 } from '../constants/configs';
-import { MSG_ERR_EMAIL_EXIST, MSG_ERR_EMPTY_DATA, MSG_ERR_EMPTY_RES } from '../constants/messages';
+import { 
+  MSG_ERR_EMAIL_EXIST, 
+  MSG_ERR_EMPTY_DATA, 
+  MSG_ERR_EMPTY_RES 
+} from '../constants/messages';
 
 import axios from '../config/axios';
 import moment from '../config/moment';

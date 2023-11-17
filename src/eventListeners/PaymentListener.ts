@@ -20,11 +20,20 @@ import {
   EL_ID_USER_TAB_PAYMENT,
   EL_ID_PAYMENT_COUNT
 } from "../constants/elements";
-import { MSG_ERR_EMPTY_ORDER, MSG_ERR_UNKNOWN, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+import { 
+  MSG_ERR_EMPTY_ORDER, 
+  MSG_ERR_UNKNOWN, 
+  MSG_INFO_OMISE, 
+  MSG_LOADING 
+} from "../constants/messages";
 import { PAYMENT_REDIRECT } from "../constants/configs";
-import { DATA_ATT_EMPTY, DATA_ATT_PAYMENT_RETURN_URI, DATA_ATT_WAIT } from "../constants/attributes";
-import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
+import { 
+  DATA_ATT_EMPTY, 
+  DATA_ATT_PAYMENT_RETURN_URI, 
+  DATA_ATT_WAIT 
+} from "../constants/attributes";
 import { NAME_OK } from "../constants/names";
+import { URL_USER } from "../constants/urls";
 
 import { updateOrders } from "./OrderListener";
 import { removeCartItem, updateCartItems } from "./CartListener";
@@ -35,9 +44,9 @@ import { getCartItems } from "../api/cart";
 import { createOrder } from "../api/order";
 
 import { CartItem } from "../models/cart";
-import { URL_USER } from "../constants/urls";
 
 import * as tingle from 'tingle.js';
+import { multiLanguageUrl } from "../utils/language";
 
 const modal = new tingle.modal({
   footer: true,
@@ -318,7 +327,7 @@ export const PaymentListener = async (): Promise<void> => {
             });
             updateOrders();
             const path: string = window.location.pathname;
-            if (path === `/${URL_USER}` || path === `/${LANG_PREF_TH}${URL_USER}` || path === `/${LANG_PREF_CN}${URL_USER}`) {
+            if (multiLanguageUrl(URL_USER, true).includes(path)) {
               const tabPaymentElement = document.getElementById(EL_ID_USER_TAB_PAYMENT) as HTMLElement;
               tabPaymentElement?.click();
             }

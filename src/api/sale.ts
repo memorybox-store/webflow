@@ -5,7 +5,10 @@ import axios from '../config/axios';
 import { AxiosResponse } from 'axios';
 import moment from '../config/moment';
 
-import { createRequestHeader, handleResponseError } from '../utils/rest';
+import { 
+  createRequestHeader, 
+  handleResponseError 
+} from '../utils/rest';
 
 import { Company, Boat } from '../models/sale';
 

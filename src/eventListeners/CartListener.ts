@@ -14,7 +14,13 @@ import {
   EL_ID_CART_CHECKOUT_BTN,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
-import { NAME_CANCEL, NAME_CART_ADD, NAME_CART_ADDED, NAME_CONFIRM, NAME_OK } from "../constants/names";
+import { 
+  NAME_CANCEL, 
+  NAME_CART_ADD, 
+  NAME_CART_ADDED, 
+  NAME_CONFIRM, 
+  NAME_OK 
+} from "../constants/names";
 import { URL_USER } from "../constants/urls";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
 import { 
@@ -322,6 +328,7 @@ export const CartListener = async (): Promise<void> => {
         modalElement.classList.add('hidden-force');
       });
     }
+
   }
 
 }

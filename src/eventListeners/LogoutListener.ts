@@ -2,6 +2,7 @@ import { EL_ID_LOGOUT_BTN } from "../constants/elements";
 import { URL_LOGIN } from "../constants/urls";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
 import { NAME_OK } from "../constants/names";
+import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 
 import * as tingle from 'tingle.js';
 
@@ -26,6 +27,11 @@ export const LogoutListener = (): void => {
 			modal.setContent(message || MSG_ERR_UNKNOWN);
 			modal.open();
 		});
-		location.href = `./${URL_LOGIN}`;
+		const redirect = element.getAttribute(DATA_ATT_REDIRECT_URI) || '';
+		if (redirect) {
+			location.href = redirect;
+		} else {
+			location.href = `./${URL_LOGIN}`;
+		}
 	});
 };

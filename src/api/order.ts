@@ -5,8 +5,10 @@ import axios from '../config/axios';
 import { AxiosResponse } from 'axios';
 import moment from '../config/moment';
 
-import { createRequestHeader, handleResponseError } from '../utils/rest';
-import { getProduct, getProductDetails } from './product';
+import { 
+  createRequestHeader, 
+  handleResponseError 
+} from '../utils/rest';
 
 import { savePartnership } from './partner';
 

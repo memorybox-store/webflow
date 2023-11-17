@@ -6,18 +6,22 @@ import {
   EL_ID_RESULT_SUM_TOTAL,
   EL_ID_RESULT_SUM_MY_PIC
 } from './constants/elements';
-import { MSG_ERR_UNKNOWN, MSG_INFO_OMISE } from './constants/messages';
+import { 
+  MSG_ERR_UNKNOWN, 
+  MSG_INFO_OMISE 
+} from './constants/messages';
+import { PAYMENT_REDIRECT } from './constants/configs';
 import {
   URL_FINDER,
+  URL_FINDER_V2,
   URL_HELP_CENTER,
   URL_LOGIN,
   URL_PRIVACY_POLICY,
+  URL_RESULT,
   URL_SIGNIN,
   URL_SIGNUP,
-  URL_TERMS
+  URL_TERMS,
 } from './constants/urls';
-import { PAYMENT_REDIRECT } from './constants/configs';
-import { LANG_PREF_CN, LANG_PREF_TH } from './constants/languages';
 import { NAME_OK } from './constants/names';
 
 import './style.css';
@@ -42,6 +46,20 @@ import { OrderListener } from './eventListeners/OrderListener';
 import { UserListener } from './eventListeners/UserListener';
 import { RgisterListener } from './eventListeners/RegisterListener';
 import { DownloadListener } from './eventListeners/DownloadListener';
+import { multiLanguageUrl } from './utils/language';
+
+const publichUrls = [
+  `/`,
+  ...multiLanguageUrl(URL_LOGIN, true),
+  ...multiLanguageUrl(URL_SIGNUP, true),
+  ...multiLanguageUrl(URL_SIGNIN, true),
+  ...multiLanguageUrl(URL_PRIVACY_POLICY, true),
+  ...multiLanguageUrl(URL_TERMS, true),
+  ...multiLanguageUrl(URL_HELP_CENTER, true),
+  ...multiLanguageUrl(URL_FINDER, true),
+  ...multiLanguageUrl(URL_FINDER_V2, true),
+  ...multiLanguageUrl(URL_RESULT, true),
+];
 
 const modal = new tingle.modal({
   footer: true,
@@ -67,28 +85,6 @@ const modalLoading = new tingle.modal({
 });
 modalLoading.setContent('<div class="lds-ripple"><div></div><div></div></div>');
 
-const publicUrls = [
-  `/`,
-  `/${URL_LOGIN}`,
-  `/${LANG_PREF_TH}${URL_LOGIN}`,
-  `/${LANG_PREF_CN}${URL_LOGIN}`,
-  `/${URL_SIGNUP}`,
-  `/${LANG_PREF_TH}${URL_SIGNUP}`,
-  `/${LANG_PREF_CN}${URL_SIGNUP}`,
-  `/${URL_SIGNIN}`,
-  `/${LANG_PREF_TH}${URL_SIGNIN}`,
-  `/${LANG_PREF_CN}${URL_SIGNIN}`,
-  `/${URL_PRIVACY_POLICY}`,
-  `/${LANG_PREF_TH}${URL_PRIVACY_POLICY}`,
-  `/${LANG_PREF_CN}${URL_PRIVACY_POLICY}`,
-  `/${URL_TERMS}`,
-  `/${LANG_PREF_TH}${URL_TERMS}`,
-  `/${LANG_PREF_CN}${URL_TERMS}`,
-  `/${URL_HELP_CENTER}`,
-  `/${LANG_PREF_TH}${URL_HELP_CENTER}`,
-  `/${LANG_PREF_CN}${URL_HELP_CENTER}`,
-];
-
 const checkAuthen = () => {
   return new Promise(async (resolve) => {
     let result: boolean = false;
@@ -96,11 +92,9 @@ const checkAuthen = () => {
     await authen().then(async () => {
       result = true;
       if (
-        path === `/` 
-        || path === `/${URL_LOGIN}` 
-        || path === `/${LANG_PREF_TH}${URL_LOGIN}` 
-        || path === `/${LANG_PREF_CN}${URL_LOGIN}`
-        ) {
+        path === `/`
+        || multiLanguageUrl(URL_LOGIN, true).includes(path)
+      ) {
         const url = new URL(window.location.href);
         const redirectPrev: string = url.searchParams.get("redirect");
         if (redirectPrev) {
@@ -134,7 +128,7 @@ const checkAuthen = () => {
         modal.setContent(message || MSG_ERR_UNKNOWN);
         modal.open();
       });
-      if (!publicUrls.includes(path)) {
+      if (!publichUrls.includes(path)) {
         const redirect: string = encodeURIComponent(window.location.href);
         location.href = `./${URL_LOGIN}?redirect=${redirect}`;
       }
@@ -149,14 +143,14 @@ const initialize = () => {
   LogoutListener();
   SocialLoginListener();
   ScanListener();
+  SearchListener();
+  ProductListener();
   checkAuthen().then((result: boolean) => {
     if (result) {
 
       UserListener();
       CartListener();
       PaymentListener();
-      SearchListener();
-      ProductListener();
       ProcessPaymentListener();
       OrderListener();
       DownloadListener();

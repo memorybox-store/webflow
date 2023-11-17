@@ -129,6 +129,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Logout
 
+- **Button Attribute - Redirect URI:** `data-redirect-uri`
 - **Button ID:** `logout-button`
 
 ## Register
@@ -176,7 +177,7 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 
 ## Cart
 
-- **Checkout Badge Attribute - Result URI:** `data-checkout-uri`
+- **Checkout Badge Attribute - Checkout URI:** `data-checkout-uri` (Full URI)
 - **Checkout Badge Attribute - Remove Prompt Message:** `data-remove-prompt` ({{name}} = Item name)
 - **Checkout Badge Attribute - Cancel Button Confirm Text:** `data-remove-button-confirm`
 - **Checkout Badge Attribute - Cancel Button Cancel Text:** `data-remove-button-cancel`

@@ -4,7 +4,10 @@ import { MSG_ERR_EMPTY_RES } from '../constants/messages';
 import axios from '../config/axios';
 import { AxiosResponse } from 'axios';
 
-import { createRequestHeader, handleResponseError } from '../utils/rest';
+import { 
+  createRequestHeader, 
+  handleResponseError 
+} from '../utils/rest';
 
 import { CartItem } from '../models/cart';
 import { Company } from '../models/sale';

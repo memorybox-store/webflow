@@ -1,5 +1,8 @@
 import { PAYMENT_SERVER } from '../constants/configs';
-import { MSG_ERR_EMPTY_RES, MSG_ERR_UNKNOWN } from '../constants/messages';
+import {
+  MSG_ERR_EMPTY_RES,
+  MSG_ERR_UNKNOWN
+} from '../constants/messages';
 
 import axios from '../config/axios';
 import { AxiosResponse } from 'axios';
@@ -7,7 +10,7 @@ import { AxiosResponse } from 'axios';
 import { createRequestHeader, handleResponseError } from '../utils/rest';
 
 export const charge = async (
-  token: string = '', 
+  token: string = '',
   source: string = '',
   amount: string = '',
   description: string = '',
@@ -45,7 +48,7 @@ export const charge = async (
 }
 
 export const paymentAuthorize = async (
-  status: boolean, 
+  status: boolean,
   ref: string,
   type: string = '',
   code: string = '',

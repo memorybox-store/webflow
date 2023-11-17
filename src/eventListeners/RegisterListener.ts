@@ -1,5 +1,10 @@
 import { EL_ID_REGISTER_FORM } from "../constants/elements";
-import { MSG_ERR_ACCEPT_TERMS, MSG_ERR_UNKNOWN, MSG_MISMATCH, MSG_SUCCESS } from "../constants/messages";
+import { 
+	MSG_ERR_ACCEPT_TERMS, 
+	MSG_ERR_UNKNOWN, 
+	MSG_MISMATCH, 
+	MSG_SUCCESS 
+} from "../constants/messages";
 import { URL_LOGIN } from "../constants/urls";
 import { DATA_ATT_REDIRECT_URI } from "../constants/attributes";
 import { NAME_OK } from "../constants/names";

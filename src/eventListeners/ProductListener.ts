@@ -19,8 +19,16 @@ import {
   EL_ID_RESULT_HEADER_COMPANY,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
-import { NAME_CART_ADD, NAME_CART_ADDED, NAME_CART_ADDING, NAME_OK } from "../constants/names";
-import { MSG_ERR_UNKNOWN, MSG_INFO_NOT_AVAIL } from "../constants/messages";
+import { 
+  NAME_CART_ADD, 
+  NAME_CART_ADDED, 
+  NAME_CART_ADDING, 
+  NAME_OK 
+} from "../constants/names";
+import { 
+  MSG_ERR_UNKNOWN, 
+  MSG_INFO_NOT_AVAIL 
+} from "../constants/messages";
 import { DATA_ATT_EMPTY } from "../constants/attributes";
 
 import moment from '../config/moment';
@@ -37,6 +45,8 @@ import { CartItem } from "../models/cart";
 import { getStorage, setStorage } from "../utils/storage";
 
 import * as tingle from 'tingle.js';
+import { authen } from "../api/user";
+import { URL_LOGIN } from "../constants/urls";
 
 const modal = new tingle.modal({
   footer: true,
@@ -56,10 +66,15 @@ export const ProductListener = async (): Promise<void> => {
   const add = (id: string, companyId: string, itemId: string) => {
     return new Promise(async (resolve, reject) => {
       // Add product to cart via API
-      await addItemToCart(id, companyId, itemId, 1).then(async (data: CartItem[]) => {
-        resolve(data);
-      }).catch((error) => {
-        reject(error);
+      await authen().then(async () => {
+        await addItemToCart(id, companyId, itemId, 1).then(async (data: CartItem[]) => {
+          resolve(data);
+        }).catch((error) => {
+          reject(error);
+        });
+      }).catch(() => {
+        const redirect: string = encodeURIComponent(window.location.href);
+        location.href = `./${URL_LOGIN}?redirect=${redirect}`;
       });
     });
   }

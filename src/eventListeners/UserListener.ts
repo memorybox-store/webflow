@@ -3,7 +3,6 @@ import {
 	EL_ID_USER_TAB_DOWNLOAD,
 	EL_ID_USER_TAB_PAYMENT
 } from "../constants/elements";
-import { LANG_PREF_CN, LANG_PREF_TH } from "../constants/languages";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
 import { NAME_OK } from "../constants/names";
 import { URL_USER } from "../constants/urls";
@@ -13,6 +12,7 @@ import { paymentAuthorize } from "../api/payment";
 import * as tingle from 'tingle.js';
 import { updateOrders } from "./OrderListener";
 import { updateDownloads } from "./DownloadListener";
+import { multiLanguageUrl } from "../utils/language";
 
 const modal = new tingle.modal({
   footer: true,
@@ -30,7 +30,7 @@ export const UserListener = (): void => {
 
 	// Load on specific page
 	const path: string = window.location.pathname;
-	if (path === `/${URL_USER}` || path === `/${LANG_PREF_TH}${URL_USER}` || path === `/${LANG_PREF_CN}${URL_USER}`) {
+	if (multiLanguageUrl(URL_USER, true).includes(path)) {
 		const hash: string = window.location.hash;
 		if (hash === '#cart') {
 			const tabElement = document.getElementById(EL_ID_USER_TAB_CART) as HTMLElement;

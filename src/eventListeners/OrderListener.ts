@@ -18,7 +18,11 @@ import {
   EL_CLASS_ORDER_CANCEL_BTN,
   EL_CLASS_ORDER_NO
 } from "../constants/elements";
-import { MSG_ERR_UNKNOWN, MSG_INFO_OMISE, MSG_LOADING } from "../constants/messages";
+import { 
+  MSG_ERR_UNKNOWN, 
+  MSG_INFO_OMISE, 
+  MSG_LOADING 
+} from "../constants/messages";
 import { PAYMENT_REDIRECT } from "../constants/configs";
 import { 
   DATA_ATT_CANCEL, 
@@ -27,7 +31,11 @@ import {
   DATA_ATT_PAYMENT_RETURN_URI, 
   DATA_ATT_WAIT 
 } from "../constants/attributes";
-import { NAME_CANCEL, NAME_CONFIRM, NAME_OK } from "../constants/names";
+import { 
+  NAME_CANCEL, 
+  NAME_CONFIRM, 
+  NAME_OK }
+   from "../constants/names";
 
 import * as tingle from 'tingle.js';
 

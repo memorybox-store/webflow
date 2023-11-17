@@ -14,8 +14,15 @@ import {
   MSG_INFO_NOT_AVAIL,
   MSG_INFO_SCANNING_STATUS
 } from "../constants/messages";
-import { NAME_OK, NAME_SCANNING } from "../constants/names";
-import { DATA_ATT_EMPTY, DATA_ATT_REDIRECT_URI } from "../constants/attributes";
+import { 
+  NAME_OK, 
+  NAME_SCANNING 
+} from "../constants/names";
+import { 
+  DATA_ATT_EMPTY, 
+  DATA_ATT_REDIRECT_URI 
+} from "../constants/attributes";
+import { URL_RESULT } from "../constants/urls";
 
 import {
   detectFace,
@@ -29,8 +36,7 @@ import { Product } from "../models/product";
 import { getStorage, setStorage } from "../utils/storage";
 
 import * as tingle from 'tingle.js';
-import { URL_FINDER } from "../constants/urls";
-import { LANG_PREF_TH, LANG_PREF_CN } from "../constants/languages";
+import { multiLanguageUrl } from "../utils/language";
 
 const modal = new tingle.modal({
   footer: true,
@@ -218,12 +224,12 @@ export const ScanListener = (): void => {
       const scan = (src: string) => {
         setStorage('face', src).then(() => {
           const path: string = window.location.pathname;
-          if (path !== `/${URL_FINDER}` && path !== `/${LANG_PREF_TH}${URL_FINDER}` && path !== `/${LANG_PREF_CN}${URL_FINDER}`) {
+          if (!multiLanguageUrl(URL_RESULT, true).includes(path)) {
             const redirect = element.getAttribute(DATA_ATT_REDIRECT_URI) || '';
             if (redirect) {
               location.href = `${redirect}?run=true`;
             } else {
-              location.href = `./${URL_FINDER}?run=true`;
+              location.href = `./${URL_RESULT}?run=true`;
             }
           } else {
 
