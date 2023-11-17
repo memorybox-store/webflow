@@ -270,15 +270,20 @@ export const ScanListener = (): void => {
                   await getStorage('result-fid').then(async (boat: string) => {
                     if (boat && boat !== 'null') {
                       await getProductsScan(boat).then(async (data: Product[]) => {
-                        const chunkSize = 1;
-                        defer(0, data, resultSource.detections[0], chunkSize, () => {
+                        if (data.length) {
+                          const chunkSize = 1;
+                          defer(0, data, resultSource.detections[0], chunkSize, () => {
+                            const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
+                            scanningElement?.classList.remove('popup-display-force');
+                            const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
+                            if (resultRealtimeElement) {
+                              resultRealtimeElement.innerText = '';
+                            }
+                          });
+                        } else {
                           const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
                           scanningElement?.classList.remove('popup-display-force');
-                          const resultRealtimeElement = document.getElementById(EL_ID_PHOTO_SCANNING_STATUS) as HTMLElement;
-                          if (resultRealtimeElement) {
-                            resultRealtimeElement.innerText = '';
-                          }
-                        });
+                        }
                       });
                     }
                   });
