@@ -104,10 +104,7 @@ export const removeCartItem = (cartId: string, cartName: string) => {
             cartItems = stored as CartItem[];
           }
         });
-        console.log(cartId);
-        console.log(cartItems);
         const cartItem = cartItems.find((item: any) => item.id.toString() === cartId.toString());
-        console.log(cartItem);
         await setStorage(
           'cart-items',
           cartItems.filter((item: any) => item.id.toString() !== cartId.toString()),
@@ -206,7 +203,6 @@ const updateCartList = (data: CartItem[]) => {
               }).catch(async () => {
                 let cartItems: CartItem[] = [];
                 await getStorage('cart-items', true).then(async (stored: []) => {
-                  console.log(stored);
                   if (stored && stored.length) {
                     cartItems = stored as CartItem[];
                   }
@@ -270,6 +266,8 @@ export const updateCartItems = (data: CartItem[]) => {
   updateCartBadge(data);
   updateCartList(data);
   updateCartAmount(data);
+
+  setStorage('cart-items', data, true);
 
   // Update add buttons
   const addedItems = data.map((item: CartItem) => item.product.id.toString());

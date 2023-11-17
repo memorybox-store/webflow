@@ -25,7 +25,11 @@ export const getStorage = async (keyName = '', isObject = false) => {
       let dataToGet: any = '';
       dataToGet = await localStorage.getItem(key);
       if (isObject) {
-        dataToGet = JSON.parse(dataToGet);
+        if (dataToGet) {
+          dataToGet = JSON.parse(dataToGet);
+        } else {
+          dataToGet = {};
+        }
       }
       resolve(dataToGet);
     } catch (error) {

@@ -79,14 +79,13 @@ export const ProductListener = async (): Promise<void> => {
         });
       }).catch(async () => {
         await getStorage('cart-items', true).then(async (stored: []) => {
-          const id: string = item.id;
           let cartItems: CartItem[] = [];
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
-          if (!cartItems.find((item: any) => item.id.toString() === id.toString())) {
+          if (!cartItems.find((item: any) => item.product.id.toString() === item.id.toString())) {
             const cartItem: CartItem = {
-              id: id,
+              id: item.id,
               quantity: 1,
               product: item
             }
