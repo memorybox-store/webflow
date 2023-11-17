@@ -197,6 +197,7 @@ export const signin = async (username: string, password: string) => {
                 removeStorage('result-fid'),
                 removeStorage('result-date'),
                 removeStorage('result-company'),
+                removeStorage('cart-items')
               ]);
             }
             let cartItems: CartItem[] = [];
@@ -230,7 +231,6 @@ export const signin = async (username: string, password: string) => {
 
 export const signout = async () => {
   return new Promise(async (resolve, reject) => {
-    removeStorage('cart-items');
     removeStorage('session').then(() => {
       removeStorage('cookie').then(() => {
         removeStorage('auhv').then(() => {
