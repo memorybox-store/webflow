@@ -341,7 +341,7 @@ export const CartListener = async (): Promise<void> => {
       await authen().then(() => {
         checkoutButtonElement.setAttribute('href', checkoutURI);
       }).catch(() => {
-        location.href = `${loginURI}?redirect=${encodeURIComponent(checkoutURI)}`;
+        checkoutButtonElement.setAttribute('href', `${loginURI}?redirect=${encodeURIComponent(checkoutURI)}`);
       });
       checkoutButtonElement.addEventListener('click', async () => {
         const modalElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART}"]`) as HTMLElement;
