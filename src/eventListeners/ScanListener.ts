@@ -303,8 +303,6 @@ export const ScanListener = (): void => {
 
             img.onload = () => {
 
-              console.log('loaded');
-
               const scanningElement = document.getElementById(EL_ID_PHOTO_SCANNING) as HTMLImageElement;
               scanningElement?.classList.add('popup-display-force');
 
@@ -367,7 +365,6 @@ export const ScanListener = (): void => {
             };
 
             img.src = src;
-            console.log(src);
 
           }
         });
@@ -446,11 +443,7 @@ export const ScanListener = (): void => {
       const url = new URL(window.location.href);
       let run = url.searchParams.get("run");
       if (run) {
-        console.log('test');
-        const path: string = window.location.pathname;
-        // window.history.pushState(null, "", path);
         getStorage('face').then((face: string) => {
-          console.log(face);
           if (face) {
             scan(face);
           }

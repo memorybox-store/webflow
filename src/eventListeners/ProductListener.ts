@@ -420,8 +420,14 @@ export const ProductListener = async (): Promise<void> => {
           await setStorage('result-company', companyName ? companyName : '');
         }
         if (companyName) {
+          const url = new URL(window.location.href);
           const path: string = window.location.pathname;
-          window.history.pushState(null, "", `${path}?fid=${boat}&date=${date}&company=${encodeURI(companyName)}`);
+          let run = url.searchParams.get("run");
+          if (run) {
+            window.history.pushState(null, "", `${path}?fid=${boat}&date=${date}&company=${encodeURI(companyName)}&run=true`);
+          } else {
+            window.history.pushState(null, "", `${path}?fid=${boat}&date=${date}&company=${encodeURI(companyName)}`);
+          }
           const imageId = url.searchParams.get("mid");
           load(boat, date, companyName);
         }
