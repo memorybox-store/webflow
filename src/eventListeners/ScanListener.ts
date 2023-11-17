@@ -248,9 +248,14 @@ export const ScanListener = (): void => {
 
               const formData = new FormData(formElement);
 
-              const boat = formData.get('boat') as string || '';
-              let company = formData.get('company') as string || '';
-              const date = formData.get('date') as string || '';
+              let company = '';
+
+              const boatValue = formData.get('boat') as string || '';
+              const companyValue = formData.get('company') as string || '';
+              const dateValue = formData.get('date') as string || '';
+              if (companyValue) {
+                company = companyValue;
+              }
 
               await getCompanies().then(async (companies: Array<any>) => {
 
@@ -263,25 +268,28 @@ export const ScanListener = (): void => {
                   }
                 }
 
-                if (company && date && boat) {
+                if (company && dateValue && boatValue) {
                   const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
-                  await setStorage('result-fid', boat);
-                  await setStorage('result-date', date);
+                  await setStorage('result-fid', boatValue);
+                  await setStorage('result-date', dateValue);
                   await setStorage('result-company', companyName);
-                  const result = formElement.getAttribute(DATA_ATT_RESULT_URI) || '';
+                  const result = element.getAttribute(DATA_ATT_RESULT_URI) || '';
+                  console.log(result);
                   if (result) {
-                    location.href = `${result}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}&run=true`;
+                    console.log(`${result}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`);
+                    location.href = `${result}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`;
                   } else {
-                    location.href = `./${URL_RESULT}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}&run=true`;
+                    location.href = `./${URL_RESULT}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`;
+                    console.log(`./${URL_RESULT}?fid=${boatValue}&date=${dateValue}&mid=&company=${encodeURI(companyName)}&run=true`);
                   }
                 } else {
                   if (!company) {
                     modal.setContent(msgEmptyCompany || MSG_ERR_UNKNOWN);
                     modal.open();
-                  } else if (!date) {
+                  } else if (!dateValue) {
                     modal.setContent(msgEmptyDate || MSG_ERR_UNKNOWN);
                     modal.open();
-                  } else if (!boat) {
+                  } else if (!boatValue) {
                     modal.setContent(msgEmptyBoat || MSG_ERR_UNKNOWN);
                     modal.open();
                   }
