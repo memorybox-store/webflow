@@ -84,7 +84,7 @@ export const ProductListener = async (): Promise<void> => {
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
-          if (!cartItems.find((item: any) => item.id === id)) {
+          if (!cartItems.find((item: any) => item.id.toString() === id.toString())) {
             const cartItem: CartItem = {
               id: id,
               quantity: 1,

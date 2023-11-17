@@ -104,13 +104,16 @@ export const removeCartItem = (cartId: string, cartName: string) => {
             cartItems = stored as CartItem[];
           }
         });
-        const cartItemsRemoved = [...cartItems.filter((item: any) => item.id !== cartId)];
+        console.log(cartId);
+        console.log(cartItems);
+        const cartItem = cartItems.find((item: any) => item.id.toString() === cartId.toString());
+        console.log(cartItem);
         await setStorage(
           'cart-items',
-          cartItemsRemoved,
+          cartItems.filter((item: any) => item.id.toString() !== cartId.toString()),
           true
         );
-        resolve(cartItemsRemoved);
+        resolve(cartItem);
       });
     });
     modalRemove.addFooterBtn(txtCancel, 'tingle-btn', () => modalRemove.close());
@@ -191,7 +194,7 @@ const updateCartList = (data: CartItem[]) => {
           const cartId = removeElement.getAttribute('data-target');
           if (cartId) {
             const cartName = removeElement.getAttribute('data-name') || '';
-            removeCartItem(cartId, cartName).then(async (removedData: CartItem[]) => {
+            removeCartItem(cartId, cartName).then(async () => {
               await authen().then(async () => {
                 await getCartItems().then(async (updatedData: CartItem[]) => {
                   updateCartItems(updatedData);
@@ -201,8 +204,15 @@ const updateCartList = (data: CartItem[]) => {
                   modal.open();
                 });
               }).catch(async () => {
-                updateCartItems(removedData);
-                updatePaymentItems(removedData);
+                let cartItems: CartItem[] = [];
+                await getStorage('cart-items', true).then(async (stored: []) => {
+                  console.log(stored);
+                  if (stored && stored.length) {
+                    cartItems = stored as CartItem[];
+                  }
+                });
+                updateCartItems(cartItems);
+                updatePaymentItems(cartItems);
               });
             }).catch((message) => {
               modal.setContent(message || MSG_ERR_UNKNOWN);
