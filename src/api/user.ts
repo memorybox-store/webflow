@@ -199,7 +199,6 @@ export const signin = async (username: string, password: string) => {
                 removeStorage('result-company'),
               ]);
             }
-            await setStorage('profile', profile, true);
             let cartItems: CartItem[] = [];
             await getStorage('cart-items', true).then(async (stored: [] | null) => {
               if (stored && stored.length) {

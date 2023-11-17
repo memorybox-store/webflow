@@ -83,8 +83,7 @@ export const ProductListener = async (): Promise<void> => {
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
-          console.log(cartItems.find((item: CartItem) => item.product.id.toString() === item.id.toString()));
-          if (cartItems.find((item: CartItem) => item.product.id.toString() === item.id.toString()) === undefined) {
+          if (cartItems.find((cartItem: CartItem) => cartItem.product.id.toString() === item.id.toString()) === undefined) {
             const cartItem: CartItem = {
               id: item.id,
               quantity: 1,

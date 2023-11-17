@@ -104,10 +104,10 @@ export const removeCartItem = (cartId: string, cartName: string) => {
             cartItems = stored as CartItem[];
           }
         });
-        const cartItem = cartItems.find((item: CartItem) => item.id.toString() === cartId.toString());
+        const cartItem = cartItems.find((cartItem: CartItem) => cartItem.id.toString() === cartId.toString());
         await setStorage(
           'cart-items',
-          cartItems.filter((item: CartItem) => item.id.toString() !== cartId.toString()),
+          cartItems.filter((cartItem: CartItem) => cartItem.id.toString() !== cartId.toString()),
           true
         );
         resolve(cartItem);
