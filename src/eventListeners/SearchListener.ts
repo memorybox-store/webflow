@@ -183,6 +183,16 @@ export const SearchListener = (): void => {
 				}
 			}
 		}
+
+    const url = new URL(window.location.href);
+    let companyParam = url.searchParams.get("company");
+		if (companyParam) {
+			const companySelected: Company = companies.find((data: Company) => data.shortname === companyParam);
+			if (companySelected) {
+				company = companySelected.id.toString();
+			}
+		}
+
 	}
 
 	const setBoats = (data: Company[]) => {
@@ -314,9 +324,10 @@ export const SearchListener = (): void => {
 		});
 	}
 
+	loadCompanies();
+
 	const companyElement = document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 	if (companyElement) {
-		loadCompanies();
 		companyElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
 			company = value;
