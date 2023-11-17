@@ -259,13 +259,18 @@ export const ScanListener = (): void => {
 
               await getCompanies().then(async (companies: Array<any>) => {
 
+                console.log(companies);
+
                 const url = new URL(window.location.href);
                 let companyParam = url.searchParams.get("company");
+                console.log(companyParam);
                 if (companyParam) {
                   const companySelected: Company = companies.find((data: Company) => data.shortname === companyParam);
+                  console.log(companySelected);
                   if (companySelected) {
                     company = companySelected.id.toString();
                   }
+                  console.log(company);
                 }
 
                 if (company && dateValue && boatValue) {
