@@ -446,8 +446,9 @@ export const ScanListener = (): void => {
       const url = new URL(window.location.href);
       let run = url.searchParams.get("run");
       if (run) {
+        console.log('test');
         const path: string = window.location.pathname;
-        window.history.pushState(null, "", path);
+        // window.history.pushState(null, "", path);
         getStorage('face').then((face: string) => {
           console.log(face);
           if (face) {
