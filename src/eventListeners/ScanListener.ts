@@ -249,11 +249,21 @@ export const ScanListener = (): void => {
               const formData = new FormData(formElement);
 
               const boat = formData.get('boat') as string || '';
-              const company = formData.get('company') as string || '';
+              let company = formData.get('company') as string || '';
               const date = formData.get('date') as string || '';
 
-              if (company && date && boat) {
-                await getCompanies().then(async (companies: Array<any>) => {
+              await getCompanies().then(async (companies: Array<any>) => {
+
+                const url = new URL(window.location.href);
+                let companyParam = url.searchParams.get("company");
+                if (companyParam) {
+                  const companySelected: Company = companies.find((data: Company) => data.shortname === companyParam);
+                  if (companySelected) {
+                    company = companySelected.id.toString();
+                  }
+                }
+
+                if (company && date && boat) {
                   const companyName = companies.find((data: Company) => data.id.toString() === company)?.name || '';
                   await setStorage('result-fid', boat);
                   await setStorage('result-date', date);
@@ -264,22 +274,22 @@ export const ScanListener = (): void => {
                   } else {
                     location.href = `./${URL_RESULT}?fid=${boat}&date=${date}&mid=&company=${encodeURI(companyName)}&run=true`;
                   }
-                }).catch((message) => {
-                  modal.setContent(message || MSG_ERR_UNKNOWN);
-                  modal.open();
-                });
-              } else {
-                if (!company) {
-                  modal.setContent(msgEmptyCompany || MSG_ERR_UNKNOWN);
-                  modal.open();
-                } else if (!date) {
-                  modal.setContent(msgEmptyDate || MSG_ERR_UNKNOWN);
-                  modal.open();
-                } else if (!boat) {
-                  modal.setContent(msgEmptyBoat || MSG_ERR_UNKNOWN);
-                  modal.open();
+                } else {
+                  if (!company) {
+                    modal.setContent(msgEmptyCompany || MSG_ERR_UNKNOWN);
+                    modal.open();
+                  } else if (!date) {
+                    modal.setContent(msgEmptyDate || MSG_ERR_UNKNOWN);
+                    modal.open();
+                  } else if (!boat) {
+                    modal.setContent(msgEmptyBoat || MSG_ERR_UNKNOWN);
+                    modal.open();
+                  }
                 }
-              }
+              }).catch((message) => {
+                modal.setContent(message || MSG_ERR_UNKNOWN);
+                modal.open();
+              });
             }
 
           } else {
