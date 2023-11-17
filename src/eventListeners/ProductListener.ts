@@ -67,7 +67,8 @@ export const ProductListener = async (): Promise<void> => {
     return new Promise(async (resolve, reject) => {
       // Add product to cart via API
       await authen().then(async () => {
-        await addItemToCart(item.id,
+        await addItemToCart(
+          item.id,
           item.company?.id.toString() || '',
           item.details.id.toString() || '',
           1

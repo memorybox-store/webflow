@@ -4,10 +4,10 @@ import {
   SERVER,
   SOCIAL_LOGIN_REDIRECT
 } from '../constants/configs';
-import { 
-  MSG_ERR_EMAIL_EXIST, 
-  MSG_ERR_EMPTY_DATA, 
-  MSG_ERR_EMPTY_RES 
+import {
+  MSG_ERR_EMAIL_EXIST,
+  MSG_ERR_EMPTY_DATA,
+  MSG_ERR_EMPTY_RES
 } from '../constants/messages';
 
 import axios from '../config/axios';
@@ -18,6 +18,8 @@ import { createRequestHeader, handleResponseError } from '../utils/rest';
 import { getStorage, removeStorage, setStorage } from '../utils/storage';
 
 import { Profile, Session } from '../models/user';
+import { CartItem } from '../models/cart';
+import { addItemToCart } from './cart';
 
 export const authen = async () => {
   return new Promise(async (resolve, reject) => {
@@ -188,8 +190,8 @@ export const signin = async (username: string, password: string) => {
             let storedProfile: Profile = await getStorage('profile', true) as Profile || null;
             if (storedProfile && profile && storedProfile.username !== profile.username) {
               await Promise.all([
-                removeStorage('face'), 
-                removeStorage('status-mypic'), 
+                removeStorage('face'),
+                removeStorage('status-mypic'),
                 removeStorage('status-total'),
                 removeStorage('status-boat'),
                 removeStorage('result-fid'),
@@ -198,6 +200,21 @@ export const signin = async (username: string, password: string) => {
               ]);
             }
             await setStorage('profile', profile);
+            await getStorage('cart-items', true).then(async (stored: []) => {
+              let cartItems: CartItem[] = [];
+              if (stored && stored.length) {
+                cartItems = stored as CartItem[];
+              }
+              for (let item of cartItems) {
+                await addItemToCart(
+                  item.product.id,
+                  item.product.company?.id,
+                  item.product.details.id.toString() || '',
+                  1
+                ).catch(() => { });
+              }
+              await removeStorage('cart-items');
+            });
           }).catch(() => { });
           resolve(session);
         }).catch((error) => {

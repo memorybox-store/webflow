@@ -40,7 +40,7 @@ import { getCartItems, removeItemFromCart } from "../api/cart";
 
 import { CartItem } from "../models/cart";
 import { authen } from "../api/user";
-import { getStorage } from "../utils/storage";
+import { getStorage, setStorage } from "../utils/storage";
 
 const modal = new tingle.modal({
   footer: true,
@@ -104,6 +104,8 @@ export const removeCartItem = (cartId: string, cartName: string) => {
             cartItems = stored as CartItem[];
           }
           const cartItem = cartItems.find((item: any) => item.id === cartId);
+          cartItems = cartItems.filter((item: any) => item.id !== cartId);
+          await setStorage('cart-items', cartItems, true);
           resolve(cartItem);
         });
       });
