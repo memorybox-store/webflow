@@ -83,7 +83,8 @@ export const ProductListener = async (): Promise<void> => {
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
-          if (!cartItems.find((item: any) => item.product.id.toString() === item.id.toString())) {
+          console.log(cartItems.find((item: CartItem) => item.product.id.toString() === item.id.toString()));
+          if (cartItems.find((item: CartItem) => item.product.id.toString() === item.id.toString()) === undefined) {
             const cartItem: CartItem = {
               id: item.id,
               quantity: 1,
@@ -204,8 +205,10 @@ export const ProductListener = async (): Promise<void> => {
       let addedItems: string[] = [];
 
       // Get added items from cart for checking via API
-      await getCartItems().then(async (cartItemsData: CartItem[]) => {
-        addedItems = cartItemsData.map((item: CartItem) => item.product.id.toString());
+      await authen().then(async () => {
+        await getCartItems().then(async (cartItemsData: CartItem[]) => {
+          addedItems = cartItemsData.map((item: CartItem) => item.product.id.toString());
+        }).catch(() => { });
       }).catch(() => { });
 
       // Get products from boat via API
