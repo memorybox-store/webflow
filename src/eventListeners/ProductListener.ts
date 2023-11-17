@@ -47,6 +47,7 @@ import { getStorage, setStorage } from "../utils/storage";
 import * as tingle from 'tingle.js';
 import { authen } from "../api/user";
 import { URL_LOGIN } from "../constants/urls";
+import { updateScannerStatusReady } from "./ScanListener";
 
 const modal = new tingle.modal({
   footer: true,
@@ -208,7 +209,13 @@ export const ProductListener = async (): Promise<void> => {
         await getCartItems().then(async (cartItemsData: CartItem[]) => {
           addedItems = cartItemsData.map((item: CartItem) => item.product.id.toString());
         }).catch(() => { });
-      }).catch(() => { });
+      }).catch(async () => {
+        await getStorage('cart-items', true).then(async (stored: [] | null) => {
+          if (stored && stored.length) {
+            addedItems = stored.map((item: CartItem) => item.product.id.toString());
+          }
+        });
+      });
 
       // Get products from boat via API
       await getProducts(boatId).then(async (data: Product[]) => {
@@ -225,6 +232,7 @@ export const ProductListener = async (): Promise<void> => {
           setStorage('status-boat', data.length ? data[0].boat?.name : '-');
         }
 
+        let index = 0;
         for (let item of data) {
 
           // Init card (Cloned from sample element)
@@ -240,6 +248,13 @@ export const ProductListener = async (): Promise<void> => {
           if (imgElement) {
             imgElement.crossOrigin = 'anonymous';
             imgElement.setAttribute('crossorigin', 'anonymous');
+
+            imgElement.onload = () => {
+              const lastId = data[data.length - 1].id;
+              if (item.id === lastId) {
+                updateScannerStatusReady();
+              }
+            }
 
             imgElement.src = '';
             imgElement.srcset = '';
@@ -371,6 +386,8 @@ export const ProductListener = async (): Promise<void> => {
 
           // Append card to container
           cardContainer?.appendChild(cardElement);
+
+          index += 1;
 
         }
 
