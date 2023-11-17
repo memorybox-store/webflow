@@ -200,21 +200,21 @@ export const signin = async (username: string, password: string) => {
               ]);
             }
             await setStorage('profile', profile);
+            let cartItems: CartItem[] = [];
             await getStorage('cart-items', true).then(async (stored: []) => {
-              let cartItems: CartItem[] = [];
               if (stored && stored.length) {
                 cartItems = stored as CartItem[];
               }
-              for (let item of cartItems) {
-                await addItemToCart(
-                  item.product.id,
-                  item.product.company?.id,
-                  item.product.details.id.toString() || '',
-                  1
-                ).catch(() => { });
-              }
-              await removeStorage('cart-items');
             });
+            for (let item of cartItems) {
+              await addItemToCart(
+                item.product.id,
+                item.product.company?.id,
+                item.product.details.id.toString() || '',
+                1
+              ).catch(() => { });
+            }
+            await removeStorage('cart-items');
           }).catch(() => { });
           resolve(session);
         }).catch((error) => {

@@ -298,7 +298,7 @@ export const ScanListener = (): void => {
             }
 
           } else {
-            
+
             const img = new Image();
 
             img.onload = () => {
@@ -443,6 +443,9 @@ export const ScanListener = (): void => {
       const url = new URL(window.location.href);
       let run = url.searchParams.get("run");
       if (run) {
+        const currentUrl = window.location.href;
+        const updatedUrl = currentUrl.replace('&run=true', '');
+        window.history.pushState(null, null, updatedUrl);
         getStorage('face').then((face: string) => {
           if (face) {
             scan(face);

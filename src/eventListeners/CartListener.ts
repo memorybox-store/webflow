@@ -14,21 +14,21 @@ import {
   EL_ID_CART_CHECKOUT_BTN,
   EL_CLASS_ADD_TO_CART_POPUP_BTN
 } from "../constants/elements";
-import { 
-  NAME_CANCEL, 
-  NAME_CART_ADD, 
-  NAME_CART_ADDED, 
-  NAME_CONFIRM, 
-  NAME_OK 
+import {
+  NAME_CANCEL,
+  NAME_CART_ADD,
+  NAME_CART_ADDED,
+  NAME_CONFIRM,
+  NAME_OK
 } from "../constants/names";
 import { URL_LOGIN, URL_USER } from "../constants/urls";
 import { MSG_ERR_UNKNOWN } from "../constants/messages";
-import { 
-  DATA_ATT_CHECKOUT_URI, 
-  DATA_ATT_LOGIN_URI, 
-  DATA_ATT_REMOVE, 
-  DATA_ATT_REMOVE_BTN_CANCEL, 
-  DATA_ATT_REMOVE_BTN_CONFIRM 
+import {
+  DATA_ATT_CHECKOUT_URI,
+  DATA_ATT_LOGIN_URI,
+  DATA_ATT_REMOVE,
+  DATA_ATT_REMOVE_BTN_CANCEL,
+  DATA_ATT_REMOVE_BTN_CONFIRM
 } from "../constants/attributes";
 
 import * as tingle from 'tingle.js';
@@ -72,7 +72,7 @@ const THBcompact = new Intl.NumberFormat(
 
 export const removeCartItem = (cartId: string, cartName: string) => {
   return new Promise(async (resolve, reject) => {
-    
+
     const element = document.getElementById(EL_ID_CART_BADGE) as HTMLElement;
 
     const txtPrompt: string = element?.getAttribute(DATA_ATT_REMOVE) || `Do you want to remove {{name}} from cart?`;
@@ -98,21 +98,24 @@ export const removeCartItem = (cartId: string, cartName: string) => {
           reject(error);
         });
       }).catch(async () => {
+        let cartItems: CartItem[] = [];
         await getStorage('cart-items', true).then(async (stored: []) => {
-          let cartItems: CartItem[] = [];
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
-          const cartItem = cartItems.find((item: any) => item.id === cartId);
-          cartItems = cartItems.filter((item: any) => item.id !== cartId);
-          await setStorage('cart-items', cartItems, true);
-          resolve(cartItem);
         });
+        const cartItemsRemoved = [...cartItems.filter((item: any) => item.id !== cartId)];
+        await setStorage(
+          'cart-items',
+          cartItemsRemoved,
+          true
+        );
+        resolve(cartItemsRemoved);
       });
     });
     modalRemove.addFooterBtn(txtCancel, 'tingle-btn', () => modalRemove.close());
     modalRemove.open();
-  
+
   });
 }
 
@@ -188,7 +191,7 @@ const updateCartList = (data: CartItem[]) => {
           const cartId = removeElement.getAttribute('data-target');
           if (cartId) {
             const cartName = removeElement.getAttribute('data-name') || '';
-            removeCartItem(cartId, cartName).then(async () => {
+            removeCartItem(cartId, cartName).then(async (removedData: CartItem[]) => {
               await authen().then(async () => {
                 await getCartItems().then(async (updatedData: CartItem[]) => {
                   updateCartItems(updatedData);
@@ -198,14 +201,8 @@ const updateCartList = (data: CartItem[]) => {
                   modal.open();
                 });
               }).catch(async () => {
-                await getStorage('cart-items', true).then(async (stored: []) => {
-                  let cartItems: CartItem[] = [];
-                  if (stored && stored.length) {
-                    cartItems = stored as CartItem[];
-                  }
-                  updateCartItems(cartItems);
-                  updatePaymentItems(cartItems);
-                });
+                updateCartItems(removedData);
+                updatePaymentItems(removedData);
               });
             }).catch((message) => {
               modal.setContent(message || MSG_ERR_UNKNOWN);
@@ -215,7 +212,7 @@ const updateCartList = (data: CartItem[]) => {
         });
       }
     }
-    
+
   }
 
   // Init empty cart
@@ -314,14 +311,14 @@ export const CartListener = async (): Promise<void> => {
           modal.open();
         });
       }).catch(async () => {
+        let cartItems: CartItem[] = [];
         await getStorage('cart-items', true).then(async (stored: []) => {
-          let cartItems: CartItem[] = [];
           if (stored && stored.length) {
             cartItems = stored as CartItem[];
           }
-          initializeElements(cartItems);
-          resolve(cartItems);
         });
+        initializeElements(cartItems);
+        resolve(cartItems);
       });
     });
   }
@@ -333,7 +330,7 @@ export const CartListener = async (): Promise<void> => {
 
     const checkoutURI = element.getAttribute(DATA_ATT_CHECKOUT_URI) || `./${URL_USER}#cart`;
     const loginURI = element.getAttribute(DATA_ATT_LOGIN_URI) || `./${URL_LOGIN}`;
-  
+
     // Init checkout button
     const ecomCheckoutElement = document.querySelector(`[data-node-type="${EL_DNT_CHECKOUT_BTN}"]`);
     if (ecomCheckoutElement) {
@@ -354,7 +351,7 @@ export const CartListener = async (): Promise<void> => {
       });
       ecomCheckoutElement.parentElement.replaceChild(checkoutButtonElement, ecomCheckoutElement);
     }
-  
+
     // Init cart modal
     const modalElement = document.querySelector(`[data-node-type="${EL_DNT_MODAL_CART}"]`) as HTMLElement;
     if (modalElement) {
