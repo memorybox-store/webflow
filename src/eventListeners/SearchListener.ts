@@ -434,7 +434,7 @@ export const SearchListener = (): void => {
 					modal.setContent(msgEmptyDate || MSG_ERR_UNKNOWN);
 					modal.open();
 				} else if (!boatValue) {
-					modal.setContent(msgEmptyBoat || MSG_ERR_UNKNOWN);
+					modal.setContent(msgEmptyGuide || MSG_ERR_UNKNOWN);
 					modal.open();
 				}
 			}

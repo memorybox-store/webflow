@@ -47,6 +47,7 @@ import { UserListener } from './eventListeners/UserListener';
 import { RgisterListener } from './eventListeners/RegisterListener';
 import { DownloadListener } from './eventListeners/DownloadListener';
 import { multiLanguageUrl } from './utils/language';
+import { getBoats } from './api/sale';
 
 const publichUrls = [
   `/`,
@@ -274,5 +275,12 @@ document.addEventListener("DOMContentLoaded", () => {
   initalizeOmise();
 
   initialize();
+
+  // getBoats(companyId, tripDate).then(async (data: Array<any>) => {
+  //   console.log();
+  // }).catch((message) => {
+  //   modal.setContent(message || MSG_ERR_UNKNOWN);
+  //   modal.open();
+  // });
 
 });

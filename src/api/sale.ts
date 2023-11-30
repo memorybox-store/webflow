@@ -76,11 +76,23 @@ export const getBoats = async (compId: string, date: string) => {
           const boats: Boat[] = data.map((item: any) => (
             {
               id: item.a1,
-              name: item.a3,
+              name: item.a3.split(',').map((itemName: string) => itemName.trim()),
               prefix: item.a2,
               createdAt: item.a4
             }
-          ));
+          )).reduce((result: Array<Boat>, item: any) => {
+            return [
+              ...item.name.map((itemName: string) => {
+                return {
+                  id: item.id,
+                  name: itemName,
+                  prefix: item.prefix,
+                  createdAt: item.createdAt
+                }
+              }), 
+              ...result
+            ];
+          }, []);
           resolve(boats);
         } else {
           reject(response.data.Message);
