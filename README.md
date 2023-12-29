@@ -153,12 +153,13 @@ The JavaScript code defines various element IDs, classes, and names that are cru
 - **Form Attribute - Empty Company Message:** `data-empty-company`
 - **Form Attribute - Empty Date Message:** `data-empty-date`
 - **Form Attribute - Empty Boat Message:** `data-empty-boat`
-- **Form Attribute - Empty Guide Message:** `data-empty-guide`
 - **Form ID:** `finder-form`
 - **Select Company ID:** `company-select`
+- **Select Company Attribute - Placeholder:** `data-placeholder`
 - **Select Trip Date ID:** `date-input`
 - **Select Boat ID:** `boat-select`
-- **Select Guide ID:** `guide-select`
+- **Select Boat Attribute - Placeholder:** `data-placeholder`
+- **Select Guide Attribute - Placeholder:** `data-placeholder`
 - **Dropdown Company ID (Deprecated):** `company-selector`
 - **Dropdown Boat (Deprecated):** `boat-selector`
 - **Select Class (Deprecated):** `w-dropdown-link`

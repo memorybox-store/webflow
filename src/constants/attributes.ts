@@ -16,7 +16,9 @@ export const DATA_ATT_EMPTY = `data-empty`;
 export const DATA_ATT_EMPTY_COMPANY = `data-empty-company`;
 export const DATA_ATT_EMPTY_DATE = `data-empty-date`;
 export const DATA_ATT_EMPTY_BOAT = `data-empty-boat`;
-export const DATA_ATT_EMPTY_GUIDE = `data-empty-guide`;
+
+/* Placeholders */
+export const DATA_ATT_PLACEHOLDER = `data-placeholder`;
 
 /* Default Load */
 export const DATA_ATT_WAIT = `data-wait`;

@@ -6,19 +6,18 @@ import {
 	EL_ID_SELECT_COMPANY,
 	EL_ID_SELECT_TRIP_DATE
 } from "../constants/elements";
-import { 
-	MSG_ERR_EMPTY_BOAT, 
-	MSG_ERR_EMPTY_COMPANY, 
-	MSG_ERR_EMPTY_DATE, 
-	MSG_ERR_EMPTY_GUIDE, 
+import {
+	MSG_ERR_EMPTY_BOAT,
+	MSG_ERR_EMPTY_COMPANY,
+	MSG_ERR_EMPTY_DATE,
 	MSG_ERR_UNKNOWN
 } from "../constants/messages";
-import { 
-	DATA_ATT_EMPTY_BOAT, 
-	DATA_ATT_EMPTY_COMPANY, 
-	DATA_ATT_EMPTY_DATE, 
-	DATA_ATT_EMPTY_GUIDE, 
-	DATA_ATT_RESULT_URI 
+import {
+	DATA_ATT_EMPTY_BOAT,
+	DATA_ATT_EMPTY_COMPANY,
+	DATA_ATT_EMPTY_DATE,
+	DATA_ATT_PLACEHOLDER,
+	DATA_ATT_RESULT_URI
 } from "../constants/attributes";
 import { URL_RESULT } from "../constants/urls";
 import { NAME_OK } from "../constants/names";
@@ -31,15 +30,16 @@ import { Company } from "../models/sale";
 
 import * as tingle from 'tingle.js';
 import { setStorage } from "../utils/storage";
+import { PLACEHOLDER_SELECT_COMPANY, PLACEHOLDER_SELECT_BOAT } from "../constants/placeholders";
 
 const modal = new tingle.modal({
-  footer: true,
-  stickyFooter: false,
-  closeMethods: ['overlay', 'button', 'escape'],
-  closeLabel: '',
-  beforeClose: () => {
-    return true;
-  }
+	footer: true,
+	stickyFooter: false,
+	closeMethods: ['overlay', 'button', 'escape'],
+	closeLabel: '',
+	beforeClose: () => {
+		return true;
+	}
 });
 modal.setContent('');
 modal.addFooterBtn(NAME_OK, 'tingle-btn tingle-btn--primary', () => modal.close());
@@ -49,14 +49,14 @@ export const SearchListener = (): void => {
 	let companyOptions: Array<any> = [
 		{
 			value: '',
-			text: 'Select Company...'
+			text: '-'
 		}
 	];
 
 	let boatOptions: Array<any> = [
 		{
 			value: '',
-			text: 'Select Boat...'
+			text: '-'
 		}
 	];
 
@@ -65,26 +65,25 @@ export const SearchListener = (): void => {
 
 	let date: string = moment().format();
 
-	let boat: string = '';
-
 	const setCompanies = (data: Company[]) => {
 		companies = [...data];
-		companyOptions = [
-			{
-				value: '',
-				subvalue: '',
-				text: 'Select Company...'
-			},
-			...data.map((item: Company) => (
-				{
-					value: item.id,
-					subvalue: item.shortname,
-					text: item.name
-				}
-			))
-		];
 		const element = document.getElementById(EL_ID_SELECT_COMPANY) as HTMLSelectElement;
 		if (element) {
+			const placeholder = element.getAttribute(DATA_ATT_PLACEHOLDER) || PLACEHOLDER_SELECT_COMPANY;
+			companyOptions = [
+				{
+					value: '',
+					subvalue: '',
+					text: placeholder
+				},
+				...data.map((item: Company) => (
+					{
+						value: item.id,
+						subvalue: item.shortname,
+						text: item.name
+					}
+				))
+			];
 			if (element.hasChildNodes()) {
 				const nodes: Array<any> = Object.entries(element.childNodes).map(
 					([_, node]) => node
@@ -166,7 +165,7 @@ export const SearchListener = (): void => {
 								dropdownLink.classList.remove('w--open');
 								const dropdownArrow = dropdownElement.querySelector('.w-icon-dropdown-toggle');
 								dropdownArrow?.setAttribute(
-									'style', 
+									'style',
 									'transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;'
 								);
 								const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
@@ -184,8 +183,8 @@ export const SearchListener = (): void => {
 			}
 		}
 
-    const url = new URL(window.location.href);
-    let companyParam = url.searchParams.get("company");
+		const url = new URL(window.location.href);
+		let companyParam = url.searchParams.get("company");
 		if (companyParam) {
 			const companySelected: Company = companies.find((data: Company) => data.shortname === companyParam);
 			if (companySelected) {
@@ -196,20 +195,21 @@ export const SearchListener = (): void => {
 	}
 
 	const setBoats = (data: Company[]) => {
-		boatOptions = [
-			{
-				value: '',
-				text: 'Select Boat...'
-			},
-			...data.map((item: Company) => (
-				{
-					value: item.id,
-					text: item.name
-				}
-			))
-		];
 		const element = document.getElementById(EL_ID_SELECT_BOAT) as HTMLSelectElement;
 		if (element) {
+			const placeholder = element.getAttribute(DATA_ATT_PLACEHOLDER) || PLACEHOLDER_SELECT_BOAT;
+			boatOptions = [
+				{
+					value: '',
+					text: placeholder
+				},
+				...data.map((item: Company) => (
+					{
+						value: item.id,
+						text: item.name
+					}
+				))
+			];
 			if (element.hasChildNodes()) {
 				const nodes: Array<any> = Object.entries(element.childNodes).map(
 					([_, node]) => node
@@ -282,7 +282,7 @@ export const SearchListener = (): void => {
 								dropdownLink.classList.remove('w--open');
 								const dropdownArrow = dropdownElement.querySelector('.w-icon-dropdown-toggle');
 								dropdownArrow?.setAttribute(
-									'style', 
+									'style',
 									'transform: translate3d(0px, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;'
 								);
 								const dropdownLabel = dropdownElement.querySelector('[fs-selectcustom-element="label"]');
@@ -306,8 +306,8 @@ export const SearchListener = (): void => {
 				setCompanies(data);
 				resolve(data);
 			}).catch((message) => {
-        modal.setContent(message || MSG_ERR_UNKNOWN);
-        modal.open();
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
 			});
 		});
 	}
@@ -318,8 +318,8 @@ export const SearchListener = (): void => {
 				setBoats(data);
 				resolve(data);
 			}).catch((message) => {
-        modal.setContent(message || MSG_ERR_UNKNOWN);
-        modal.open();
+				modal.setContent(message || MSG_ERR_UNKNOWN);
+				modal.open();
 			});
 		});
 	}
@@ -335,22 +335,9 @@ export const SearchListener = (): void => {
 		});
 	}
 
-	// const companyDropdownElement = document.getElementById(EL_ID_DROPDOWN_COMPANY) as HTMLElement;
-	// if (companyDropdownElement) {
-	// 	companyDropdownElement.addEventListener("change", (event: any) => {
-	// 		const value = event.target.value;
-	// 		company = value;
-	// 		loadBoats(value, date);
-	// 	});
-	// }
-
-	// if (companyElement || companyDropdownElement) {
-	// 	loadCompanies();
-	// }
-
 	const dateElement = document.getElementById(EL_ID_SELECT_TRIP_DATE) as HTMLInputElement;
 	if (dateElement) {
-		
+
 		// Create a MutationObserver
 		const observer = new MutationObserver(function (mutationsList) {
 			for (const mutation of mutationsList) {
@@ -390,7 +377,6 @@ export const SearchListener = (): void => {
 	if (boatElement) {
 		boatElement.addEventListener("change", (event: any) => {
 			const value = event.target.value;
-			boat = value;
 		});
 	}
 
@@ -401,7 +387,6 @@ export const SearchListener = (): void => {
 			const msgEmptyCompany: string = formElement.getAttribute(DATA_ATT_EMPTY_COMPANY) || MSG_ERR_EMPTY_COMPANY;
 			const msgEmptyDate: string = formElement.getAttribute(DATA_ATT_EMPTY_DATE) || MSG_ERR_EMPTY_DATE;
 			const msgEmptyBoat: string = formElement.getAttribute(DATA_ATT_EMPTY_BOAT) || MSG_ERR_EMPTY_BOAT;
-			const msgEmptyGuide: string = formElement.getAttribute(DATA_ATT_EMPTY_GUIDE) || MSG_ERR_EMPTY_GUIDE;
 
 			event.preventDefault();
 			event.stopPropagation();
@@ -434,7 +419,7 @@ export const SearchListener = (): void => {
 					modal.setContent(msgEmptyDate || MSG_ERR_UNKNOWN);
 					modal.open();
 				} else if (!boatValue) {
-					modal.setContent(msgEmptyGuide || MSG_ERR_UNKNOWN);
+					modal.setContent(msgEmptyBoat || MSG_ERR_UNKNOWN);
 					modal.open();
 				}
 			}
